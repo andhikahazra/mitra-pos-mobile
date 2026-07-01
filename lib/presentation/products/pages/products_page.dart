@@ -478,7 +478,7 @@ class _ListingTile extends StatelessWidget {
   }
 
   String _formatVolumeKg(double volumeCm3) {
-    final volumeKg = volumeCm3 / 1000;
+    final volumeKg = volumeCm3 / 6000;
     if (volumeKg == volumeKg.roundToDouble()) {
       return volumeKg.toStringAsFixed(0);
     }

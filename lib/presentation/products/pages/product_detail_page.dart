@@ -158,7 +158,7 @@ class ProductDetailPage extends StatelessWidget {
                   _Divider(),
                   _SpecRow(
                     label: 'Volume (Berat)', 
-                    value: '${(product.volumeCm3 / 1000).toStringAsFixed(2)} kg',
+                    value: '${(product.volumeCm3 / 6000).toStringAsFixed(2)} kg',
                     isBold: true,
                   ),
                 ],
