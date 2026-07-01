@@ -11,7 +11,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 final authControllerProvider =
-    StateNotifierProvider.autoDispose<AuthController, AuthState>(
+    StateNotifierProvider<AuthController, AuthState>(
   (ref) => getIt<AuthController>(),
 );
 
@@ -47,6 +47,7 @@ class AuthController extends StateNotifier<AuthState> {
   }
 
   Future<void> _onGetProfileRequested() async {
+    if (state.user != null) return; // Already fetched, skip
     final result = await getProfileUseCase();
     result.fold(
       (failure) => null, // Silently fail if can't get profile (e.g. not logged in)

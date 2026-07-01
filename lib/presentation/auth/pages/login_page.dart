@@ -25,6 +25,7 @@ class _LoginViewState extends ConsumerState<_LoginView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _hasNavigated = false;
 
   @override
   void dispose() {
@@ -34,6 +35,8 @@ class _LoginViewState extends ConsumerState<_LoginView> {
   }
 
   void _goToHome(BuildContext context) {
+    if (_hasNavigated) return; // Guard: only navigate once
+    _hasNavigated = true;
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const HomePage()),
@@ -43,7 +46,8 @@ class _LoginViewState extends ConsumerState<_LoginView> {
   @override
   Widget build(BuildContext context) {
     ref.listen<AuthState>(authControllerProvider, (previous, next) {
-      if (next.isAuthenticated) {
+      // Only navigate if transitioning FROM unauthenticated TO authenticated
+      if (!(previous?.isAuthenticated ?? false) && next.isAuthenticated) {
         _goToHome(context);
       }
     });
