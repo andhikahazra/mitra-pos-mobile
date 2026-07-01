@@ -30,6 +30,7 @@ class _IncomingGoodsFormPageState extends ConsumerState<IncomingGoodsFormPage> {
   
   SupplierModel? _selectedSupplier;
   String? _invoiceFileName;
+  String? _invoiceFilePath;
 
   final List<_IncomingItemForm> _items = [];
 
@@ -110,6 +111,7 @@ class _IncomingGoodsFormPageState extends ConsumerState<IncomingGoodsFormPage> {
 
     setState(() {
       _invoiceFileName = result.files.first.name;
+      _invoiceFilePath = result.files.first.path;
     });
   }
 
@@ -119,6 +121,7 @@ class _IncomingGoodsFormPageState extends ConsumerState<IncomingGoodsFormPage> {
 
     setState(() {
       _invoiceFileName = picked.name;
+      _invoiceFilePath = picked.path;
     });
   }
 
@@ -176,6 +179,7 @@ class _IncomingGoodsFormPageState extends ConsumerState<IncomingGoodsFormPage> {
       'supplier_id': _selectedSupplier!.id,
       'tanggal_terima': _selectedDate.toIso8601String(),
       'catatan': _noteController.text.trim(),
+      'foto_struk_path': _invoiceFilePath,
       'items': _items.map((item) => {
         'produk_id': item.selectedProduct!.id,
         'jumlah': int.parse(item.qtyController.text.replaceAll('.', '')),

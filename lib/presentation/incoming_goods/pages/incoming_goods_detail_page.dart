@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
+import 'package:mitrapos/core/constants/app_constants.dart';
 
 class IncomingGoodsDetailPage extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -14,6 +15,12 @@ class IncomingGoodsDetailPage extends StatelessWidget {
     final String status = data['status'] ?? 'Menunggu';
     final String supplierName = data['supplier']?['nama'] ?? 'Unknown';
     final String supplierPhone = data['supplier']?['no_telp'] ?? '-';
+    final String? fotoStrukPath = data['foto_struk'] as String?;
+    final String? fotoStrukUrl = (fotoStrukPath != null && fotoStrukPath.isNotEmpty)
+        ? (fotoStrukPath.startsWith('http')
+            ? fotoStrukPath
+            : '${AppConstants.baseUrl.replaceAll('/api', '/storage')}/$fotoStrukPath')
+        : null;
     final String dateStr = data['tanggal_terima'] ?? '';
     final String orderDateStr = data['tanggal_pesan'] ?? '';
     final String formattedDate = dateStr.isNotEmpty 
@@ -174,6 +181,36 @@ class IncomingGoodsDetailPage extends StatelessWidget {
               ],
             ),
           ),
+          
+          if (fotoStrukUrl != null) ...[
+            const SizedBox(height: 20),
+            Text('Foto Struk / Invoice', style: AppTypePairing.titleMd()),
+            const SizedBox(height: 8),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                fotoStrukUrl,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 150,
+                    width: double.infinity,
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.broken_image_outlined, color: Colors.grey),
+                  );
+                },
+              ),
+            ),
+          ],
           const SizedBox(height: 40),
         ],
       ),

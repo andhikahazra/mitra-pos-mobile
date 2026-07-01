@@ -17,7 +17,10 @@ class TransactionsRemoteDataSourceImpl implements TransactionsRemoteDataSource {
 
   @override
   Future<List<TransactionProductModel>> getProdukTransaksi() async {
-    final response = await _dioClient.get('/products');
+    final response = await _dioClient.get(
+      '/products',
+      queryParameters: {'per_page': 100},
+    );
     final List data = response.data['data']['data'];
     return data.map((item) => TransactionProductModel.fromJson(item)).toList();
   }

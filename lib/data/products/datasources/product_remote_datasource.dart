@@ -20,6 +20,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       'search': search,
       'kategori_id': kategoriId,
       'page': page,
+      'per_page': 100,
     }..removeWhere((key, value) => value == null);
 
     final response = await _dioClient.get(

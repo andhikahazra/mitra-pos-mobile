@@ -32,9 +32,21 @@ class ProductModel extends Product {
 
     // Handle dimensions
     final dimensi = json['dimensi'];
-    final panjang = dimensi != null ? double.parse(dimensi['panjang'].toString()) : 0.0;
-    final lebar = dimensi != null ? double.parse(dimensi['lebar'].toString()) : 0.0;
-    final tinggi = dimensi != null ? double.parse(dimensi['tinggi'].toString()) : 0.0;
+    final panjang = json['panjang'] != null 
+        ? double.parse(json['panjang'].toString())
+        : (dimensi != null && dimensi['panjang'] != null 
+            ? double.parse(dimensi['panjang'].toString()) 
+            : 0.0);
+    final lebar = json['lebar'] != null 
+        ? double.parse(json['lebar'].toString())
+        : (dimensi != null && dimensi['lebar'] != null 
+            ? double.parse(dimensi['lebar'].toString()) 
+            : 0.0);
+    final tinggi = json['tinggi'] != null 
+        ? double.parse(json['tinggi'].toString())
+        : (dimensi != null && dimensi['tinggi'] != null 
+            ? double.parse(dimensi['tinggi'].toString()) 
+            : 0.0);
 
     return ProductModel(
       id: json['id'], // Actual Database ID
