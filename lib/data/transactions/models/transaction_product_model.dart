@@ -1,4 +1,5 @@
 import 'package:mitrapos/domain/transactions/entities/transaction_product.dart';
+import 'package:mitrapos/core/constants/app_constants.dart';
 
 class TransactionProductModel extends TransactionProduct {
   const TransactionProductModel({
@@ -12,6 +13,13 @@ class TransactionProductModel extends TransactionProduct {
   });
 
   factory TransactionProductModel.fromJson(Map<String, dynamic> json) {
+    final fotoPath = json['foto'] as String?;
+    final imageUrl = (fotoPath != null && fotoPath.isNotEmpty)
+        ? (fotoPath.startsWith('http')
+            ? fotoPath
+            : '${AppConstants.baseUrl.replaceAll('/api', '/storage')}/$fotoPath')
+        : null;
+
     return TransactionProductModel(
       id: int.parse(json['id'].toString()), // Map to int
       sku: json['sku'] ?? '', // Map to sku
@@ -21,9 +29,7 @@ class TransactionProductModel extends TransactionProduct {
           : (json['kategori_nama'] ?? 'Umum'),
       harga: int.parse(json['harga']?.toString().split('.')[0] ?? '0'), 
       stok: int.parse(json['stok']?.toString().split('.')[0] ?? '0'),
-      imageUrl: (json['foto'] != null && (json['foto'] as List).isNotEmpty) 
-          ? json['foto'][0]['path'] 
-          : null,
+      imageUrl: imageUrl,
     );
   }
 }

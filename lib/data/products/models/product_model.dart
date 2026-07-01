@@ -1,4 +1,5 @@
 import 'package:mitrapos/domain/products/entities/product.dart';
+import 'package:mitrapos/core/constants/app_constants.dart';
 
 class ProductModel extends Product {
   const ProductModel({
@@ -22,8 +23,12 @@ class ProductModel extends Product {
     final categoryName = category != null ? category['nama'] : 'Umum';
 
     // Handle image
-    final photos = json['foto'] as List?;
-    final imageUrl = (photos != null && photos.isNotEmpty) ? photos[0]['path'] : null;
+    final fotoPath = json['foto'] as String?;
+    final imageUrl = (fotoPath != null && fotoPath.isNotEmpty)
+        ? (fotoPath.startsWith('http')
+            ? fotoPath
+            : '${AppConstants.baseUrl.replaceAll('/api', '/storage')}/$fotoPath')
+        : null;
 
     // Handle dimensions
     final dimensi = json['dimensi'];

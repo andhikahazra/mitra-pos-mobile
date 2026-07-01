@@ -35,6 +35,6 @@ class AppConstants {
   static const Duration animationSlow = Duration(milliseconds: 500);
 
   // API (Placeholder for future use)
-  static const String baseUrl = 'http://192.168.101.7:8000/api';
+  static const String baseUrl = 'https://mitrapos.tech/api';
   static const Duration apiTimeout = Duration(seconds: 30);
 }
