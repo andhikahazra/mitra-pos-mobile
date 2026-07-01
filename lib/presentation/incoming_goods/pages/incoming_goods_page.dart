@@ -34,9 +34,9 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
 
   Widget _incomingItemCard(Map<String, dynamic> item) {
     final supplierName = item['supplier']?['nama'] ?? 'Supplier Unknown';
-    final dateStr = item['tanggal_terima'] ?? '';
+    final dateStr = item['tanggal_terima'] ?? item['tanggal_pesan'] ?? '';
     final formattedDate = dateStr.isNotEmpty 
-        ? DateFormat('dd MMM yyyy').format(DateTime.parse(dateStr))
+        ? DateFormat('dd MMM yyyy').format(DateTime.parse(dateStr).toLocal())
         : '-';
     final status = item['status'] ?? 'Pending';
     final totalItems = (item['detail'] as List?)?.length ?? 0;

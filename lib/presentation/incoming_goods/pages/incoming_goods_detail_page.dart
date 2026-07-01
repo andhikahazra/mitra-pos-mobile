@@ -17,10 +17,10 @@ class IncomingGoodsDetailPage extends StatelessWidget {
     final String dateStr = data['tanggal_terima'] ?? '';
     final String orderDateStr = data['tanggal_pesan'] ?? '';
     final String formattedDate = dateStr.isNotEmpty 
-        ? DateFormat('dd MMM yyyy').format(DateTime.parse(dateStr))
+        ? DateFormat('dd MMM yyyy').format(DateTime.parse(dateStr).toLocal())
         : '-';
     final String formattedOrderDate = orderDateStr.isNotEmpty 
-        ? DateFormat('dd MMM yyyy').format(DateTime.parse(orderDateStr))
+        ? DateFormat('dd MMM yyyy').format(DateTime.parse(orderDateStr).toLocal())
         : '-';
     final String userInput = data['user']?['nama'] ?? '-';
     final List items = data['detail'] ?? [];

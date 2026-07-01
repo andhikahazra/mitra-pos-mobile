@@ -20,7 +20,7 @@ class HistoryTransactionModel extends HistoryTransaction {
     return HistoryTransactionModel(
       id: int.parse(json['id'].toString()),
       kode: json['kode'] ?? '',
-      tanggal: DateTime.parse(json['tanggal']),
+      tanggal: DateTime.parse(json['tanggal']).toLocal(),
       cashierName: json['user']?['nama'] ?? '-',
       metodePembayaran: json['metode_pembayaran'] ?? '',
       status: json['status'] ?? 'Selesai',
