@@ -137,6 +137,9 @@ class _TransactionsView extends ConsumerWidget {
           ref
               .read(transactionsControllerProvider.notifier)
               .add(const ResetTransactionStatus());
+          ref
+              .read(transactionsControllerProvider.notifier)
+              .add(const LoadProdukTransaksi());
         });
       } else if (next.errorMessage != null) {
         ScaffoldMessenger.of(
@@ -3223,8 +3226,11 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                       Expanded(
                         child: FilledButton.icon(
                           onPressed: () {
-                            Navigator.popUntil(
-                                context, (route) => route.isFirst);
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (_) => const HomePage()),
+                              (route) => false,
+                            );
                           },
                           icon: const Icon(Icons.home_outlined, size: 18),
                           label: const Text('Ke Home'),

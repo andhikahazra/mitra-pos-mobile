@@ -80,7 +80,11 @@ class TransactionsController extends StateNotifier<TransactionsState> {
   Future<void> _onLoadProdukTransaksi(
     LoadProdukTransaksi event,
   ) async {
-    state = state.copyWith(isLoading: true, clearError: true);
+    if (state.allProducts.isEmpty) {
+      state = state.copyWith(isLoading: true, clearError: true);
+    } else {
+      state = state.copyWith(clearError: true);
+    }
 
     final results = await Future.wait([
       getTransactionProducts(),
