@@ -1544,12 +1544,41 @@ class _KasirProductTileState extends State<_KasirProductTile> {
                       color: _posBlueSoft,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.inventory_2_outlined,
-                        size: 28,
-                        color: _posBlueDark,
-                      ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: widget.product.imageUrl != null && widget.product.imageUrl!.isNotEmpty
+                          ? Image.network(
+                              widget.product.imageUrl!,
+                              width: 56,
+                              height: 56,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return const Center(
+                                  child: SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) => const Center(
+                                child: Icon(
+                                  Icons.image_not_supported_outlined,
+                                  size: 24,
+                                  color: _posBlueDark,
+                                ),
+                              ),
+                            )
+                          : const Center(
+                              child: Icon(
+                                Icons.inventory_2_outlined,
+                                size: 24,
+                                color: _posBlueDark,
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -1793,16 +1822,42 @@ class _KasirProductGridCard extends StatelessWidget {
                               width: double.infinity,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: Container(
-                                  color: AppColors.surfaceContainerLow,
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.close_rounded,
-                                      size: 28,
-                                      color: AppColors.textTertiary,
-                                    ),
-                                  ),
-                                ),
+                                child: product.imageUrl != null && product.imageUrl!.isNotEmpty
+                                    ? Image.network(
+                                        product.imageUrl!,
+                                        fit: BoxFit.cover,
+                                        loadingBuilder: (context, child, loadingProgress) {
+                                          if (loadingProgress == null) return child;
+                                          return Container(
+                                            color: AppColors.surfaceContainerLow,
+                                            child: const Center(
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        errorBuilder: (context, error, stackTrace) => Container(
+                                          color: AppColors.surfaceContainerLow,
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.image_not_supported_outlined,
+                                              size: 28,
+                                              color: AppColors.textTertiary,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(
+                                        color: AppColors.surfaceContainerLow,
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.image_not_supported_outlined,
+                                            size: 28,
+                                            color: AppColors.textTertiary,
+                                          ),
+                                        ),
+                                      ),
                               ),
                             ),
                           ),
