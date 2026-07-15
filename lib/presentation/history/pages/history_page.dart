@@ -89,10 +89,14 @@ class HistoryPage extends ConsumerStatefulWidget {
 
 class _HistoryPageState extends ConsumerState<HistoryPage> {
   String _searchKeyword = '';
+  bool _onlySuccess = false;
 
   final List<String> _rangeLabels = const ['All', 'Hari', 'Minggu', 'Bulan'];
 
   bool _matchesSearch(HistoryTransaction entry) {
+    if (_onlySuccess && entry.status.toLowerCase() != 'selesai') {
+      return false;
+    }
     final keyword = _searchKeyword.trim().toLowerCase();
     if (keyword.isEmpty) return true;
 
@@ -136,55 +140,42 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
         backgroundColor: AppColors.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        titleSpacing: 20,
-        centerTitle: false,
-        title: Row(
-          children: [
-            Container(
-              width: 8,
-              height: 24,
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Riwayat',
-                    style: AppTypePairing.headlineLg(
-                      color: AppColors.textPrimary,
-                      weight: FontWeight.w900,
-                    ),
-                  ),
-                  Text(
-                    'Manajemen transaksi harian',
-                    style: AppTypePairing.bodySm(
-                      color: AppColors.textTertiary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.primaryFixed,
-                borderRadius: BorderRadius.circular(99),
-              ),
-              child: Text(
-                '${filteredEntries.length} Data',
-                style: AppTypePairing.labelSmCaps(
-                  color: AppColors.primary,
-                  weight: FontWeight.w800,
-                ),
-              ),
-            ),
-          ],
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color(0xFF000B60),
+          ),
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const HomePage()),
+              );
+            }
+          },
         ),
+        title: Text(
+          'Riwayat Transaksi',
+          style: AppTypePairing.headlineLg(
+            color: const Color(0xFF000B60),
+            weight: FontWeight.w800,
+          ),
+        ),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.more_vert_rounded,
+              color: Color(0xFF000B60),
+            ),
+            onPressed: () {
+              // Menu action
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       bottomNavigationBar: MitraPOSBottomNavBar(
         currentIndex: 3,
@@ -222,38 +213,28 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
                   child: Container(
                     height: 48,
                     decoration: BoxDecoration(
-                      color: AppColors.white,
+                      color: const Color(0xFFF4F7FB),
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.03),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
                     ),
                     child: TextField(
                       onChanged: (value) =>
                           setState(() => _searchKeyword = value),
                       decoration: InputDecoration(
-                        hintText: 'Cari invoice atau kasir...',
+                        hintText: 'Cari transaksi...',
                         hintStyle: AppTypePairing.bodySm(
-                          color: AppColors.textTertiary,
+                          color: const Color(0xFF9E9E9E),
                         ),
                         prefixIcon: const Icon(Icons.search_rounded,
-                            size: 22, color: AppColors.primary),
+                            size: 22, color: Color(0xFF757575)),
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 13),
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Material(
-                  color: AppColors.primary,
+                  color: const Color(0xFFF4F7FB),
                   borderRadius: BorderRadius.circular(14),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(14),
@@ -452,33 +433,104 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
                       height: 48,
                       alignment: Alignment.center,
                       child: const Icon(Icons.tune_rounded,
-                          color: AppColors.white, size: 22),
+                          color: Color(0xFF555555), size: 22),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
+          // Horizontal scrolling filter chips
+          SizedBox(
+            height: 38,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
-                _PremiumFilterChip(
-                  label: _rangeLabels[activeRangeIndex],
-                  icon: Icons.access_time_rounded,
+                _buildFilterChip(
+                  label: 'Semua',
+                  isSelected: state.activeRange.toLowerCase() == 'all' &&
+                      state.selectedDate == null &&
+                      !_onlySuccess,
+                  onTap: () {
+                    setState(() {
+                      _onlySuccess = false;
+                    });
+                    notifier.setRange('all');
+                    notifier.setDate(null);
+                  },
                 ),
-                if (state.selectedDate != null) ...[
-                  const SizedBox(width: 10),
-                  _PremiumFilterChip(
-                    label: _formatShortDate(state.selectedDate!),
-                    icon: Icons.calendar_today_rounded,
-                    onClear: () => notifier.setDate(null),
-                  ),
-                ],
+                const SizedBox(width: 8),
+                _buildFilterChip(
+                  label: 'Bulan Ini',
+                  isSelected: state.activeRange.toLowerCase() == 'bulan',
+                  onTap: () {
+                    if (state.activeRange.toLowerCase() == 'bulan') {
+                      notifier.setRange('all');
+                    } else {
+                      notifier.setRange('Bulan');
+                    }
+                  },
+                ),
+                const SizedBox(width: 8),
+                _buildFilterChip(
+                  label: 'Sukses',
+                  isSelected: _onlySuccess,
+                  onTap: () {
+                    setState(() {
+                      _onlySuccess = !_onlySuccess;
+                    });
+                  },
+                ),
+                const SizedBox(width: 8),
+                _buildFilterChip(
+                  label: state.selectedDate == null
+                      ? 'Pilih Tanggal...'
+                      : _formatShortDate(state.selectedDate!),
+                  icon: Icons.calendar_today_outlined,
+                  isSelected: state.selectedDate != null,
+                  onTap: () async {
+                    final now = DateTime.now();
+                    final picked = await showDatePicker(
+                      context: context,
+                      initialDate: state.selectedDate ?? now,
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime(now.year + 1, 12, 31),
+                    );
+                    if (picked != null) {
+                      notifier.setDate(DateTime(picked.year, picked.month, picked.day));
+                    }
+                  },
+                ),
               ],
             ),
           ),
           const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Container(
+                  width: 4,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF000B60),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Daftar Transaksi',
+                  style: TextStyle(
+                    color: const Color(0xFF000B60),
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
           Expanded(
             child: state.isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -517,52 +569,74 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
       ),
     );
   }
-}
 
-class _PremiumFilterChip extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final VoidCallback? onClear;
-
-  const _PremiumFilterChip({
-    required this.label,
-    required this.icon,
-    this.onClear,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.primaryFixed.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: AppColors.primary),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: AppTypePairing.bodySm(
-              color: AppColors.primary,
-              weight: FontWeight.w800,
-            ),
+  Widget _buildFilterChip({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+    IconData? icon,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color(0xFFE8F0FE)
+              : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected
+                ? const Color(0xFF000B60)
+                : const Color(0xFFDFE6E9),
+            width: 1,
           ),
-          if (onClear != null) ...[
-            const SizedBox(width: 6),
-            InkWell(
-              onTap: onClear,
-              child: const Icon(Icons.close_rounded, size: 14, color: AppColors.primary),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              Icon(
+                icon,
+                size: 14,
+                color: isSelected ? const Color(0xFF000B60) : const Color(0xFF636E72),
+              ),
+              const SizedBox(width: 6),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? const Color(0xFF000B60) : const Color(0xFF636E72),
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                fontSize: 13,
+              ),
             ),
           ],
-        ],
+        ),
       ),
     );
   }
+}
 
+class _DashedLinePainter extends CustomPainter {
+  final Color color;
+  _DashedLinePainter({this.color = const Color(0xFFDFE6E9)});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double dashWidth = 5, dashSpace = 3, startX = 0;
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1;
+    while (startX < size.width) {
+      canvas.drawLine(Offset(startX, 0), Offset(startX + dashWidth, 0), paint);
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
 class _HistoryListCard extends StatelessWidget {
@@ -574,21 +648,55 @@ class _HistoryListCard extends StatelessWidget {
     required this.onTap,
   });
 
+  IconData _getIconForTransaction(HistoryTransaction entry) {
+    final method = entry.metodePembayaran.toLowerCase();
+    final firstProduct = entry.details.isNotEmpty ? entry.details.first.productName.toLowerCase() : '';
+
+    if (method.contains('bank') || method.contains('transfer') || method.contains('bca') || method.contains('mandiri')) {
+      return Icons.account_balance_rounded;
+    }
+    if (method.contains('listrik') || method.contains('pln') || firstProduct.contains('listrik') || firstProduct.contains('pln')) {
+      return Icons.receipt_rounded;
+    }
+    if (method.contains('wallet') || method.contains('gopay') || method.contains('ovo') || method.contains('dana') || method.contains('linkaja') || firstProduct.contains('gopay') || firstProduct.contains('wallet')) {
+      return Icons.phone_android_rounded;
+    }
+    if (method.contains('qris') || method.contains('merchant') || firstProduct.contains('qris')) {
+      return Icons.shopping_bag_rounded;
+    }
+
+    return Icons.shopping_bag_rounded;
+  }
+
+  String _getTransactionDetailText(HistoryTransaction entry) {
+    if (entry.details.isEmpty) {
+      return '${entry.totalItems} Item';
+    }
+    final firstProduct = entry.details.first.productName;
+    final method = entry.metodePembayaran.toLowerCase();
+    if (method.contains('bank') || method.contains('transfer') || method.contains('tunai') || method.isEmpty) {
+      final unit = entry.totalItems == 1 ? 'Item' : 'Items';
+      return '${entry.totalItems} $unit • $firstProduct';
+    } else {
+      return firstProduct;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(14),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.08),
+          color: const Color(0xFFF0F3F8),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.03),
-            blurRadius: 6,
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
@@ -597,96 +705,105 @@ class _HistoryListCard extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            child: Row(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryFixed.withValues(alpha: 0.5),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(
-                    Icons.receipt_long_rounded,
-                    color: AppColors.primary,
-                    size: 18,
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 46,
+                      height: 46,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFE8F0FE),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _getIconForTransaction(entry),
+                        color: const Color(0xFF000B60),
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                entry.kode,
+                                style: const TextStyle(
+                                  color: Color(0xFF4955B3),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                _formatShortDateTime(entry.tanggal),
+                                style: const TextStyle(
+                                  color: Color(0xFF9E9E9E),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  entry.metodePembayaran,
+                                  style: const TextStyle(
+                                    color: Color(0xFF191C1D),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              _StatusBadge(status: entry.status),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _getTransactionDetailText(entry),
+                            style: const TextStyle(
+                              color: Color(0xFF757575),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              entry.kode,
-                              style: AppTypePairing.titleMd(
-                                weight: FontWeight.w800,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            _formatShortDateTime(entry.tanggal),
-                            style: AppTypePairing.bodySm(
-                              color: AppColors.textTertiary,
-                              weight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 2),
-                      Row(
-                        children: [
-                          Text(
-                            '${entry.totalItems} Items',
-                            style: AppTypePairing.bodySm(
-                              color: AppColors.textSecondary,
-                              weight: FontWeight.w700,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: Container(
-                              width: 2,
-                              height: 2,
-                              decoration: const BoxDecoration(
-                                color: AppColors.textTertiary,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            entry.metodePembayaran,
-                            style: AppTypePairing.bodySm(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _StatusBadge(status: entry.status),
-                          Text(
-                            CurrencyFormatter.format(entry.totalHarga,
-                                symbol: 'Rp'),
-                            style: AppTypePairing.titleMd(
-                              color: AppColors.primary,
-                              weight: FontWeight.w900,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                const SizedBox(height: 12),
+                CustomPaint(
+                  size: const Size(double.infinity, 1),
+                  painter: _DashedLinePainter(color: const Color(0xFFE5EAF2)),
+                ),
+                const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    CurrencyFormatter.format(entry.totalHarga, symbol: 'Rp'),
+                    style: const TextStyle(
+                      color: Color(0xFF191C1D),
+                      fontWeight: FontWeight.w900,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ],
@@ -698,28 +815,29 @@ class _HistoryListCard extends StatelessWidget {
   }
 }
 
-
-
 class _StatusBadge extends StatelessWidget {
   final String status;
   const _StatusBadge({required this.status});
 
   @override
   Widget build(BuildContext context) {
-    final isSelesai = status == 'Selesai';
+    final isSelesai = status.toLowerCase() == 'selesai';
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isSelesai
-            ? AppColors.successLight.withValues(alpha: 0.2)
-            : AppColors.errorLight.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(4),
+            ? const Color(0xFFE2F0D9)
+            : const Color(0xFFFCE8E6),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
         status.toUpperCase(),
-        style: AppTypePairing.labelSmCaps(
-          color: isSelesai ? AppColors.success : AppColors.error,
-          weight: FontWeight.w800,
+        style: TextStyle(
+          color: isSelesai
+              ? const Color(0xFF388E3C)
+              : const Color(0xFFC5221F),
+          fontWeight: FontWeight.bold,
+          fontSize: 10,
         ),
       ),
     );
