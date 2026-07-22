@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mitrapos/core/theme/app_colors.dart';
+import 'package:mitrapos/core/theme/app_text_styles.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/constants/app_constants.dart';
 
@@ -33,7 +34,6 @@ class IncomingGoodsDetailPage extends StatelessWidget {
     final List items = data['detail'] ?? [];
     final String catatan = data['catatan'] ?? '-';
 
-    // Calculate total
     double total = 0;
     for (var item in items) {
       final double price = double.tryParse(item['harga'].toString()) ?? 0;
@@ -43,148 +43,243 @@ class IncomingGoodsDetailPage extends StatelessWidget {
 
     Color statusColor = AppColors.warning;
     Color statusBgColor = AppColors.warningLight;
+    IconData statusIcon = Icons.schedule_rounded;
     if (status == 'Diterima' || status == 'Disetujui' || status == 'Selesai') {
       statusColor = AppColors.success;
       statusBgColor = AppColors.successLight;
+      statusIcon = Icons.check_circle_rounded;
     } else if (status == 'Ditolak') {
       statusColor = AppColors.error;
       statusBgColor = AppColors.errorLight;
+      statusIcon = Icons.cancel_rounded;
     }
 
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Detail Penerimaan'),
-        backgroundColor: AppColors.surface,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
+        centerTitle: false,
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [
-          // Header Card
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+          _DashboardCard(
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: statusBgColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(statusIcon, color: statusColor, size: 28),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        kode,
+                        style: AppTextStyles.headingSmall.copyWith(fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        formattedDate,
+                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: statusBgColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    status,
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: statusColor,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
             ),
+          ),
+          const SizedBox(height: 12),
+          _DashboardCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Informasi',
+                  style: AppTypePairing.titleMd(weight: FontWeight.w700),
+                ),
+                const SizedBox(height: 16),
+                _InfoRow(label: 'Supplier', value: supplierName),
+                const SizedBox(height: 12),
+                _InfoRow(label: 'Kontak', value: supplierPhone),
+                const SizedBox(height: 12),
+                _InfoRow(label: 'Tgl Pesan', value: formattedOrderDate),
+                const SizedBox(height: 12),
+                _InfoRow(label: 'Tgl Terima', value: formattedDate),
+                const SizedBox(height: 12),
+                _InfoRow(label: 'Input Oleh', value: userInput),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          _DashboardCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(kode, style: AppTypePairing.headlineLg(color: AppColors.textPrimary)),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: statusBgColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        status,
-                        style: AppTypePairing.labelSmCaps(color: statusColor),
-                      ),
+                    Text(
+                      'Daftar Produk',
+                      style: AppTypePairing.titleMd(weight: FontWeight.w700),
+                    ),
+                    Text(
+                      '${items.length} item',
+                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
                     ),
                   ],
                 ),
-                const Divider(height: 24),
-                _InfoRow(label: 'Supplier', value: supplierName),
-                _InfoRow(label: 'Kontak', value: supplierPhone),
-                _InfoRow(label: 'Tgl Pesan', value: formattedOrderDate),
-                _InfoRow(label: 'Tgl Terima', value: formattedDate),
-                _InfoRow(label: 'Input Oleh', value: userInput),
+                const SizedBox(height: 16),
+                if (items.isEmpty)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      child: Text(
+                        'Tidak ada produk',
+                        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+                      ),
+                    ),
+                  )
+                else ...[
+                  Row(
+                    children: [
+                      Expanded(flex: 3, child: Text('Produk', style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600))),
+                      Expanded(flex: 1, child: Text('Qty', textAlign: TextAlign.center, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600))),
+                      Expanded(flex: 2, child: Text('Harga', textAlign: TextAlign.right, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600))),
+                      Expanded(flex: 2, child: Text('Subtotal', textAlign: TextAlign.right, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600))),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  const Divider(height: 1, thickness: 0.5),
+                  const SizedBox(height: 8),
+                  ...items.map((item) {
+                    final product = item['produk'] ?? {};
+                    final String productName = product['nama'] ?? 'Product Deleted';
+                    final String sku = product['sku'] ?? '-';
+                    final int qty = int.tryParse(item['jumlah'].toString()) ?? 0;
+                    final double price = double.tryParse(item['harga'].toString()) ?? 0;
+                    final double subtotal = qty * price;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  productName,
+                                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  'SKU: $sku',
+                                  style: AppTextStyles.labelSmall.copyWith(color: AppColors.textTertiary),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              qty.toString(),
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              NumberFormat.currency(locale: 'id', symbol: '', decimalDigits: 0).format(price),
+                              textAlign: TextAlign.right,
+                              style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              NumberFormat.currency(locale: 'id', symbol: '', decimalDigits: 0).format(subtotal),
+                              textAlign: TextAlign.right,
+                              style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
               ],
             ),
           ),
-          const SizedBox(height: 20),
-          
-          Text('Daftar Produk', style: AppTypePairing.titleMd()),
-          const SizedBox(height: 10),
-          
-          // Items List
-          ...items.map((item) {
-            final product = item['produk'] ?? {};
-            final String productName = product['nama'] ?? 'Product Deleted';
-            final String sku = product['sku'] ?? '-';
-            final int qty = int.tryParse(item['jumlah'].toString()) ?? 0;
-            final double price = double.tryParse(item['harga'].toString()) ?? 0;
-            final double subtotal = qty * price;
-
-            return Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.border.withValues(alpha: 0.3)),
-              ),
-              child: Row(
+          const SizedBox(height: 16),
+          if (catatan != '-' && catatan.isNotEmpty) ...[
+            _DashboardCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(productName, style: AppTypePairing.valueMd(color: AppColors.textPrimary)),
-                        Text('SKU: $sku', style: AppTypePairing.labelSmCaps(color: Colors.grey)),
-                        const SizedBox(height: 4),
-                        Text(
-                          '$qty x ${NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(price)}',
-                          style: AppTypePairing.bodySm(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(subtotal),
-                    style: AppTypePairing.valueMd(color: AppColors.primary),
-                  ),
+                  Text('Catatan', style: AppTypePairing.titleMd(weight: FontWeight.w700)),
+                  const SizedBox(height: 12),
+                  Text(catatan, style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary)),
                 ],
               ),
-            );
-          }),
-
-          const SizedBox(height: 10),
-          
-          // Note Section
-          if (catatan != '-' && catatan.isNotEmpty) ...[
-            Text('Catatan', style: AppTypePairing.titleMd()),
-            const SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceContainer,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(catatan, style: AppTypePairing.bodySm()),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
           ],
-
-          // Summary Section
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.primaryFixed,
-              borderRadius: BorderRadius.circular(12),
+              gradient: AppColors.primaryGradient,
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('TOTAL PEMBAYARAN', style: AppTypePairing.valueMd(color: AppColors.primary)),
+                Text(
+                  'TOTAL PEMBAYARAN',
+                  style: AppTextStyles.labelLarge.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
                 Text(
                   NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(total),
-                  style: AppTypePairing.titleMd(color: AppColors.primary),
+                  style: AppTextStyles.headingMedium.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ],
             ),
           ),
-          
           if (fotoStrukUrl != null) ...[
             const SizedBox(height: 20),
-            Text('Foto Struk / Invoice', style: AppTypePairing.titleMd()),
+            Text('Foto Struk / Invoice', style: AppTypePairing.titleMd(weight: FontWeight.w700)),
             const SizedBox(height: 8),
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
@@ -218,6 +313,31 @@ class IncomingGoodsDetailPage extends StatelessWidget {
   }
 }
 
+class _DashboardCard extends StatelessWidget {
+  final Widget child;
+
+  const _DashboardCard({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadowLight,
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+}
+
 class _InfoRow extends StatelessWidget {
   final String label;
   final String value;
@@ -226,15 +346,25 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: AppTypePairing.bodySm(color: Colors.grey)),
-          Text(value, style: AppTypePairing.bodySm(weight: FontWeight.w600)),
-        ],
-      ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 90,
+          child: Text(
+            label,
+            style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+          ),
+        ),
+        Text(':', style: AppTextStyles.bodySmall),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value,
+            style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
     );
   }
 }
