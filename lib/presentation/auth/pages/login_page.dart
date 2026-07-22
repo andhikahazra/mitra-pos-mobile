@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_text_styles.dart';
+import 'package:mitrapos/core/widgets/skeleton.dart';
 import 'package:mitrapos/presentation/home/pages/home_page.dart';
 import 'package:mitrapos/presentation/auth/controller/auth_controller.dart';
 
@@ -164,10 +165,7 @@ class _LoginViewState extends ConsumerState<_LoginView> {
                           ? const SizedBox(
                               width: 18,
                               height: 18,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: AppColors.white,
-                              ),
+                              child: Skeleton(width: 18, height: 18, borderRadius: 9),
                             )
                           : Text(
                               'Masuk',

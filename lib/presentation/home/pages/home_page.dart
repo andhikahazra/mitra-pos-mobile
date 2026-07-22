@@ -11,6 +11,8 @@ import 'package:mitrapos/core/theme/app_text_styles.dart';
 import 'package:mitrapos/core/utils/currency_formatter.dart';
 import 'package:mitrapos/core/widgets/metric_tile.dart';
 import 'package:mitrapos/core/widgets/mitrapos_bottom_nav_bar.dart';
+import 'package:mitrapos/core/widgets/mitrapos_sidebar.dart';
+import 'package:mitrapos/core/widgets/skeleton.dart';
 import 'package:mitrapos/presentation/auth/controller/auth_controller.dart';
 import 'package:mitrapos/presentation/home/controller/home_controller.dart';
 import 'package:mitrapos/presentation/home/widgets/performance_chart.dart';
@@ -106,42 +108,23 @@ class _HomePageState extends ConsumerState<HomePage>
   @override
   Widget build(BuildContext context) {
     final homeState = ref.watch(homeControllerProvider);
+    final isTablet = MediaQuery.of(context).size.width >= 800;
 
-    return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
-      bottomNavigationBar: Navigator.canPop(context)
-          ? null
-          : MitraPOSBottomNavBar(
-              currentIndex: 0,
-              onTap: (index) {
-                if (index == 1) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const ProductsPage()),
-                  );
-                } else if (index == 2) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const TransactionsPage()),
-                  );
-                } else if (index == 3) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const HistoryPage()),
-                  );
-                } else if (index == 4) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const IncomingGoodsPage(),
-                    ),
-                  );
-                }
-              },
-            ),
-      body: Column(
+    void handleNav(int index) {
+      if (index == 1) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ProductsPage()));
+      } else if (index == 2) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TransactionsPage()));
+      } else if (index == 3) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HistoryPage()));
+      } else if (index == 4) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const IncomingGoodsPage()));
+      }
+    }
+
+    Widget homeBody() {
+      return Column(
         children: [
-          // User Profile Header
           Consumer(
             builder: (context, ref, child) {
               final authState = ref.watch(authControllerProvider);
@@ -151,27 +134,51 @@ class _HomePageState extends ConsumerState<HomePage>
                 email: user?.email ?? '...',
                 isPrinterConnected: _isPrinterConnected,
                 onProfileTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const ProfilePage()),
-                  );
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfilePage()));
                 },
               );
             },
           ),
-
           const SizedBox(height: AppConstants.paddingSM),
-
-
-
           const SizedBox(height: AppConstants.paddingMD),
-
-          // Views
-          Expanded(
-            child: _buildHomeTab(homeState),
-          ),
+          Expanded(child: _buildHomeTab(homeState)),
         ],
-      ),
+      );
+    }
+
+    if (isTablet) {
+      return Scaffold(
+        backgroundColor: AppColors.surfaceContainerLowest,
+        body: SafeArea(
+          child: Row(
+            children: [
+              MitraPOSSidebar(currentIndex: 0, onTap: handleNav),
+              Expanded(child: homeBody()),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: AppColors.surfaceContainerLowest,
+      bottomNavigationBar: Navigator.canPop(context)
+          ? null
+          : MitraPOSBottomNavBar(
+              currentIndex: 0,
+              onTap: (index) {
+                if (index == 1) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ProductsPage()));
+                } else if (index == 2) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TransactionsPage()));
+                } else if (index == 3) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HistoryPage()));
+                } else if (index == 4) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const IncomingGoodsPage()));
+                }
+              },
+            ),
+      body: homeBody(),
     );
   }
 
@@ -179,7 +186,7 @@ class _HomePageState extends ConsumerState<HomePage>
 
   Widget _buildHomeTab(HomeState state) {
     if (state is HomeLoading || state is HomeInitial) {
-      return const Center(child: CircularProgressIndicator());
+      return const HomeSkeleton();
     }
 
     if (state is HomeError) {

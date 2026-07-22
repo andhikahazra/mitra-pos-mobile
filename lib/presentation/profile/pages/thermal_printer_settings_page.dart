@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/theme/app_text_styles.dart';
+import 'package:mitrapos/core/widgets/skeleton.dart';
 
 class ThermalPrinterSettingsPage extends StatefulWidget {
   const ThermalPrinterSettingsPage({super.key});
@@ -552,7 +553,7 @@ class _ThermalPrinterSettingsPageState
             if (_isLoading)
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 40),
-                child: Center(child: CircularProgressIndicator()),
+                child: Center(child: Skeleton(height: 200, borderRadius: 12)),
               )
             else if (visibleDevices.isEmpty)
               _EmptyDeviceState(

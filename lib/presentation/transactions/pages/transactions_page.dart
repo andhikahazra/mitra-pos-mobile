@@ -20,6 +20,8 @@ import 'package:mitrapos/core/di/injection.dart';
 import 'package:mitrapos/presentation/transactions/controller/transactions_controller.dart';
 
 import 'package:mitrapos/core/widgets/mitrapos_bottom_nav_bar.dart';
+import 'package:mitrapos/core/widgets/mitrapos_sidebar.dart';
+import 'package:mitrapos/core/widgets/skeleton.dart';
 import 'package:mitrapos/presentation/incoming_goods/pages/incoming_goods_page.dart';
 import 'package:mitrapos/presentation/products/pages/products_page.dart';
 import 'package:mitrapos/presentation/history/pages/history_page.dart';
@@ -156,7 +158,7 @@ class _TransactionsView extends ConsumerWidget {
       body: Builder(
         builder: (context) {
           if (state.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const TransactionsSkeleton();
           }
 
           if (state.errorMessage != null) {
@@ -273,11 +275,17 @@ class _KasirMainScreenState extends ConsumerState<_KasirMainScreen> {
   @override
   Widget build(BuildContext context) {
     final state = widget.state;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth >= 800;
     final kategoriList = _kategori(state.allProducts);
     final totalItem = _totalItem(state);
     final totalHarga = _totalHarga(state);
     final hasCartItems = state.cartItems.isNotEmpty;
     final displayedProducts = state.visibleProducts;
+
+    if (isTablet) {
+      return _TabletTransactionLayout(state: state);
+    }
 
     return PopScope(
       canPop: false,
@@ -523,6 +531,505 @@ class _KasirMainScreenState extends ConsumerState<_KasirMainScreen> {
       total += p.harga * entry.value;
     }
     return total;
+  }
+}
+
+class _TabletTransactionLayout extends ConsumerStatefulWidget {
+  final TransactionsState state;
+  const _TabletTransactionLayout({required this.state});
+
+  @override
+  ConsumerState<_TabletTransactionLayout> createState() => _TabletTransactionLayoutState();
+}
+
+class _TabletTransactionLayoutState extends ConsumerState<_TabletTransactionLayout> {
+  bool _isGridView = true;
+  String? _metodePembayaran;
+  bool _applyAdminFee = true;
+  String? _selectedBank;
+  final TextEditingController _cashController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
+
+  @override
+  void dispose() {
+    _cashController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  int _parseNominal(String raw) {
+    final digits = raw.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.isEmpty) return 0;
+    return int.tryParse(digits) ?? 0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = widget.state;
+    final controller = ref.read(transactionsControllerProvider.notifier);
+    final kategoriList = _kategoriList(state.allProducts);
+    final displayedProducts = state.visibleProducts;
+    final cartEntries = state.cartItems.entries.toList();
+    final productMap = {for (final p in state.allProducts) p.id: p};
+
+    var subtotal = 0;
+    var jumlah = 0;
+    for (final entry in cartEntries) {
+      final p = productMap[entry.key];
+      if (p == null) continue;
+      subtotal += p.harga * entry.value;
+      jumlah += entry.value;
+    }
+
+    final total = _metodePembayaran == 'Internal' ? 0 : subtotal;
+    final isTunai = _metodePembayaran == 'Tunai';
+    final isInternal = _metodePembayaran == 'Internal';
+
+    int finalAdminFee = 0;
+    if (_metodePembayaran == 'QRIS' && _applyAdminFee) {
+      final dynamic rawAdminFee = state.appSettings?['biaya_admin_qris'];
+      finalAdminFee = double.tryParse(rawAdminFee?.toString() ?? '0')?.toInt() ?? 0;
+    }
+
+    final uangCustomer = _parseNominal(_cashController.text);
+    final kembalian = (uangCustomer - total - finalAdminFee).clamp(0, 1 << 30);
+    final isTunaiKurang = isTunai && uangCustomer < (total + finalAdminFee);
+    final metodeBelumDipilih = _metodePembayaran == null;
+    final isInternalTanpaCatatan = isInternal && _noteController.text.trim().isEmpty;
+    final List bankList = state.appSettings?['rekening_bank'] ?? [];
+
+    return Scaffold(
+      backgroundColor: AppColors.surfaceContainerLowest,
+      body: SafeArea(
+        child: Row(
+          children: [
+            MitraPOSSidebar(
+              currentIndex: 2,
+              onTap: (index) {
+                if (index == 0) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomePage()));
+                } else if (index == 1) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ProductsPage()));
+                } else if (index == 3) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HistoryPage()));
+                } else if (index == 4) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const IncomingGoodsPage()));
+                }
+              },
+            ),
+            Expanded(
+              flex: 6,
+              child: _buildProductPanel(state, controller, kategoriList, displayedProducts),
+            ),
+            Container(width: 1, color: AppColors.borderLight),
+            Expanded(
+              flex: 4,
+              child: _buildCartPanel(state, controller, cartEntries, productMap, subtotal, jumlah, total, finalAdminFee, uangCustomer, kembalian, isTunaiKurang, metodeBelumDipilih, isInternalTanpaCatatan, bankList, isTunai, isInternal, finalAdminFee, total),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<String> _kategoriList(List<TransactionProduct> products) {
+    final set = <String>{'Semua'};
+    for (final item in products) {
+      set.add(item.kategori);
+    }
+    return set.toList();
+  }
+
+  Widget _buildProductPanel(TransactionsState state, TransactionsController controller, List<String> kategoriList, List<TransactionProduct> displayedProducts) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+          child: Row(
+            children: [
+              Text('Produk', style: AppTypePairing.titleMd(color: _posBlueDark, weight: FontWeight.w800)),
+              const Spacer(),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceContainerLowest,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _ViewToggleButton(icon: Icons.view_list_rounded, selected: !_isGridView, onTap: () => setState(() => _isGridView = false)),
+                    _ViewToggleButton(icon: Icons.grid_view_rounded, selected: _isGridView, onTap: () => setState(() => _isGridView = true)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: _SearchKasir(onChanged: (value) => controller.add(CariProdukTransaksi(value))),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 32,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            itemBuilder: (context, index) {
+              final label = kategoriList[index];
+              final isSelected = label == state.selectedKategori;
+              return PeriodFilterChip(label: label, isSelected: isSelected, onTap: () => controller.add(FilterKategoriTransaksi(label)));
+            },
+            separatorBuilder: (context, index) => const SizedBox(width: 6),
+            itemCount: kategoriList.length,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Expanded(
+          child: displayedProducts.isEmpty
+              ? Center(child: Text('Produk tidak ditemukan', style: AppTextStyles.bodyMedium))
+              : _isGridView
+                  ? LayoutBuilder(
+                      builder: (context, constraints) {
+                        const hp = 20.0;
+                        const sp = 12.0;
+                        final aw = constraints.maxWidth - (hp * 2);
+                        final cac = aw >= 600 ? 4 : aw >= 440 ? 3 : 2;
+                        return GridView.builder(
+                          padding: const EdgeInsets.fromLTRB(hp, 0, hp, 20),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: cac, crossAxisSpacing: sp, mainAxisSpacing: sp, childAspectRatio: 0.82),
+                          itemCount: displayedProducts.length,
+                          itemBuilder: (context, index) {
+                            final p = displayedProducts[index];
+                            return _KasirProductGridCard(
+                              product: p, qty: state.cartItems[p.id] ?? 0, highlighted: state.cartItems.containsKey(p.id),
+                              onTambah: () => controller.add(TambahProdukKeranjang(p)),
+                              onTapProduct: () => _showQuantityInputDialog(product: p, currentQty: state.cartItems[p.id] ?? 0),
+                            );
+                          },
+                        );
+                      },
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      itemCount: displayedProducts.length,
+                      itemBuilder: (context, index) {
+                        final p = displayedProducts[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: _KasirProductTile(
+                            product: p,
+                            qty: state.cartItems[p.id] ?? 0,
+                            highlighted: state.cartItems.containsKey(p.id),
+                            onTambah: () => controller.add(TambahProdukKeranjang(p)),
+                            onKurang: () => controller.add(KurangProdukKeranjang(p.id)),
+                            onTapProduct: () => _showQuantityInputDialog(product: p, currentQty: state.cartItems[p.id] ?? 0),
+                          ),
+                        );
+                      },
+                    ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _showQuantityInputDialog({required TransactionProduct product, required int currentQty}) async {
+    final result = await showDialog<int>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.2),
+      builder: (_) => _QuantityInputDialog(product: product, initialQty: currentQty > 0 ? currentQty : 1),
+    );
+    if (!mounted || result == null) return;
+    final qty = result < 0 ? 0 : result;
+    ref.read(transactionsControllerProvider.notifier).add(SetQtyProdukKeranjang(productId: product.id, qty: qty));
+  }
+
+  Widget _buildCartPanel(
+    TransactionsState state, TransactionsController controller,
+    List<MapEntry<int, int>> cartEntries, Map<int, TransactionProduct> productMap,
+    int subtotal, int jumlah, int total, int finalAdminFee,
+    int uangCustomer, int kembalian, bool isTunaiKurang, bool metodeBelumDipilih,
+    bool isInternalTanpaCatatan, List bankList, bool isTunai, bool isInternal,
+    int totalHarga, int totalValue,
+  ) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+          child: Row(
+            children: [
+              Text('Ringkasan Order', style: AppTypePairing.titleMd(color: _posBlueDark, weight: FontWeight.w800)),
+              const Spacer(),
+              if (cartEntries.isNotEmpty)
+                TextButton.icon(
+                  onPressed: () => controller.add(const ResetKeranjang()),
+                  icon: const Icon(Icons.refresh_rounded, size: 14),
+                  label: const Text('Reset'),
+                  style: TextButton.styleFrom(foregroundColor: _posBlueDark, backgroundColor: _posBlueSoft, visualDensity: VisualDensity.compact, padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999))),
+                ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: cartEntries.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.shopping_cart_outlined, size: 48, color: AppColors.textTertiary.withValues(alpha: 0.4)),
+                      const SizedBox(height: 12),
+                      Text('Belum ada item', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary)),
+                      const SizedBox(height: 4),
+                      Text('Tap produk untuk menambahkan', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textTertiary)),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  itemCount: cartEntries.length,
+                  itemBuilder: (context, index) {
+                    final entry = cartEntries[index];
+                    final product = productMap[entry.key];
+                    if (product == null) return const SizedBox.shrink();
+                    return _buildTabletCartItem(product, entry.value, controller);
+                  },
+                ),
+        ),
+        if (cartEntries.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            child: Column(
+              children: [
+                _summaryRowHelper('Jumlah Item', '$jumlah item', false),
+                const SizedBox(height: 6),
+                _summaryRowHelper('Subtotal', CurrencyFormatter.format(subtotal, symbol: 'Rp'), false),
+                const SizedBox(height: 6),
+                _summaryRowHelper('Metode', _metodePembayaran ?? '-', false),
+                if (finalAdminFee > 0) ...[
+                  const SizedBox(height: 6),
+                  _summaryRowHelper('Biaya Admin', CurrencyFormatter.format(finalAdminFee, symbol: 'Rp'), false),
+                ],
+                const Divider(height: 20),
+                _summaryRowHelper('Total', CurrencyFormatter.format(total + finalAdminFee, symbol: 'Rp'), true),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() { _metodePembayaran = 'Tunai'; _selectedBank = null; _cashController.clear(); }),
+                        child: _paymentChip('Tunai', _metodePembayaran == 'Tunai'),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() { _metodePembayaran = 'QRIS'; _selectedBank = null; _cashController.clear(); }),
+                        child: _paymentChip('QRIS', _metodePembayaran == 'QRIS'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() { _metodePembayaran = 'Transfer'; _selectedBank = null; _cashController.clear(); }),
+                        child: _paymentChip('Transfer', _metodePembayaran == 'Transfer'),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() { _metodePembayaran = 'Piutang'; _selectedBank = null; _cashController.clear(); }),
+                        child: _paymentChip('Piutang', _metodePembayaran == 'Piutang'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          if (_metodePembayaran == 'QRIS' && finalAdminFee > 0)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+              child: Row(
+                children: [
+                  SizedBox(height: 20, width: 20, child: Checkbox(value: _applyAdminFee, activeColor: _posBlueDark, onChanged: (v) => setState(() => _applyAdminFee = v ?? false))),
+                  const SizedBox(width: 8),
+                  Text('Biaya Admin QRIS', style: AppTextStyles.labelSmall),
+                ],
+              ),
+            ),
+          if (_metodePembayaran == 'Transfer' && bankList.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+              child: Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: bankList.map((bank) {
+                  final String bankName = bank['bank'] ?? '-';
+                  final isSelected = _selectedBank == bankName;
+                  return ChoiceChip(label: Text(bankName), selected: isSelected, onSelected: (s) => setState(() => _selectedBank = s ? bankName : null), selectedColor: _posBlueSoft, labelStyle: AppTextStyles.labelSmall.copyWith(color: isSelected ? _posBlueDark : AppColors.textPrimary, fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500));
+                }).toList(),
+              ),
+            ),
+          if (isTunai)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+              child: TextField(
+                controller: _cashController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onChanged: (_) => setState(() {}),
+                decoration: InputDecoration(
+                  hintText: 'Uang Customer',
+                  hintStyle: AppTextStyles.labelLarge.copyWith(color: AppColors.textTertiary),
+                  prefixText: 'Rp ',
+                  prefixStyle: AppTextStyles.labelLarge.copyWith(color: _posBlueDark, fontWeight: FontWeight.w700),
+                  filled: true,
+                  fillColor: AppColors.surfaceContainerLowest,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.10))),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: _posBlueDark, width: 1.2)),
+                ),
+              ),
+            ),
+          if (metodeBelumDipilih)
+            Padding(
+              padding: const EdgeInsets.only(top: 6, left: 20),
+              child: Align(alignment: Alignment.centerLeft, child: Text('Pilih metode pembayaran', style: AppTextStyles.labelSmall.copyWith(color: AppColors.error, fontWeight: FontWeight.w700))),
+            ),
+          if (isInternalTanpaCatatan)
+            Padding(
+              padding: const EdgeInsets.only(top: 6, left: 20),
+              child: Align(alignment: Alignment.centerLeft, child: Text('Wajib isi catatan untuk Internal', style: AppTextStyles.labelSmall.copyWith(color: AppColors.error, fontWeight: FontWeight.w700))),
+            ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+            child: SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                style: FilledButton.styleFrom(backgroundColor: AppColors.indigoPrimary, foregroundColor: Colors.white, minimumSize: const Size.fromHeight(48), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)), elevation: 0),
+                onPressed: jumlah == 0 || metodeBelumDipilih || isTunaiKurang || isInternalTanpaCatatan || state.isSubmitting
+                    ? null
+                    : () {
+                        String finalMethod = _metodePembayaran!;
+                        if (_metodePembayaran == 'Transfer' && _selectedBank != null) finalMethod = 'Transfer $_selectedBank';
+                        controller.add(SubmitTransaksi(
+                          namaPelanggan: '', noHpPelanggan: null, metodePembayaran: finalMethod,
+                          biayaAdmin: finalAdminFee, uangCustomer: isTunai ? _parseNominal(_cashController.text) : 0,
+                          catatan: _noteController.text.trim(),
+                        ));
+                      },
+                child: state.isSubmitting
+                    ? const SizedBox(height: 20, width: 20, child: Skeleton(width: 20, height: 20, borderRadius: 10))
+                    : Text('KONFIRMASI TRANSAKSI', style: AppTextStyles.labelLarge.copyWith(color: Colors.white, fontWeight: FontWeight.w700)),
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _summaryRowHelper(String label, String value, bool isBold) {
+    final labelStyle = isBold
+        ? AppTextStyles.headingSmall.copyWith(fontWeight: FontWeight.w700)
+        : AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary);
+    final valueStyle = isBold
+        ? AppTextStyles.headingMedium.copyWith(fontWeight: FontWeight.w800, color: _posBlueDark)
+        : AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: labelStyle),
+        Text(value, style: valueStyle),
+      ],
+    );
+  }
+
+  Widget _paymentChip(String label, bool isSelected) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        gradient: isSelected ? AppColors.indigoActionGradient : null,
+        color: isSelected ? null : AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: isSelected ? AppColors.primary : AppColors.indigoSurfaceTint.withValues(alpha: 0.10)),
+      ),
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: AppTextStyles.labelSmall.copyWith(
+          color: isSelected ? Colors.white : AppColors.textSecondary,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabletCartItem(TransactionProduct product, int qty, TransactionsController controller) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(color: _posBlueSoft, borderRadius: BorderRadius.circular(8)),
+            child: Center(child: Icon(Icons.inventory_2_outlined, size: 20, color: _posBlueDark)),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(product.nama, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppTextStyles.labelLarge.copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
+                const SizedBox(height: 2),
+                Text('$qty x ${CurrencyFormatter.format(product.harga, symbol: 'Rp')}', style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary)),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: () => controller.add(KurangProdukKeranjang(product.id)),
+                child: Container(width: 28, height: 28, decoration: BoxDecoration(color: const Color(0xFFEF4444).withValues(alpha: 0.12), borderRadius: BorderRadius.circular(7)),
+                  child: const Icon(Icons.remove, size: 16, color: Color(0xFFEF4444)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text('$qty', style: AppTextStyles.labelLarge.copyWith(fontWeight: FontWeight.w700)),
+              ),
+              GestureDetector(
+                onTap: () => controller.add(TambahProdukKeranjang(product)),
+                child: Container(width: 28, height: 28, decoration: BoxDecoration(color: _posBlueDark.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(7)),
+                  child: const Icon(Icons.add, size: 16, color: _posBlueDark),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -1294,10 +1801,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                           ? const SizedBox(
                               height: 20,
                               width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
+                              child: Skeleton(width: 20, height: 20, borderRadius: 10),
                             )
                           : Text(
                               'KONFIRMASI TRANSAKSI',
@@ -1615,9 +2119,7 @@ class _KasirProductTileState extends State<_KasirProductTile> {
                                       child: SizedBox(
                                         width: 16,
                                         height: 16,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
+                                        child: Skeleton(width: 16, height: 16, borderRadius: 8),
                                       ),
                                     );
                                   },
@@ -1896,8 +2398,10 @@ class _KasirProductGridCard extends StatelessWidget {
                                                     .surfaceContainerLow,
                                                 child: const Center(
                                                   child:
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2,
+                                                      Skeleton(
+                                                        width: 16,
+                                                        height: 16,
+                                                        borderRadius: 8,
                                                       ),
                                                 ),
                                               );

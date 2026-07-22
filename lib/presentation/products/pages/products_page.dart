@@ -5,6 +5,8 @@ import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/theme/app_text_styles.dart';
 import 'package:mitrapos/core/widgets/indigo_filter_chip.dart';
 import 'package:mitrapos/core/widgets/mitrapos_bottom_nav_bar.dart';
+import 'package:mitrapos/core/widgets/mitrapos_sidebar.dart';
+import 'package:mitrapos/core/widgets/skeleton.dart';
 import 'package:mitrapos/domain/products/entities/product.dart';
 import 'package:mitrapos/presentation/home/pages/home_page.dart';
 import 'package:mitrapos/presentation/products/controller/product_controller.dart';
@@ -32,6 +34,117 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(productControllerProvider);
+    final isTablet = MediaQuery.of(context).size.width >= 800;
+
+    void handleNav(int index) {
+      if (index == 0) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomePage()));
+      } else if (index == 2) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TransactionsPage()));
+      } else if (index == 3) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HistoryPage()));
+      } else if (index == 4) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const IncomingGoodsPage()));
+      }
+    }
+
+    Widget body() {
+      if (state.isLoading && state.products.isEmpty) {
+        return const ProductsSkeleton();
+      }
+      if (state.errorMessage != null) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.error_outline, size: 46, color: AppColors.error),
+                const SizedBox(height: 12),
+                Text(state.errorMessage!, style: AppTextStyles.bodyMedium, textAlign: TextAlign.center),
+                const SizedBox(height: 12),
+                FilledButton(
+                  onPressed: () => ref.read(productControllerProvider.notifier).fetchProducts(),
+                  child: const Text('Coba Lagi'),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    onChanged: (value) => ref.read(productControllerProvider.notifier).updateSearch(value),
+                    decoration: InputDecoration(
+                      hintText: 'Cari nama produk atau SKU',
+                      hintStyle: AppTypePairing.bodySm(),
+                      prefixIcon: const Icon(Icons.search_rounded, size: 19),
+                      filled: true,
+                      fillColor: AppColors.surfaceContainerLowest,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: AppColors.indigoPrimary.withValues(alpha: 0.45)),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                _FilterButton(state: state),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () => ref.read(productControllerProvider.notifier).fetchProducts(),
+              child: state.products.isEmpty
+                  ? const SingleChildScrollView(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      child: SizedBox(height: 400, child: _EmptyProductsState()),
+                    )
+                  : ListView.separated(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: state.products.length,
+                      separatorBuilder: (context, index) => const SizedBox(height: 10),
+                      padding: const EdgeInsets.fromLTRB(16, 1, 16, 12),
+                      itemBuilder: (context, index) {
+                        final item = state.products[index];
+                        return InkWell(
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailPage(product: item))),
+                          child: _ListingTile(item: item),
+                        );
+                      },
+                    ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    if (isTablet) {
+      return Scaffold(
+        backgroundColor: AppColors.surfaceContainerLowest,
+        body: SafeArea(
+          child: Row(
+            children: [
+              MitraPOSSidebar(currentIndex: 1, onTap: handleNav),
+              Expanded(child: body()),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppColors.surfaceContainerLowest,
@@ -84,7 +197,7 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
       body: Builder(
         builder: (context) {
           if (state.isLoading && state.products.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+            return const ProductsSkeleton();
           }
 
           if (state.errorMessage != null) {

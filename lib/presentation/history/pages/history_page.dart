@@ -5,6 +5,8 @@ import 'package:mitrapos/core/theme/app_text_styles.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/utils/currency_formatter.dart';
 import 'package:mitrapos/core/widgets/mitrapos_bottom_nav_bar.dart';
+import 'package:mitrapos/core/widgets/mitrapos_sidebar.dart';
+import 'package:mitrapos/core/widgets/skeleton.dart';
 import 'package:mitrapos/presentation/history/controller/history_controller.dart';
 import 'package:mitrapos/domain/history/entities/history_transaction.dart';
 import 'package:mitrapos/presentation/home/pages/home_page.dart';
@@ -127,6 +129,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
   Widget build(BuildContext context) {
     final state = ref.watch(historyControllerProvider);
     final notifier = ref.read(historyControllerProvider.notifier);
+    final isTablet = MediaQuery.of(context).size.width >= 800;
 
     final filteredEntries = state.transactions.where(_matchesSearch).toList();
 
@@ -136,48 +139,20 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
     );
     if (activeRangeIndex == -1) activeRangeIndex = 0;
 
-    return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
-      appBar: AppBar(
-        backgroundColor: AppColors.surfaceContainerLowest,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          'Riwayat Transaksi',
-          style: AppTypePairing.titleMd(
-            color: const Color(0xFF000B60),
-            weight: FontWeight.w800,
-          ),
-        ),
-        centerTitle: false,
-      ),
-      bottomNavigationBar: MitraPOSBottomNavBar(
-        currentIndex: 3,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const HomePage()),
-            );
-          } else if (index == 1) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const ProductsPage()),
-            );
-          } else if (index == 2) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const TransactionsPage()),
-            );
-          } else if (index == 4) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const IncomingGoodsPage()),
-            );
-          }
-        },
-      ),
-      body: Column(
+    void handleNav(int index) {
+      if (index == 0) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomePage()));
+      } else if (index == 1) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ProductsPage()));
+      } else if (index == 2) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TransactionsPage()));
+      } else if (index == 4) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const IncomingGoodsPage()));
+      }
+    }
+
+    Widget historyBody() {
+      return Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 6, 20, 12),
@@ -274,7 +249,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
           const SizedBox(height: 8),
           Expanded(
             child: state.isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? const HistorySkeleton()
                 : state.errorMessage != null
                     ? Center(child: Text(state.errorMessage!))
                     : RefreshIndicator(
@@ -307,7 +282,53 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
                       ),
           ),
         ],
+      );
+  }
+
+    if (isTablet) {
+      return Scaffold(
+        backgroundColor: AppColors.surfaceContainerLowest,
+        body: SafeArea(
+          child: Row(
+            children: [
+              MitraPOSSidebar(currentIndex: 3, onTap: handleNav),
+              Expanded(child: historyBody()),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: AppColors.surfaceContainerLowest,
+      appBar: AppBar(
+        backgroundColor: AppColors.surfaceContainerLowest,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Riwayat Transaksi',
+          style: AppTypePairing.titleMd(
+            color: const Color(0xFF000B60),
+            weight: FontWeight.w800,
+          ),
+        ),
+        centerTitle: false,
       ),
+      bottomNavigationBar: MitraPOSBottomNavBar(
+        currentIndex: 3,
+onTap: (index) {
+                if (index == 0) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomePage()));
+                } else if (index == 1) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ProductsPage()));
+                } else if (index == 2) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TransactionsPage()));
+                } else if (index == 4) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const IncomingGoodsPage()));
+                }
+              },
+      ),
+      body: historyBody(),
     );
   }
 
@@ -1014,9 +1035,8 @@ class _ItemsCard extends StatelessWidget {
                     )),
               ],
             ),
-        ],
-      ),
-    );
+          ],
+        )); 
   }
 }
 

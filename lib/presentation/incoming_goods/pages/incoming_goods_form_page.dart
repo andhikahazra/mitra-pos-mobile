@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:mitrapos/core/widgets/skeleton.dart';
 import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/theme/app_text_styles.dart';
@@ -328,7 +329,7 @@ class _IncomingGoodsFormPageState extends ConsumerState<IncomingGoodsFormPage> {
             ),
           ),
           if (incomingState.isSubmitting)
-            const Center(child: CircularProgressIndicator()),
+            const Center(child: Skeleton(height: 48, borderRadius: 24)),
         ],
       ),
       bottomNavigationBar: _BottomSubmitBar(
@@ -813,7 +814,7 @@ class _BottomSubmitBar extends StatelessWidget {
                   ? const SizedBox(
                       width: 20, 
                       height: 20, 
-                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+                      child: Skeleton(width: 20, height: 20, borderRadius: 10)
                     ) 
                   : Text(
                       'Simpan Data',

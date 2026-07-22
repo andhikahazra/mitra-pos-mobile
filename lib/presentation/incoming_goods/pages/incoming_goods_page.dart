@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/widgets/mitrapos_bottom_nav_bar.dart';
+import 'package:mitrapos/core/widgets/mitrapos_sidebar.dart';
+import 'package:mitrapos/core/widgets/skeleton.dart';
 import 'package:mitrapos/presentation/home/pages/home_page.dart';
 import 'package:mitrapos/presentation/incoming_goods/bloc/incoming_goods_controller.dart';
 import 'package:mitrapos/presentation/incoming_goods/pages/incoming_goods_form_page.dart';
@@ -137,50 +139,22 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
   Widget build(BuildContext context) {
     final state = ref.watch(incomingGoodsControllerProvider);
     final incomingItems = state.incomingGoods;
+    final isTablet = MediaQuery.of(context).size.width >= 800;
 
-    return Scaffold(
-      backgroundColor: AppColors.surface,
-      appBar: AppBar(
-        backgroundColor: AppColors.surface,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Penerimaan Barang',
-          style: AppTypePairing.titleMd(
-            color: const Color(0xFF000B60),
-            weight: FontWeight.w800,
-          ),
-        ),
-        centerTitle: false,
-      ),
-      bottomNavigationBar: MitraPOSBottomNavBar(
-        currentIndex: 4,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const HomePage()),
-            );
-          } else if (index == 1) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const ProductsPage()),
-            );
-          } else if (index == 2) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const TransactionsPage()),
-            );
-          } else if (index == 3) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const HistoryPage()),
-            );
-          }
-        },
-      ),
-      body: RefreshIndicator(
+void handleNav(int index) {
+      if (index == 0) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomePage()));
+      } else if (index == 1) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ProductsPage()));
+      } else if (index == 2) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TransactionsPage()));
+      } else if (index == 3) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HistoryPage()));
+      }
+    }
+
+    Widget incomingBody() {
+      return RefreshIndicator(
         onRefresh: _onRefresh,
         color: AppColors.primary,
         child: ListView(
@@ -246,10 +220,10 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
             ),
             const SizedBox(height: 20),
             if (state.isLoading && incomingItems.isEmpty)
-              const Center(child: Padding(
+              const Padding(
                 padding: EdgeInsets.all(32.0),
-                child: CircularProgressIndicator(),
-              ))
+                child: IncomingGoodsSkeleton(),
+              )
             else if (incomingItems.isEmpty)
               Center(
                 child: Column(
@@ -280,7 +254,54 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
             ],
           ],
         ),
+      );
+  }
+
+    if (isTablet) {
+      return Scaffold(
+        backgroundColor: AppColors.surface,
+        body: SafeArea(
+          child: Row(
+            children: [
+              MitraPOSSidebar(currentIndex: 4, onTap: handleNav),
+              Expanded(child: incomingBody()),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: AppColors.surface,
+      appBar: AppBar(
+        backgroundColor: AppColors.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Penerimaan Barang',
+          style: AppTypePairing.titleMd(
+            color: const Color(0xFF000B60),
+            weight: FontWeight.w800,
+          ),
+        ),
+        centerTitle: false,
       ),
+      bottomNavigationBar: MitraPOSBottomNavBar(
+        currentIndex: 4,
+onTap: (index) {
+                if (index == 0) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomePage()));
+                } else if (index == 1) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ProductsPage()));
+                } else if (index == 2) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TransactionsPage()));
+                } else if (index == 3) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HistoryPage()));
+                }
+              },
+      ),
+      body: incomingBody(),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_text_styles.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
+import 'package:mitrapos/core/widgets/skeleton.dart';
 import 'package:mitrapos/core/constants/app_constants.dart';
 
 class IncomingGoodsDetailPage extends StatelessWidget {
@@ -291,7 +292,7 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                   return const Center(
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
-                      child: CircularProgressIndicator(),
+                      child: Skeleton(height: 200, borderRadius: 12),
                     ),
                   );
                 },
