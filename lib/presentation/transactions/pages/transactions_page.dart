@@ -612,10 +612,14 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: Text(
             'Tambah Pelanggan Baru',
-            style: AppTextStyles.headingSmall.copyWith(fontWeight: FontWeight.w700),
+            style: AppTextStyles.headingSmall.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -647,7 +651,9 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
               onPressed: () => Navigator.pop(context),
               child: Text(
                 'Batal',
-                style: AppTextStyles.labelLarge.copyWith(color: AppColors.textSecondary),
+                style: AppTextStyles.labelLarge.copyWith(
+                  color: AppColors.textSecondary,
+                ),
               ),
             ),
             FilledButton(
@@ -746,65 +752,92 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                             RawAutocomplete<Map<String, dynamic>>(
                               textEditingController: _buyerController,
                               focusNode: FocusNode(),
-                              optionsBuilder: (TextEditingValue textEditingValue) {
-                                if (textEditingValue.text.isEmpty) {
-                                  return const Iterable<Map<String, dynamic>>.empty();
-                                }
-                                return state.customerHistory.where((Map<String, dynamic> option) {
-                                  final name = (option['nama_pelanggan'] ?? '').toString().toLowerCase();
-                                  return name.contains(textEditingValue.text.toLowerCase());
-                                });
-                              },
-                              displayStringForOption: (Map<String, dynamic> option) => option['nama_pelanggan'] ?? '',
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                    if (textEditingValue.text.isEmpty) {
+                                      return const Iterable<
+                                        Map<String, dynamic>
+                                      >.empty();
+                                    }
+                                    return state.customerHistory.where((
+                                      Map<String, dynamic> option,
+                                    ) {
+                                      final name =
+                                          (option['nama_pelanggan'] ?? '')
+                                              .toString()
+                                              .toLowerCase();
+                                      return name.contains(
+                                        textEditingValue.text.toLowerCase(),
+                                      );
+                                    });
+                                  },
+                              displayStringForOption:
+                                  (Map<String, dynamic> option) =>
+                                      option['nama_pelanggan'] ?? '',
                               onSelected: (Map<String, dynamic> selection) {
-                                _waController.text = selection['no_hp_pelanggan'] ?? '';
+                                _waController.text =
+                                    selection['no_hp_pelanggan'] ?? '';
                                 setState(() {});
                               },
-                              fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-                                return TextField(
-                                  controller: controller,
-                                  focusNode: focusNode,
-                                  onChanged: (_) => setState(() {}),
-                                  decoration: InputDecoration(
-                                    hintText: 'Nama Pelanggan (Opsional)',
-                                    hintStyle: AppTextStyles.labelLarge.copyWith(
-                                      color: AppColors.textTertiary,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    suffixIcon: Icon(
-                                      Icons.person,
-                                      color: AppColors.textTertiary.withValues(
-                                        alpha: 0.9,
+                              fieldViewBuilder:
+                                  (
+                                    context,
+                                    controller,
+                                    focusNode,
+                                    onFieldSubmitted,
+                                  ) {
+                                    return TextField(
+                                      controller: controller,
+                                      focusNode: focusNode,
+                                      onChanged: (_) => setState(() {}),
+                                      decoration: InputDecoration(
+                                        hintText: 'Nama Pelanggan (Opsional)',
+                                        hintStyle: AppTextStyles.labelLarge
+                                            .copyWith(
+                                              color: AppColors.textTertiary,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                        suffixIcon: Icon(
+                                          Icons.person,
+                                          color: AppColors.textTertiary
+                                              .withValues(alpha: 0.9),
+                                          size: 22,
+                                        ),
+                                        filled: true,
+                                        fillColor:
+                                            AppColors.surfaceContainerLowest,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              horizontal: 14,
+                                              vertical: 10,
+                                            ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          borderSide: BorderSide(
+                                            color: AppColors.indigoSurfaceTint
+                                                .withValues(alpha: 0.10),
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          borderSide: const BorderSide(
+                                            color: _posBlueDark,
+                                            width: 1.2,
+                                          ),
+                                        ),
                                       ),
-                                      size: 22,
-                                    ),
-                                    filled: true,
-                                    fillColor: AppColors.surfaceContainerLowest,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 14,
-                                      vertical: 10,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(
-                                        color: AppColors.indigoSurfaceTint
-                                            .withValues(alpha: 0.10),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(
-                                        color: _posBlueDark,
-                                        width: 1.2,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
+                                    );
+                                  },
                               optionsViewBuilder: (context, onSelected, options) {
                                 return Align(
                                   alignment: Alignment.topLeft,
@@ -815,22 +848,31 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                                     child: ConstrainedBox(
                                       constraints: BoxConstraints(
                                         maxHeight: 250,
-                                        maxWidth: MediaQuery.of(context).size.width - 32,
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width -
+                                            32,
                                       ),
                                       child: ListView.builder(
-                                        padding: const EdgeInsets.symmetric(vertical: 8),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                        ),
                                         shrinkWrap: true,
                                         itemCount: options.length + 1,
                                         itemBuilder: (context, index) {
                                           if (index == options.length) {
                                             return ListTile(
-                                              leading: const Icon(Icons.add_circle_outline, color: _posBlueDark),
+                                              leading: const Icon(
+                                                Icons.add_circle_outline,
+                                                color: _posBlueDark,
+                                              ),
                                               title: Text(
                                                 'Tambah Pelanggan Baru...',
-                                                style: AppTextStyles.bodyMedium.copyWith(
-                                                  color: _posBlueDark,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
+                                                style: AppTextStyles.bodyMedium
+                                                    .copyWith(
+                                                      color: _posBlueDark,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
                                               ),
                                               onTap: () {
                                                 // Call dialog directly without submitting the autocomplete text
@@ -839,12 +881,22 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                                             );
                                           }
 
-                                          final option = options.elementAt(index);
-                                          final name = option['nama_pelanggan'] ?? '';
-                                          final noHp = option['no_hp_pelanggan'] ?? '-';
+                                          final option = options.elementAt(
+                                            index,
+                                          );
+                                          final name =
+                                              option['nama_pelanggan'] ?? '';
+                                          final noHp =
+                                              option['no_hp_pelanggan'] ?? '-';
                                           return ListTile(
-                                            title: Text(name, style: AppTextStyles.bodyMedium),
-                                            subtitle: Text(noHp, style: AppTextStyles.bodySmall),
+                                            title: Text(
+                                              name,
+                                              style: AppTextStyles.bodyMedium,
+                                            ),
+                                            subtitle: Text(
+                                              noHp,
+                                              style: AppTextStyles.bodySmall,
+                                            ),
                                             onTap: () {
                                               onSelected(option);
                                             },
@@ -1205,13 +1257,14 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                         ),
                         elevation: 0,
                       ),
-                        onPressed: jumlah == 0 ||
-                                metodeBelumDipilih ||
-                                isTunaiKurang ||
-                                isInternalTanpaCatatan ||
-                                state.isSubmitting
-                            ? null
-                            : () {
+                      onPressed:
+                          jumlah == 0 ||
+                              metodeBelumDipilih ||
+                              isTunaiKurang ||
+                              isInternalTanpaCatatan ||
+                              state.isSubmitting
+                          ? null
+                          : () {
                               String finalMethod = _metodePembayaran!;
                               if (_metodePembayaran == 'Transfer' &&
                                   _selectedBank != null) {
@@ -1224,8 +1277,9 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                                     SubmitTransaksi(
                                       namaPelanggan: _buyerController.text
                                           .trim(),
-                                      noHpPelanggan: _waController.text.trim().isEmpty 
-                                          ? null 
+                                      noHpPelanggan:
+                                          _waController.text.trim().isEmpty
+                                          ? null
                                           : _waController.text.trim(),
                                       metodePembayaran: finalMethod,
                                       biayaAdmin: finalAdminFee,
@@ -1245,8 +1299,8 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                                 color: Colors.white,
                               ),
                             )
-                            : Text(
-                                'KONFIRMASI TRANSAKSI',
+                          : Text(
+                              'KONFIRMASI TRANSAKSI',
                               style: AppTextStyles.labelLarge.copyWith(
                                 color: AppColors.white,
                                 fontWeight: FontWeight.w700,
@@ -1546,31 +1600,35 @@ class _KasirProductTileState extends State<_KasirProductTile> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: widget.product.imageUrl != null && widget.product.imageUrl!.isNotEmpty
+                      child:
+                          widget.product.imageUrl != null &&
+                              widget.product.imageUrl!.isNotEmpty
                           ? Image.network(
                               widget.product.imageUrl!,
                               width: 56,
                               height: 56,
                               fit: BoxFit.cover,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return const Center(
-                                  child: SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return const Center(
+                                      child: SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Center(
+                                    child: Icon(
+                                      Icons.image_not_supported_outlined,
+                                      size: 24,
+                                      color: _posBlueDark,
                                     ),
                                   ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) => const Center(
-                                child: Icon(
-                                  Icons.image_not_supported_outlined,
-                                  size: 24,
-                                  color: _posBlueDark,
-                                ),
-                              ),
                             )
                           : const Center(
                               child: Icon(
@@ -1822,31 +1880,45 @@ class _KasirProductGridCard extends StatelessWidget {
                               width: double.infinity,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: product.imageUrl != null && product.imageUrl!.isNotEmpty
+                                child:
+                                    product.imageUrl != null &&
+                                        product.imageUrl!.isNotEmpty
                                     ? Image.network(
                                         product.imageUrl!,
                                         fit: BoxFit.cover,
-                                        loadingBuilder: (context, child, loadingProgress) {
-                                          if (loadingProgress == null) return child;
-                                          return Container(
-                                            color: AppColors.surfaceContainerLow,
-                                            child: const Center(
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return Container(
+                                                color: AppColors
+                                                    .surfaceContainerLow,
+                                                child: const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                      ),
+                                                ),
+                                              );
+                                            },
+                                        errorBuilder:
+                                            (
+                                              context,
+                                              error,
+                                              stackTrace,
+                                            ) => Container(
+                                              color:
+                                                  AppColors.surfaceContainerLow,
+                                              child: const Center(
+                                                child: Icon(
+                                                  Icons
+                                                      .image_not_supported_outlined,
+                                                  size: 28,
+                                                  color: AppColors.textTertiary,
+                                                ),
                                               ),
                                             ),
-                                          );
-                                        },
-                                        errorBuilder: (context, error, stackTrace) => Container(
-                                          color: AppColors.surfaceContainerLow,
-                                          child: const Center(
-                                            child: Icon(
-                                              Icons.image_not_supported_outlined,
-                                              size: 28,
-                                              color: AppColors.textTertiary,
-                                            ),
-                                          ),
-                                        ),
                                       )
                                     : Container(
                                         color: AppColors.surfaceContainerLow,
@@ -3283,7 +3355,9 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                           onPressed: () {
                             Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(builder: (_) => const HomePage()),
+                              MaterialPageRoute(
+                                builder: (_) => const HomePage(),
+                              ),
                               (route) => false,
                             );
                           },
@@ -3309,13 +3383,20 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                         child: FilledButton.icon(
                           onPressed: () {
                             Navigator.popUntil(
-                                context, (route) => route.isFirst);
+                              context,
+                              (route) => route.isFirst,
+                            );
                           },
                           icon: const Icon(Icons.add_circle_outline, size: 18),
                           label: const Text('Penjualan Baru'),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size.fromHeight(44),
-                            backgroundColor: const Color(0xFFF3F4F7),
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              255,
+                              255,
+                              255,
+                            ),
                             side: BorderSide(
                               color: AppColors.indigoSurfaceTint.withValues(
                                 alpha: 0.22,

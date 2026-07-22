@@ -17,7 +17,7 @@ class HistoryState {
     this.isLoading = false,
     this.transactions = const [],
     this.errorMessage,
-    this.activeRange = 'all',
+    this.activeRange = 'hari',
     this.selectedDate,
   });
 
@@ -59,12 +59,32 @@ class HistoryController extends StateNotifier<HistoryState> {
   }
 
   void setRange(String range) {
-    state = state.copyWith(activeRange: range);
+    state = HistoryState(
+      isLoading: state.isLoading,
+      transactions: state.transactions,
+      errorMessage: state.errorMessage,
+      activeRange: range,
+    );
     loadHistory();
   }
 
   void setDate(DateTime? date) {
-    state = state.copyWith(selectedDate: date);
+    if (date != null) {
+      state = HistoryState(
+        isLoading: state.isLoading,
+        transactions: state.transactions,
+        errorMessage: state.errorMessage,
+        activeRange: 'all',
+        selectedDate: date,
+      );
+    } else {
+      state = HistoryState(
+        isLoading: state.isLoading,
+        transactions: state.transactions,
+        errorMessage: state.errorMessage,
+        activeRange: state.activeRange,
+      );
+    }
     loadHistory();
   }
 

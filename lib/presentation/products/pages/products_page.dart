@@ -40,48 +40,14 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: false,
-        titleSpacing: 18,
-        title: Row(
-          children: [
-            Container(
-              width: 10,
-              height: 10,
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(999),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Produk',
-                    style: AppTypePairing.headlineLg(color: AppColors.primary),
-                  ),
-                  Text(
-                    'Kelola katalog dan stok',
-                    style: AppTypePairing.bodySm(),
-                  ),
-                ],
-              ),
-            ),
-            if (!state.isLoading)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryFixed,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  '${state.products.length} item',
-                  style: AppTypePairing.labelSmCaps(color: AppColors.primary),
-                ),
-              ),
-          ],
+        title: Text(
+          'Produk',
+          style: AppTypePairing.titleMd(
+            color: const Color(0xFF000B60),
+            weight: FontWeight.w800,
+          ),
         ),
+        centerTitle: false,
       ),
       bottomNavigationBar: Navigator.canPop(context)
           ? null
@@ -152,18 +118,6 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
 
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
-                child: _ProductsMetaBar(
-                  visibleItems: state.products.length,
-                  activeFilter: state.categoryFilter == null 
-                      ? 'Semua' 
-                      : (state.categories.any((c) => c.id == state.categoryFilter)
-                          ? state.categories.firstWhere((c) => c.id == state.categoryFilter).name
-                          : 'Kategori ${state.categoryFilter}'),
-                ),
-              ),
-              const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: Row(
@@ -577,57 +531,4 @@ class _EmptyProductsState extends StatelessWidget {
   }
 }
 
-class _ProductsMetaBar extends StatelessWidget {
-  final int visibleItems;
-  final String activeFilter;
 
-  const _ProductsMetaBar({
-    required this.visibleItems,
-    required this.activeFilter,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(11),
-        border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.1),
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.inventory_2_outlined,
-            size: 14,
-            color: AppColors.textSecondary,
-          ),
-          const SizedBox(width: 6),
-          Text(
-            '$visibleItems produk',
-            style: AppTypePairing.bodySm(
-              color: AppColors.textSecondary,
-              weight: FontWeight.w600,
-            ),
-          ),
-          const Spacer(),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColors.indigoSurfaceTint.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            child: Text(
-              'Filter: $activeFilter',
-              style: AppTypePairing.labelSmCaps(
-                color: AppColors.indigoPrimary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

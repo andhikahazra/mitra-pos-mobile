@@ -144,36 +144,15 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
         backgroundColor: AppColors.surface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        titleSpacing: 18,
-        title: Row(
-          children: [
-            Container(
-              width: 10,
-              height: 10,
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(999),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Penerimaan Barang',
-                    style: AppTypePairing.headlineLg(color: AppColors.primary),
-                  ),
-                  Text(
-                    'Pantau barang masuk dari supplier',
-                    style: AppTypePairing.bodySm(),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Penerimaan Barang',
+          style: AppTypePairing.titleMd(
+            color: const Color(0xFF000B60),
+            weight: FontWeight.w800,
+          ),
         ),
+        centerTitle: false,
       ),
       bottomNavigationBar: MitraPOSBottomNavBar(
         currentIndex: 4,
