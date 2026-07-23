@@ -55,6 +55,7 @@ class AppColors {
   // Border Colors
   static const Color border = Color(0xFFC8CEDA);
   static const Color borderLight = Color(0xFFF0F3F8);
+  static const Color divider = Color(0xFFEAECF0);
   
   // Shadow Colors
   static const Color shadow = Color(0x1A000000);

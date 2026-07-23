@@ -19,6 +19,7 @@ import 'package:mitrapos/core/network/dio_client.dart';
 import 'package:mitrapos/core/di/injection.dart';
 import 'package:mitrapos/presentation/transactions/controller/transactions_controller.dart';
 
+import 'package:mitrapos/core/widgets/order_summary_widget.dart';
 import 'package:mitrapos/core/widgets/mitrapos_bottom_nav_bar.dart';
 import 'package:mitrapos/core/widgets/mitrapos_sidebar.dart';
 import 'package:mitrapos/core/widgets/skeleton.dart';
@@ -785,36 +786,30 @@ class _TabletTransactionLayoutState extends ConsumerState<_TabletTransactionLayo
                     ],
                   ),
                 )
-              : ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: cartEntries.length,
-                  itemBuilder: (context, index) {
-                    final entry = cartEntries[index];
+              : OrderSummaryWidget(
+                  title: 'Ringkasan Order',
+                  items: cartEntries.map((entry) {
                     final product = productMap[entry.key];
-                    if (product == null) return const SizedBox.shrink();
-                    return _buildTabletCartItem(product, entry.value, controller);
-                  },
+                    if (product == null) return null;
+                    return OrderSummaryItem(
+                      name: product.nama,
+                      quantity: entry.value,
+                      unitPrice: product.harga,
+                      lineTotal: product.harga * entry.value,
+                      imageUrl: product.imageUrl,
+                      onIncrement: () => controller.add(TambahProdukKeranjang(product)),
+                      onDecrement: () => controller.add(KurangProdukKeranjang(product.id)),
+                    );
+                  }).whereType<OrderSummaryItem>().toList(),
+                  subTotal: subtotal,
+                  tax: 0,
+                  discount: 0,
+                  total: total + finalAdminFee,
+                  adminFee: finalAdminFee,
+                  itemCount: jumlah,
                 ),
         ),
         if (cartEntries.isNotEmpty) ...[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child: Column(
-              children: [
-                _summaryRowHelper('Jumlah Item', '$jumlah item', false),
-                const SizedBox(height: 6),
-                _summaryRowHelper('Subtotal', CurrencyFormatter.format(subtotal, symbol: 'Rp'), false),
-                const SizedBox(height: 6),
-                _summaryRowHelper('Metode', _metodePembayaran ?? '-', false),
-                if (finalAdminFee > 0) ...[
-                  const SizedBox(height: 6),
-                  _summaryRowHelper('Biaya Admin', CurrencyFormatter.format(finalAdminFee, symbol: 'Rp'), false),
-                ],
-                const Divider(height: 20),
-                _summaryRowHelper('Total', CurrencyFormatter.format(total + finalAdminFee, symbol: 'Rp'), true),
-              ],
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
             child: Column(
@@ -937,23 +932,6 @@ class _TabletTransactionLayoutState extends ConsumerState<_TabletTransactionLayo
             ),
           ),
         ],
-      ],
-    );
-  }
-
-  Widget _summaryRowHelper(String label, String value, bool isBold) {
-    final labelStyle = isBold
-        ? AppTextStyles.headingSmall.copyWith(fontWeight: FontWeight.w700)
-        : AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary);
-    final valueStyle = isBold
-        ? AppTextStyles.headingMedium.copyWith(fontWeight: FontWeight.w800, color: _posBlueDark)
-        : AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600);
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label, style: labelStyle),
-        Text(value, style: valueStyle),
       ],
     );
   }

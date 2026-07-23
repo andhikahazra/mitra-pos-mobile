@@ -38,41 +38,42 @@ class _MitraPOSSidebarState extends State<MitraPOSSidebar> {
   Widget build(BuildContext context) {
     return Container(
       width: 72,
-      color: Colors.white,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          right: BorderSide(color: AppColors.divider, width: 1),
+        ),
+      ),
       child: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Column(
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.indigoPrimary,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.receipt_long_rounded,
-                      size: 22,
-                      color: Colors.white,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      'assets/branding/app_icon_blue_m.png',
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Text(
                     'MITRA POS',
                     style: AppTypePairing.labelSmCaps(
-                      color: AppColors.textSecondary,
-                      weight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                      weight: FontWeight.w800,
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
             ...List.generate(MitraPOSSidebar.items.length, (index) {
               final item = MitraPOSSidebar.items[index];
               final selected = index == widget.currentIndex;
