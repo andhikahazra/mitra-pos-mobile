@@ -10,6 +10,8 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLowStock = product.stock <= 10;
+
     return Scaffold(
       backgroundColor: AppColors.surfaceContainerLowest,
       appBar: AppBar(
@@ -22,158 +24,204 @@ class ProductDetailPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: 10,
-              height: 10,
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(999),
-              ),
-            ),
-            const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Detail Produk',
-                  style: AppTypePairing.headlineLg(color: AppColors.primary),
-                ),
-                Text(
-                  'Informasi lengkap katalog',
-                  style: AppTypePairing.bodySm(),
-                ),
+                Text('Detail Produk', style: AppTypePairing.headlineLg(color: AppColors.primary)),
+                Text('Informasi lengkap katalog', style: AppTypePairing.bodySm()),
               ],
             ),
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 1. Product Preview Card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.1)),
-              ),
-              child: Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      width: double.infinity,
-                      height: 240,
-                      color: AppColors.surfaceContainerLow,
-                      child: product.imageUrl != null
-                          ? Image.network(
-                              product.imageUrl!,
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) => _placeholderIcon(),
-                            )
-                          : _placeholderIcon(),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _Badge(
-                        label: product.categoryName,
-                        color: AppColors.primary,
-                        isLight: true,
-                      ),
-                      _Badge(
-                        label: product.status ? 'AKTIF' : 'NON-AKTIF',
-                        color: product.status ? AppColors.success : AppColors.error,
-                        isLight: true,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 20),
-
-            // 2. Core Information
-            Text(
-              product.name,
-              style: AppTypePairing.headlineLg(color: AppColors.textPrimary).copyWith(fontSize: 22),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'SKU: ${product.sku.toUpperCase()}',
-              style: AppTypePairing.bodySm(color: AppColors.textSecondary, weight: FontWeight.w600),
-            ),
-
-            const SizedBox(height: 24),
-
-            // 3. Price & Stock Row
-            Row(
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: _InfoBox(
-                    label: 'Harga Jual',
-                    value: 'Rp ${_formatRupiah(product.price)}',
-                    color: AppColors.primary,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _InfoBox(
-                    label: 'Stok Tersedia',
-                    value: '${product.stock} Unit',
-                    color: product.stock <= 10 ? AppColors.error : AppColors.primary,
-                  ),
-                ),
+                _HeroImage(product),
+                const SizedBox(height: 20),
+                _HeaderInfo(product, isLowStock),
+                const SizedBox(height: 24),
+                _PriceStockRow(product, isLowStock),
+                const SizedBox(height: 24),
+                _SpecsCard(product),
+                const SizedBox(height: 40),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-            const SizedBox(height: 24),
+class _HeroImage extends StatelessWidget {
+  final Product product;
+  const _HeroImage(this.product);
 
-            // 4. Specifications Card
-            Text('Spesifikasi Produk', style: AppTypePairing.titleMd()),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.1)),
-              ),
-              child: Column(
-                children: [
-                  _SpecRow(label: 'Panjang', value: '${product.panjangCm} cm'),
-                  _Divider(),
-                  _SpecRow(label: 'Lebar', value: '${product.lebarCm} cm'),
-                  _Divider(),
-                  _SpecRow(label: 'Tinggi', value: '${product.tinggiCm} cm'),
-                  _Divider(),
-                  _SpecRow(
-                    label: 'Volume (Berat)', 
-                    value: '${(product.volumeCm3 / 6000).toStringAsFixed(2)} kg',
-                    isBold: true,
-                  ),
-                ],
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        border: Border(
+          bottom: BorderSide(color: AppColors.borderLight, width: 1),
+        ),
+      ),
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                color: AppColors.surfaceContainerLow,
+                child: product.imageUrl != null
+                    ? Image.network(
+                        product.imageUrl!,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) => _placeholderIcon(),
+                      )
+                    : _placeholderIcon(),
               ),
             ),
-            
-            const SizedBox(height: 40),
-          ],
-        ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _Badge(
+                label: product.categoryName,
+                color: AppColors.primary,
+                isLight: true,
+              ),
+              _Badge(
+                label: product.status ? 'AKTIF' : 'NON-AKTIF',
+                color: product.status ? AppColors.success : AppColors.error,
+                isLight: true,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
   Widget _placeholderIcon() {
     return const Icon(Icons.image_not_supported_outlined, size: 48, color: AppColors.textTertiary);
+  }
+}
+
+class _HeaderInfo extends StatelessWidget {
+  final Product product;
+  final bool isLowStock;
+  const _HeaderInfo(this.product, this.isLowStock);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.name,
+                      style: AppTypePairing.headlineLg(color: AppColors.textPrimary).copyWith(fontSize: 22),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'SKU: ${product.sku.toUpperCase()}',
+                      style: AppTypePairing.bodySm(color: AppColors.textSecondary, weight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ),
+              if (isLowStock)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.errorLight,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.warning_amber_rounded, size: 12, color: AppColors.error),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Stok Rendah',
+                        style: AppTypePairing.labelSmCaps(color: AppColors.error),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          if (product.brand.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                const Icon(Icons.label_outline, size: 14, color: AppColors.textTertiary),
+                const SizedBox(width: 6),
+                Text(
+                  'Merek: ${product.brand}',
+                  style: AppTypePairing.bodySm(color: AppColors.textSecondary),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _PriceStockRow extends StatelessWidget {
+  final Product product;
+  final bool isLowStock;
+  const _PriceStockRow(this.product, this.isLowStock);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Row(
+        children: [
+          Expanded(
+            child: _InfoBox(
+              label: 'Harga Jual',
+              value: 'Rp ${_formatRupiah(product.price)}',
+              color: AppColors.primary,
+              icon: Icons.attach_money_rounded,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _InfoBox(
+              label: 'Stok Tersedia',
+              value: '${product.stock} Unit',
+              color: isLowStock ? AppColors.error : AppColors.success,
+              icon: Icons.inventory_2_rounded,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   String _formatRupiah(double value) {
@@ -187,6 +235,61 @@ class ProductDetailPage extends StatelessWidget {
       }
     }
     return buffer.toString();
+  }
+}
+
+class _SpecsCard extends StatelessWidget {
+  final Product product;
+  const _SpecsCard(this.product);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Spesifikasi Produk', style: AppTypePairing.titleMd()),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceContainerLowest,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.borderLight),
+            ),
+            child: Column(
+              children: [
+                _SpecRow(
+                  icon: Icons.straighten_rounded,
+                  label: 'Panjang',
+                  value: '${product.panjangCm.toStringAsFixed(product.panjangCm == product.panjangCm.roundToDouble() ? 0 : 1)} cm',
+                ),
+                _Divider(),
+                _SpecRow(
+                  icon: Icons.straighten_rounded,
+                  label: 'Lebar',
+                  value: '${product.lebarCm.toStringAsFixed(product.lebarCm == product.lebarCm.roundToDouble() ? 0 : 1)} cm',
+                ),
+                _Divider(),
+                _SpecRow(
+                  icon: Icons.straighten_rounded,
+                  label: 'Tinggi',
+                  value: '${product.tinggiCm.toStringAsFixed(product.tinggiCm == product.tinggiCm.roundToDouble() ? 0 : 1)} cm',
+                ),
+                _Divider(),
+                _SpecRow(
+                  icon: Icons.scale_rounded,
+                  label: 'Volume (Berat)',
+                  value: '${(product.volumeCm3 / 6000).toStringAsFixed(2)} kg',
+                  isBold: true,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -218,8 +321,14 @@ class _InfoBox extends StatelessWidget {
   final String label;
   final String value;
   final Color color;
+  final IconData icon;
 
-  const _InfoBox({required this.label, required this.value, required this.color});
+  const _InfoBox({
+    required this.label,
+    required this.value,
+    required this.color,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -228,17 +337,20 @@ class _InfoBox extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.1)),
+        border: Border.all(color: AppColors.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: AppTypePairing.bodySm(color: AppColors.textSecondary)),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            style: AppTypePairing.titleMd(color: color),
+          Row(
+            children: [
+              Icon(icon, size: 16, color: color),
+              const SizedBox(width: 6),
+              Text(label, style: AppTypePairing.bodySm(color: AppColors.textSecondary)),
+            ],
           ),
+          const SizedBox(height: 8),
+          Text(value, style: AppTypePairing.titleMd(color: color).copyWith(fontSize: 18)),
         ],
       ),
     );
@@ -246,23 +358,33 @@ class _InfoBox extends StatelessWidget {
 }
 
 class _SpecRow extends StatelessWidget {
+  final IconData icon;
   final String label;
   final String value;
   final bool isBold;
 
-  const _SpecRow({required this.label, required this.value, this.isBold = false});
+  const _SpecRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.isBold = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Icon(icon, size: 18, color: AppColors.textTertiary),
+          const SizedBox(width: 12),
           Text(label, style: AppTypePairing.bodySm(color: AppColors.textSecondary)),
+          const Spacer(),
           Text(
             value,
-            style: isBold ? AppTypePairing.titleMd() : AppTypePairing.bodySm(color: AppColors.textPrimary, weight: FontWeight.w600),
+            style: isBold
+                ? AppTypePairing.titleMd()
+                : AppTypePairing.bodySm(color: AppColors.textPrimary, weight: FontWeight.w600),
           ),
         ],
       ),
@@ -273,9 +395,6 @@ class _SpecRow extends StatelessWidget {
 class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Divider(height: 1, color: AppColors.indigoSurfaceTint.withValues(alpha: 0.08)),
-    );
+    return Divider(height: 1, color: AppColors.borderLight);
   }
 }

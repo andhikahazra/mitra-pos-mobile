@@ -107,16 +107,17 @@ class HomeSkeleton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header: Avatar + Greeting + Notification
           Row(
             children: [
               SkeletonCircle(size: 44),
               const SizedBox(width: 12),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Skeleton(width: 140, height: 14),
-                    SizedBox(height: 6),
+                    const SizedBox(height: 6),
                     Skeleton(width: 200, height: 11),
                   ],
                 ),
@@ -125,8 +126,10 @@ class HomeSkeleton extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          const Skeleton(width: 200, height: 18),
+          // Page title
+          Skeleton(width: 200, height: 18),
           const SizedBox(height: 12),
+          // 4 Metric cards in a row
           Row(
             children: List.generate(4, (i) => Padding(
               padding: EdgeInsets.only(right: i < 3 ? 8 : 0),
@@ -136,8 +139,10 @@ class HomeSkeleton extends StatelessWidget {
             )),
           ),
           const SizedBox(height: 16),
-          const Skeleton(height: 160, borderRadius: 12),
+          // Stats container (2x2 grid)
+          Skeleton(height: 160, borderRadius: 12),
           const SizedBox(height: 16),
+          // First row of metric tiles
           Row(
             children: [
               Expanded(child: Skeleton(height: 80, borderRadius: 10)),
@@ -146,6 +151,7 @@ class HomeSkeleton extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
+          // Second row of metric tiles
           Row(
             children: [
               Expanded(child: Skeleton(height: 80, borderRadius: 10)),
@@ -154,7 +160,9 @@ class HomeSkeleton extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          const Skeleton(height: 220, borderRadius: 12),
+          // Performance chart
+          Skeleton(height: 220, borderRadius: 12),
+          const SizedBox(height: 26),
         ],
       ),
     );
@@ -173,29 +181,16 @@ class ProductsSkeleton extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: Skeleton(height: 40, borderRadius: 12),
         ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 34,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            children: List.generate(5, (i) => Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Skeleton(width: 80, height: 34, borderRadius: 16),
-            )),
-          ),
+        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Skeleton(height: 34, borderRadius: 12),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         Expanded(
-          child: GridView.builder(
+          child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.72,
-            ),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
             itemCount: 6,
             itemBuilder: (_, i) => const _ProductCardSkeleton(),
           ),
@@ -211,21 +206,58 @@ class _ProductCardSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
+      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(10),
-      child: Column(
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(11),
+        border: Border.all(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Expanded(child: Skeleton(borderRadius: 8)),
-          const SizedBox(height: 8),
-          Skeleton(width: double.infinity, height: 12),
-          const SizedBox(height: 4),
-          Skeleton(width: 90, height: 10),
-          const SizedBox(height: 4),
-          Skeleton(width: 60, height: 12),
+          Padding(
+            padding: const EdgeInsets.only(top: 8, bottom: 8),
+            child: SkeletonCircle(size: 66),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 9, bottom: 9),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Skeleton(width: double.infinity, height: 16),
+                  const SizedBox(height: 8),
+                  Skeleton(width: 160, height: 12),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: List.generate(3, (i) => Padding(
+                      padding: EdgeInsets.only(right: i < 2 ? 5 : 0),
+                      child: Skeleton(width: 50, height: 20, borderRadius: 999),
+                    )),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(child: Skeleton(width: 80, height: 16)),
+                      const SizedBox(width: 6),
+                      Skeleton(width: 60, height: 20, borderRadius: 999),
+                      const SizedBox(width: 6),
+                      Skeleton(width: 50, height: 20, borderRadius: 999),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -238,14 +270,118 @@ class TransactionsSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.width >= 800;
+
+    if (isTablet) {
+      return _TabletTransactionSkeleton();
+    }
+    return _MobileTransactionSkeleton();
+  }
+}
+
+class _MobileTransactionSkeleton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Header with title, reset, view toggle
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+          child: Row(
+            children: [
+              Skeleton(width: 100, height: 20),
+              const Spacer(),
+              Skeleton(width: 34, height: 34, borderRadius: 12),
+              const SizedBox(width: 8),
+              Skeleton(width: 34, height: 34, borderRadius: 12),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        // Search field
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Skeleton(height: 40, borderRadius: 12),
+        ),
+        const SizedBox(height: 10),
+        // Category filter chips (horizontal list)
+        SizedBox(
+          height: 34,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            children: List.generate(6, (i) => Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Skeleton(width: 80, height: 34, borderRadius: 16),
+            )),
+          ),
+        ),
+        const SizedBox(height: 10),
+        // Product grid
+        Expanded(
+          child: GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: 0.9,
+            ),
+            itemCount: 6,
+            itemBuilder: (_, i) => Container(
+              decoration: BoxDecoration(
+                color: AppColors.surfaceContainerLowest,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Skeleton(height: 48, borderRadius: 8),
+                  SizedBox(height: 8),
+                  Skeleton(height: 12),
+                  SizedBox(height: 4),
+                  Skeleton(width: 60, height: 10),
+                  SizedBox(height: 4),
+                  Skeleton(width: 40, height: 14),
+                ],
+              ),
+            ),
+          ),
+        ),
+        // Proceed button area (bottom)
+        const SizedBox(height: 80),
+      ],
+    );
+  }
+}
+
+class _TabletTransactionSkeleton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
+        // Left panel - Products
         Expanded(
           flex: 5,
           child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                child: Row(
+                  children: [
+                    Skeleton(width: 100, height: 20),
+                    const Spacer(),
+                    Skeleton(width: 34, height: 34, borderRadius: 12),
+                    const SizedBox(width: 8),
+                    Skeleton(width: 34, height: 34, borderRadius: 12),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Skeleton(height: 40, borderRadius: 12),
               ),
               const SizedBox(height: 10),
@@ -274,7 +410,7 @@ class TransactionsSkeleton extends StatelessWidget {
                   itemCount: 6,
                   itemBuilder: (_, i) => Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.surfaceContainerLowest,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     padding: const EdgeInsets.all(10),
@@ -296,13 +432,14 @@ class TransactionsSkeleton extends StatelessWidget {
             ],
           ),
         ),
+        // Right panel - Cart/Order Summary
         Expanded(
           flex: 3,
           child: Container(
             margin: const EdgeInsets.all(8),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surfaceContainerLowest,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -349,10 +486,12 @@ class HistorySkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Search field
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 6, 20, 12),
           child: Skeleton(height: 40, borderRadius: 12),
         ),
+        // Filter chips (horizontal)
         SizedBox(
           height: 32,
           child: ListView(
@@ -365,6 +504,7 @@ class HistorySkeleton extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
+        // ListView list of history cards
         Expanded(
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
@@ -409,46 +549,83 @@ class HistorySkeleton extends StatelessWidget {
   }
 }
 
-// ── Incoming Goods Skeleton ─────────────────────────────────────────
+// ── Incoming Goods Page Skeleton ─────────────────────────────────────
 class IncomingGoodsSkeleton extends StatelessWidget {
   const IncomingGoodsSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(14, 4, 14, 14),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Skeleton(height: 140, borderRadius: 12),
-        const SizedBox(height: 20),
+        const SizedBox(height: 4),
+        // Stat pills
+        Row(
+          children: [
+            Skeleton(width: 80, height: 32, borderRadius: 8),
+            const SizedBox(width: 6),
+            Skeleton(width: 80, height: 32, borderRadius: 8),
+            const SizedBox(width: 6),
+            Skeleton(width: 80, height: 32, borderRadius: 8),
+          ],
+        ),
+        const SizedBox(height: 16),
+        // Search field
+        Skeleton(height: 38, borderRadius: 10),
+        const SizedBox(height: 10),
+        // Filter chips
+        SizedBox(
+          height: 32,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            separatorBuilder: (context, _) => const SizedBox(width: 6),
+            itemBuilder: (_, i) => Skeleton(width: 64, height: 32, borderRadius: 999),
+          ),
+        ),
+        const SizedBox(height: 14),
+        // Item cards
         ...List.generate(4, (i) => Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surfaceContainerLowest,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.borderLight),
             ),
             child: Row(
               children: [
-                Skeleton(width: 34, height: 34, borderRadius: 9),
-                const SizedBox(width: 10),
+                Skeleton(width: 40, height: 40, borderRadius: 10),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
-                      Skeleton(width: 120, height: 14),
-                      SizedBox(height: 4),
-                      Skeleton(width: 180, height: 11),
+                      Row(
+                        children: [
+                          Expanded(child: Skeleton(width: 120, height: 14)),
+                          SizedBox(width: 8),
+                          Skeleton(width: 56, height: 20, borderRadius: 999),
+                        ],
+                      ),
                       SizedBox(height: 6),
-                      Skeleton(width: 60, height: 10),
+                      Skeleton(width: 100, height: 12),
+                      SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Skeleton(width: 70, height: 10),
+                          SizedBox(width: 10),
+                          Skeleton(width: 50, height: 10),
+                          SizedBox(width: 10),
+                          Skeleton(width: 80, height: 10),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 6),
-                Skeleton(width: 60, height: 24, borderRadius: 12),
-                const SizedBox(width: 4),
-                const Icon(Icons.chevron_right_rounded, color: AppColors.textTertiary),
+                const SizedBox(width: 8),
+                Skeleton(width: 18, height: 18, borderRadius: 9),
               ],
             ),
           ),
@@ -458,22 +635,44 @@ class IncomingGoodsSkeleton extends StatelessWidget {
   }
 }
 
-// ── Login Skeleton ──────────────────────────────────────────────────
+// ── Login Page Skeleton ─────────────────────────────────────────────
 class LoginSkeleton extends StatelessWidget {
   const LoginSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          SkeletonCircle(size: 60),
-          SizedBox(height: 16),
-          Skeleton(width: 160, height: 18),
-          SizedBox(height: 8),
-          Skeleton(width: 200, height: 12),
-        ],
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Logo/brand
+              Skeleton(width: 80, height: 18),
+              const SizedBox(height: 20),
+              // Title
+              Skeleton(width: 140, height: 24),
+              const SizedBox(height: 22),
+              // Email label
+              Skeleton(width: 60, height: 14),
+              const SizedBox(height: 8),
+              // Email field
+              Skeleton(height: 48, borderRadius: 12),
+              const SizedBox(height: 16),
+              // Password label
+              Skeleton(width: 80, height: 14),
+              const SizedBox(height: 8),
+              // Password field
+              Skeleton(height: 48, borderRadius: 12),
+              const SizedBox(height: 20),
+              // Login button
+              Skeleton(width: double.infinity, height: 50, borderRadius: 12),
+            ],
+          ),
+        ),
       ),
     );
   }

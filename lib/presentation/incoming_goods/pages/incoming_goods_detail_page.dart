@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mitrapos/core/theme/app_colors.dart';
-import 'package:mitrapos/core/theme/app_text_styles.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/widgets/skeleton.dart';
 import 'package:mitrapos/core/constants/app_constants.dart';
@@ -56,18 +55,32 @@ class IncomingGoodsDetailPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.surfaceContainerLowest,
       appBar: AppBar(
-        title: const Text('Detail Penerimaan'),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
+        titleSpacing: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: AppColors.textPrimary),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Detail Penerimaan',
+          style: AppTypePairing.titleMd(color: AppColors.textPrimary, weight: FontWeight.w700),
+        ),
         centerTitle: false,
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [
-          _DashboardCard(
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceContainerLowest,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.borderLight),
+            ),
             child: Row(
               children: [
                 Container(
@@ -85,12 +98,12 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                     children: [
                       Text(
                         kode,
-                        style: AppTextStyles.headingSmall.copyWith(fontWeight: FontWeight.w700),
+                        style: AppTypePairing.titleMd(weight: FontWeight.w700),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         formattedDate,
-                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                        style: AppTypePairing.bodySm(color: AppColors.textSecondary),
                       ),
                     ],
                   ),
@@ -103,9 +116,9 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                   ),
                   child: Text(
                     status,
-                    style: AppTextStyles.labelSmall.copyWith(
+                    style: AppTypePairing.labelSmCaps(
                       color: statusColor,
-                      fontWeight: FontWeight.w700,
+                      weight: FontWeight.w700,
                     ),
                   ),
                 ),
@@ -113,7 +126,13 @@ class IncomingGoodsDetailPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          _DashboardCard(
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceContainerLowest,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.borderLight),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -135,7 +154,13 @@ class IncomingGoodsDetailPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _DashboardCard(
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceContainerLowest,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.borderLight),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -148,32 +173,34 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                     ),
                     Text(
                       '${items.length} item',
-                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                      style: AppTypePairing.bodySm(color: AppColors.textSecondary),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 if (items.isEmpty)
-                  Center(
+                  const Center(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24),
-                      child: Text(
-                        'Tidak ada produk',
-                        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
-                      ),
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: Text('Tidak ada produk'),
                     ),
                   )
                 else ...[
-                  Row(
-                    children: [
-                      Expanded(flex: 3, child: Text('Produk', style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600))),
-                      Expanded(flex: 1, child: Text('Qty', textAlign: TextAlign.center, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600))),
-                      Expanded(flex: 2, child: Text('Harga', textAlign: TextAlign.right, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600))),
-                      Expanded(flex: 2, child: Text('Subtotal', textAlign: TextAlign.right, style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600))),
-                    ],
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(flex: 3, child: Text('Produk', style: AppTypePairing.labelSmCaps(color: AppColors.textSecondary, weight: FontWeight.w600))),
+                        Expanded(flex: 1, child: Text('Qty', textAlign: TextAlign.center, style: AppTypePairing.labelSmCaps(color: AppColors.textSecondary, weight: FontWeight.w600))),
+                        Expanded(flex: 2, child: Text('Harga', textAlign: TextAlign.right, style: AppTypePairing.labelSmCaps(color: AppColors.textSecondary, weight: FontWeight.w600))),
+                        Expanded(flex: 2, child: Text('Subtotal', textAlign: TextAlign.right, style: AppTypePairing.labelSmCaps(color: AppColors.textSecondary, weight: FontWeight.w600))),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  const Divider(height: 1, thickness: 0.5),
                   const SizedBox(height: 8),
                   ...items.map((item) {
                     final product = item['produk'] ?? {};
@@ -195,13 +222,13 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                               children: [
                                 Text(
                                   productName,
-                                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
+                                  style: AppTypePairing.bodySm(color: AppColors.textPrimary, weight: FontWeight.w500),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  'SKU: $sku',
-                                  style: AppTextStyles.labelSmall.copyWith(color: AppColors.textTertiary),
+                                  'SKU $sku',
+                                  style: AppTypePairing.labelSmCaps(color: AppColors.textTertiary),
                                 ),
                               ],
                             ),
@@ -211,7 +238,7 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                             child: Text(
                               qty.toString(),
                               textAlign: TextAlign.center,
-                              style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                              style: AppTypePairing.bodySm(color: AppColors.textSecondary),
                             ),
                           ),
                           Expanded(
@@ -219,7 +246,7 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                             child: Text(
                               NumberFormat.currency(locale: 'id', symbol: '', decimalDigits: 0).format(price),
                               textAlign: TextAlign.right,
-                              style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                              style: AppTypePairing.bodySm(color: AppColors.textSecondary),
                             ),
                           ),
                           Expanded(
@@ -227,7 +254,7 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                             child: Text(
                               NumberFormat.currency(locale: 'id', symbol: '', decimalDigits: 0).format(subtotal),
                               textAlign: TextAlign.right,
-                              style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w600),
+                              style: AppTypePairing.bodySm(color: AppColors.textPrimary, weight: FontWeight.w600),
                             ),
                           ),
                         ],
@@ -240,13 +267,19 @@ class IncomingGoodsDetailPage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           if (catatan != '-' && catatan.isNotEmpty) ...[
-            _DashboardCard(
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceContainerLowest,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.borderLight),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Catatan', style: AppTypePairing.titleMd(weight: FontWeight.w700)),
                   const SizedBox(height: 12),
-                  Text(catatan, style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary)),
+                  Text(catatan, style: AppTypePairing.bodySm(color: AppColors.textSecondary)),
                 ],
               ),
             ),
@@ -256,24 +289,18 @@ class IncomingGoodsDetailPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               gradient: AppColors.primaryGradient,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'TOTAL PEMBAYARAN',
-                  style: AppTextStyles.labelLarge.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: AppTypePairing.labelSmCaps(color: AppColors.white, weight: FontWeight.w700),
                 ),
                 Text(
                   NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(total),
-                  style: AppTextStyles.headingMedium.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: AppTypePairing.headlineLg(color: AppColors.white, weight: FontWeight.w800),
                 ),
               ],
             ),
@@ -300,8 +327,8 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                   return Container(
                     height: 150,
                     width: double.infinity,
-                    color: Colors.grey[200],
-                    child: const Icon(Icons.broken_image_outlined, color: Colors.grey),
+                    color: AppColors.surfaceContainerHigh,
+                    child: const Icon(Icons.broken_image_outlined, color: AppColors.textTertiary),
                   );
                 },
               ),
@@ -310,31 +337,6 @@ class IncomingGoodsDetailPage extends StatelessWidget {
           const SizedBox(height: 40),
         ],
       ),
-    );
-  }
-}
-
-class _DashboardCard extends StatelessWidget {
-  final Widget child;
-
-  const _DashboardCard({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowLight,
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: child,
     );
   }
 }
@@ -354,15 +356,15 @@ class _InfoRow extends StatelessWidget {
           width: 90,
           child: Text(
             label,
-            style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+            style: AppTypePairing.bodySm(color: AppColors.textSecondary),
           ),
         ),
-        Text(':', style: AppTextStyles.bodySmall),
+        Text(':', style: AppTypePairing.bodySm(color: AppColors.textTertiary)),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             value,
-            style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w500),
+            style: AppTypePairing.bodySm(color: AppColors.textPrimary, weight: FontWeight.w500),
           ),
         ),
       ],

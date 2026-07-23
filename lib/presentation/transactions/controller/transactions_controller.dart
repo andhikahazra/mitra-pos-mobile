@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,17 +88,9 @@ class TransactionsController extends StateNotifier<TransactionsState> {
       state = state.copyWith(clearError: true);
     }
 
-    final results = await Future.wait([
-      getTransactionProducts(),
-      getTransactionProducts.repository.getSettings(),
-      getCustomerHistory(),
-    ]);
+    // Load products FIRST (blocking)
+    final productsResult = await getTransactionProducts();
 
-    final productsResult = results[0] as Either<Failure, List<TransactionProduct>>;
-    final settingsResult = results[1] as Either<Failure, Map<String, dynamic>>;
-    final historyResult = results[2] as Either<Failure, List<Map<String, dynamic>>>;
-
-    // Handle products
     productsResult.fold(
       (failure) => state = state.copyWith(isLoading: false, errorMessage: failure.message),
       (products) {
@@ -113,13 +107,24 @@ class TransactionsController extends StateNotifier<TransactionsState> {
       },
     );
 
-    // Handle settings
+    //v Load settings & history in BACKGROUND (non-blocking)
+    unawaited(_loadSettingsAndHistory());
+  }
+
+  Future<void> _loadSettingsAndHistory() async {
+    final results = await Future.wait([
+      getTransactionProducts.repository.getSettings(),
+      getCustomerHistory(),
+    ]);
+
+    final settingsResult = results[0] as Either<Failure, Map<String, dynamic>>;
+    final historyResult = results[1] as Either<Failure, List<Map<String, dynamic>>>;
+
     settingsResult.fold(
-      (failure) => null, // Ignore settings error for now, or log it
+      (failure) => null,
       (settings) => state = state.copyWith(appSettings: settings['data']),
     );
 
-    // Handle history
     historyResult.fold(
       (failure) => null,
       (history) => state = state.copyWith(customerHistory: history),

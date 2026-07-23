@@ -35,6 +35,6 @@ class AppConstants {
   static const Duration animationSlow = Duration(milliseconds: 500);
 
   // API (Placeholder for future use)
-  static const String baseUrl = 'http://192.168.68.181:8000/api';
+  static const String baseUrl = 'http://10.0.2.2:8000/api';
   static const Duration apiTimeout = Duration(seconds: 30);
 }
