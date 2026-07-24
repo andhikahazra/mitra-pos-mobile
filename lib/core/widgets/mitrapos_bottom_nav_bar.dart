@@ -36,8 +36,8 @@ class MitraPOSBottomNavBar extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.surfaceContainerLowest.withValues(alpha: 0.82),
-                  AppColors.surface.withValues(alpha: 0.8),
+                  context.surfaceContainerLowest.withValues(alpha: 0.82),
+                  context.surface.withValues(alpha: 0.8),
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,

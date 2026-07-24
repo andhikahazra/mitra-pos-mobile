@@ -53,22 +53,22 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: const SafeArea(
+      backgroundColor: context.indigoPrimary,
+      body: SafeArea(
         child: Center(
           child: SizedBox(
             width: 96,
             height: 96,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: context.surface,
                 borderRadius: BorderRadius.all(Radius.circular(20)),
               ),
               child: Center(
                 child: Text(
                   'M',
                   style: TextStyle(
-                    color: AppColors.primary,
+                    color: context.indigoPrimary,
                     fontSize: 56,
                     fontWeight: FontWeight.w800,
                     height: 1,

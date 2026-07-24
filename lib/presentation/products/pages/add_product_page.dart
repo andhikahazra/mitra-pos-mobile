@@ -357,7 +357,7 @@ class _ProductEditorForm extends ConsumerWidget {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.primary),
+                            borderSide: BorderSide(color: context.indigoPrimary),
                           ),
                         ),
                       ),
@@ -544,7 +544,7 @@ class _DimensionValueField extends StatelessWidget {
           onChanged: enabled ? onChanged : null,
           style: AppTextStyles.headingMedium.copyWith(
             fontWeight: FontWeight.w600,
-            color: enabled ? AppColors.textPrimary : const Color(0xFF8A8FA2),
+            color: enabled ? context.textPrimary : const Color(0xFF8A8FA2),
             fontSize: 15,
           ),
           decoration: InputDecoration(
@@ -571,7 +571,7 @@ class _DimensionValueField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: AppColors.primary),
+              borderSide: BorderSide(color: context.indigoPrimary),
             ),
           ),
         ),
@@ -653,10 +653,10 @@ class _PublishSuccessView extends StatelessWidget {
                 color: Color(0xFFEDEDED),
                 shape: BoxShape.circle,
               ),
-              child: const Center(
+              child: Center(
                 child: CircleAvatar(
                   radius: 28,
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: context.indigoPrimary,
                   child: Icon(Icons.check, color: Colors.white, size: 30),
                 ),
               ),
@@ -700,7 +700,7 @@ class _InputField extends StatelessWidget {
     required this.initialValue,
     required this.onChanged,
     this.keyboardType,
-    this.fillColor = AppColors.white,
+    this.fillColor = Colors.white,
     this.prefixText,
   });
 
@@ -747,7 +747,7 @@ class _InputField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(9),
-              borderSide: const BorderSide(color: AppColors.primary),
+              borderSide: BorderSide(color: context.indigoPrimary),
             ),
           ),
         ),

@@ -56,10 +56,10 @@ class OrderSummaryWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.surface,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.14),
         ),
       ),
       child: Column(
@@ -68,7 +68,7 @@ class OrderSummaryWidget extends StatelessWidget {
           Text(
             title,
             style: AppTypePairing.titleMd(
-              color: AppColors.textPrimary,
+              color: context.textPrimary,
               weight: FontWeight.w700,
             ),
           ),
@@ -78,19 +78,19 @@ class OrderSummaryWidget extends StatelessWidget {
                 ? Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.shopping_cart_outlined,
-                          size: 32,
-                          color: AppColors.textTertiary.withValues(alpha: 0.4),
-                        ),
+children: [
+                            Icon(
+                              Icons.shopping_cart_outlined,
+                              size: 32,
+                              color: context.textTertiary.withValues(alpha: 0.4),
+                            ),
                         const SizedBox(height: 8),
-                        Text(
-                          'Belum ada item',
-                          style: AppTypePairing.bodyMd(
-                            color: AppColors.textSecondary,
+Text(
+                            'Belum ada item',
+                            style: AppTypePairing.bodyMd(
+                              color: context.textSecondary,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   )
@@ -131,7 +131,7 @@ class _OrderSummaryItemTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: AppColors.indigoSurfaceTint.withValues(alpha: 0.08),
@@ -144,7 +144,7 @@ class _OrderSummaryItemTile extends StatelessWidget {
             child: Container(
               width: 44,
               height: 44,
-              color: AppColors.surfaceContainerLow,
+              color: context.surfaceContainerLow,
               child: item.imageUrl != null && item.imageUrl!.isNotEmpty
                   ? Image.network(
                       item.imageUrl!,
@@ -172,7 +172,7 @@ class _OrderSummaryItemTile extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypePairing.bodyMd(
-                    color: AppColors.textPrimary,
+                    color: context.textPrimary,
                     weight: FontWeight.w700,
                   ),
                 ),
@@ -180,9 +180,9 @@ class _OrderSummaryItemTile extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     item.variant!,
-                    style: AppTypePairing.bodySm(
-                      color: AppColors.textSecondary,
-                    ),
+style: AppTypePairing.bodySm(
+                        color: context.textSecondary,
+                      ),
                   ),
                 ],
               ],
@@ -215,7 +215,7 @@ class _OrderSummaryItemTile extends StatelessWidget {
                     child: Text(
                       '${item.quantity}',
                       style: AppTypePairing.bodyMd(
-                        color: AppColors.textPrimary,
+                        color: context.textPrimary,
                         weight: FontWeight.w700,
                       ),
                     ),
@@ -226,13 +226,13 @@ class _OrderSummaryItemTile extends StatelessWidget {
                       width: 24,
                       height: 24,
                       decoration: BoxDecoration(
-                        color: AppColors.indigoPrimary.withValues(alpha: 0.12),
+                        color: context.indigoPrimary.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.add,
                         size: 14,
-                        color: AppColors.indigoPrimary,
+                        color: context.indigoPrimary,
                       ),
                     ),
                   ),
@@ -242,7 +242,7 @@ class _OrderSummaryItemTile extends StatelessWidget {
               Text(
                 CurrencyFormatter.format(item.lineTotal, symbol: 'Rp'),
                 style: AppTypePairing.bodyMd(
-                  color: AppColors.textPrimary,
+                  color: context.textPrimary,
                   weight: FontWeight.w700,
                 ),
               ),
@@ -278,10 +278,10 @@ class _SummarySection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.08),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.08),
         ),
       ),
       child: Column(
@@ -320,13 +320,13 @@ class _SummarySection extends StatelessWidget {
           _SummaryRow(
             label: 'Diskon',
             value: '-${CurrencyFormatter.format(discount, symbol: 'Rp')}',
-            valueColor: AppColors.error,
+            valueColor: context.error,
           ),
           const SizedBox(height: 8),
-          Container(
-            height: 1,
-            color: AppColors.divider,
-          ),
+            Container(
+              height: 1,
+              color: context.divider,
+            ),
           const SizedBox(height: 8),
           _SummaryRow(
             label: 'Total Pembayaran',
@@ -354,22 +354,22 @@ class _SummaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final labelStyle = isBold
-        ? AppTypePairing.bodyMd(
-            color: AppColors.textPrimary,
-            weight: FontWeight.w700,
-          )
-        : AppTypePairing.bodyMd(
-            color: AppColors.textSecondary,
-          );
+      final labelStyle = isBold
+          ? AppTypePairing.bodyMd(
+              color: context.textPrimary,
+              weight: FontWeight.w700,
+            )
+          : AppTypePairing.bodyMd(
+              color: context.textSecondary,
+            );
 
     final valueStyle = isBold
         ? AppTypePairing.bodyMd(
-            color: valueColor ?? AppColors.textPrimary,
+            color: valueColor ?? context.textPrimary,
             weight: FontWeight.w700,
           )
         : AppTypePairing.bodyMd(
-            color: valueColor ?? AppColors.textPrimary,
+            color: valueColor ?? context.textPrimary,
             weight: FontWeight.w600,
           );
 

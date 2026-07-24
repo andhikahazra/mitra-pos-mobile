@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mitrapos/core/di/injection.dart';
+import 'package:mitrapos/core/services/theme_provider.dart';
+
 import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/theme/app_text_styles.dart';
@@ -31,9 +34,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final user = authState.user;
 
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: context.surface,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: context.surface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         title: Text('Profil', style: AppTypePairing.headlineLg()),
@@ -44,18 +47,18 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.surfaceContainerLowest, AppColors.surface],
+              gradient: LinearGradient(
+                colors: [context.surfaceContainerLowest, context.surface],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+                color: context.indigoSurfaceTint.withValues(alpha: 0.14),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.04),
+                  color: context.indigoPrimary.withValues(alpha: 0.04),
                   blurRadius: 14,
                   offset: const Offset(0, 7),
                 ),
@@ -69,19 +72,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.indigoSurfaceTint.withValues(alpha: 0.24),
+                    color: context.indigoSurfaceTint.withValues(alpha: 0.24),
                   ),
                   child: Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          AppColors.indigoPrimary,
-                          AppColors.indigoPrimaryContainer,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                      gradient: context.primaryGradient,
                     ),
                     child: Center(
                       child: Text(
@@ -112,7 +108,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.indigoSurfaceTint.withValues(
+                          color: context.indigoSurfaceTint.withValues(
                             alpha: 0.12,
                           ),
                           borderRadius: BorderRadius.circular(999),
@@ -120,7 +116,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         child: Text(
                           user?.role ?? 'User',
                           style: AppTextStyles.labelSmall.copyWith(
-                            color: AppColors.indigoPrimary,
+                            color: context.indigoPrimary,
                             fontWeight: FontWeight.w700,
                             fontSize: 10,
                           ),
@@ -138,14 +134,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: AppColors.indigoSurfaceTint.withValues(
+                        color: context.indigoSurfaceTint.withValues(
                           alpha: 0.12,
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.edit_outlined,
-                        color: AppColors.indigoPrimary,
+                        color: context.indigoPrimary,
                         size: 20,
                       ),
                     ),
@@ -161,17 +157,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 icon: Icons.storefront_outlined,
                 title: 'Peran Pengguna',
                 value: user?.role ?? 'Karyawan',
-                accentColor: AppColors.indigoPrimary,
+                accentColor: context.indigoPrimary,
               ),
               Divider(
                 height: 1,
-                color: AppColors.indigoSurfaceTint.withValues(alpha: 0.12),
+                color: context.indigoSurfaceTint.withValues(alpha: 0.12),
               ),
               _ProfileInfoTile(
                 icon: Icons.check_circle_outline,
                 title: 'Status Akun',
                 value: (user?.status ?? false) ? 'Aktif' : 'Non-aktif',
-                accentColor: (user?.status ?? false) ? AppColors.success : AppColors.error,
+                accentColor: (user?.status ?? false) ? context.success : context.error,
               ),
             ],
           ),
@@ -186,7 +182,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               ),
               Divider(
                 height: 1,
-                color: AppColors.indigoSurfaceTint.withValues(alpha: 0.12),
+                color: context.indigoSurfaceTint.withValues(alpha: 0.12),
               ),
               _ProfileMenuTile(
                 icon: Icons.notifications_none_rounded,
@@ -196,7 +192,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               ),
               Divider(
                 height: 1,
-                color: AppColors.indigoSurfaceTint.withValues(alpha: 0.12),
+                color: context.indigoSurfaceTint.withValues(alpha: 0.12),
               ),
               _ProfileMenuTile(
                 icon: Icons.print_rounded,
@@ -211,6 +207,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   );
                 },
               ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _SectionCard(
+            children: [
+              _ThemeModeTile(),
             ],
           ),
           const SizedBox(height: 20),
@@ -232,7 +234,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.textPrimary,
+                backgroundColor: context.textPrimary,
                 foregroundColor: Colors.white,
                 minimumSize: const Size.fromHeight(52),
                 elevation: 0,
@@ -262,10 +264,10 @@ class _SectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.14),
         ),
       ),
       child: Column(children: children),
@@ -313,7 +315,7 @@ class _ProfileInfoTile extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: AppTypePairing.bodySm(color: AppColors.textSecondary),
+                  style: AppTypePairing.bodySm(color: context.textSecondary),
                 ),
               ],
             ),
@@ -346,19 +348,77 @@ class _ProfileMenuTile extends StatelessWidget {
         width: 34,
         height: 34,
         decoration: BoxDecoration(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.12),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Icon(icon, size: 18, color: AppColors.indigoPrimary),
+        child: Icon(icon, size: 18, color: context.indigoPrimary),
       ),
       title: Text(title, style: AppTypePairing.bodySm(weight: FontWeight.w600)),
       subtitle: Text(
         subtitle,
-        style: AppTypePairing.bodySm(color: AppColors.textSecondary),
+        style: AppTypePairing.bodySm(color: context.textSecondary),
       ),
-      trailing: const Icon(
+      trailing: Icon(
         Icons.chevron_right_rounded,
-        color: AppColors.textSecondary,
+        color: context.textSecondary,
+      ),
+    );
+  }
+}
+
+class _ThemeModeTile extends StatefulWidget {
+  const _ThemeModeTile();
+
+  @override
+  State<_ThemeModeTile> createState() => _ThemeModeTileState();
+}
+
+class _ThemeModeTileState extends State<_ThemeModeTile> {
+  late final ThemeProvider _themeProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _themeProvider = getIt<ThemeProvider>();
+    _themeProvider.addListener(_onThemeChanged);
+  }
+
+  @override
+  void dispose() {
+    _themeProvider.removeListener(_onThemeChanged);
+    super.dispose();
+  }
+
+  void _onThemeChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      leading: Container(
+        width: 34,
+        height: 34,
+        decoration: BoxDecoration(
+          color: context.indigoSurfaceTint.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(
+          Icons.dark_mode_outlined,
+          size: 18,
+          color: context.indigoPrimary,
+        ),
+      ),
+      title: Text('Mode Gelap', style: AppTypePairing.bodySm(weight: FontWeight.w600)),
+      subtitle: Text(
+        'Gunakan tampilan gelap untuk aplikasi',
+        style: AppTypePairing.bodySm(color: context.textSecondary),
+      ),
+      trailing: Switch(
+        value: _themeProvider.isDark,
+        onChanged: (_) => _themeProvider.toggleTheme(),
+        activeThumbColor: context.indigoPrimary,
       ),
     );
   }

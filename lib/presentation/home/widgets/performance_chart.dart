@@ -34,10 +34,10 @@ class PerformanceChart extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
       decoration: BoxDecoration(
-        color: AppColors.white, // Gunakan warna solid, tanpa gradasi
+        color: context.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.border.withValues(alpha: 0.5),
+          color: context.border,
         ),
         // Tanpa BoxShadow untuk menghemat GPU
       ),
@@ -62,10 +62,10 @@ class PerformanceChart extends StatelessWidget {
                   show: true,
                   drawVerticalLine: false,
                   horizontalInterval: gridInterval,
-                  getDrawingHorizontalLine: (value) => FlLine(
-                    color: AppColors.border.withValues(alpha: 0.2),
-                    strokeWidth: 1,
-                  ),
+getDrawingHorizontalLine: (value) => FlLine(
+                        color: context.border,
+                        strokeWidth: 1,
+                      ),
                 ),
                 titlesData: FlTitlesData(
                   show: true,
@@ -101,7 +101,7 @@ class PerformanceChart extends StatelessWidget {
                       BarChartRodData(
                         toY: entry.value.value,
                         width: 16,
-                        color: AppColors.primary,
+                        color: context.indigoPrimary,
                         borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
                         // Matikan backDrawRodData untuk meringankan draw call
                         backDrawRodData: BackgroundBarChartRodData(show: false),
@@ -113,9 +113,9 @@ class PerformanceChart extends StatelessWidget {
                 barTouchData: BarTouchData(
                   enabled: true,
                   touchTooltipData: BarTouchTooltipData(
-                    getTooltipColor: (_) => AppColors.white,
+                    getTooltipColor: (_) => context.surface,
                     tooltipRoundedRadius: 8,
-                    tooltipBorder: const BorderSide(color: AppColors.border, width: 0.5),
+                    tooltipBorder: BorderSide(color: context.border, width: 0.5),
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                       return BarTooltipItem(
                         CurrencyFormatter.format(rod.toY),

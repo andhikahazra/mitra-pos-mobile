@@ -38,10 +38,10 @@ class _MitraPOSSidebarState extends State<MitraPOSSidebar> {
   Widget build(BuildContext context) {
     return Container(
       width: 72,
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: context.surface,
         border: Border(
-          right: BorderSide(color: AppColors.divider, width: 1),
+          right: BorderSide(color: context.divider, width: 1),
         ),
       ),
       child: SafeArea(
@@ -65,7 +65,7 @@ class _MitraPOSSidebarState extends State<MitraPOSSidebar> {
                   Text(
                     'MITRA POS',
                     style: AppTypePairing.labelSmCaps(
-                      color: AppColors.textPrimary,
+                      color: context.textPrimary,
                       weight: FontWeight.w800,
                     ),
                     textAlign: TextAlign.center,
@@ -92,7 +92,7 @@ class _MitraPOSSidebarState extends State<MitraPOSSidebar> {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Container(
                 height: 1,
-                color: AppColors.indigoSurfaceTint.withValues(alpha: 0.12),
+                color: context.divider,
               ),
             ),
             Padding(
@@ -134,8 +134,8 @@ class _SidebarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = selected
-        ? AppColors.indigoPrimary
-        : (hovered ? AppColors.indigoPrimary : AppColors.textSecondary);
+        ? context.indigoPrimary
+        : (hovered ? context.indigoPrimary : context.textSecondary);
 
     return MouseRegion(
       onEnter: (_) => onEnter(),
@@ -150,7 +150,7 @@ class _SidebarItem extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: hovered && !selected
-                ? AppColors.indigoSurfaceTint.withValues(alpha: 0.06)
+                ? context.indigoSurfaceTint.withValues(alpha: 0.06)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),

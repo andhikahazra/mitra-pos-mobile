@@ -14,8 +14,8 @@ class AppTypePairing {
     color: color ?? AppColors.textPrimary,
   );
 
-  static TextStyle titleMd({Color? color, FontWeight? weight}) => GoogleFonts.manrope(
-    fontSize: 16,
+  static TextStyle titleMd({Color? color, FontWeight? weight, double? fontSize}) => GoogleFonts.manrope(
+    fontSize: fontSize ?? 16,
     fontWeight: weight ?? FontWeight.w700,
     letterSpacing: -0.2,
     height: 1.25,

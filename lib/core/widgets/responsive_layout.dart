@@ -69,7 +69,7 @@ class _TabletLayoutState extends ConsumerState<TabletLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: context.surfaceContainerLowest,
       body: SafeArea(
         child: Row(
           children: [
@@ -118,7 +118,7 @@ class ResponsiveLayout extends ConsumerWidget {
 
         // Mobile: use Scaffold with optional AppBar and BottomNav
         return Scaffold(
-          backgroundColor: AppColors.surfaceContainerLowest,
+          backgroundColor: context.surfaceContainerLowest,
           appBar: mobileAppBar,
           bottomNavigationBar: showBottomNavOnMobile
               ? MitraPOSBottomNavBar(

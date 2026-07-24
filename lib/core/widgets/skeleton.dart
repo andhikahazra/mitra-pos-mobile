@@ -76,7 +76,7 @@ class Skeleton extends StatelessWidget {
         width: width,
         height: height,
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerHigh,
+          color: context.surfaceContainerHigh,
           borderRadius: BorderRadius.circular(borderRadius),
         ),
       ),
@@ -209,12 +209,12 @@ class _ProductCardSkeleton extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(11),
-        border: Border.all(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.1)),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.03),
+        color: context.surfaceContainerLowest,
+         borderRadius: BorderRadius.circular(11),
+         border: Border.all(color: context.indigoSurfaceTint.withValues(alpha: 0.1)),
+         boxShadow: [
+           BoxShadow(
+             color: context.indigoPrimary.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -331,10 +331,10 @@ class _MobileTransactionSkeleton extends StatelessWidget {
             itemCount: 6,
             itemBuilder: (_, i) => Container(
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: const EdgeInsets.all(10),
+color: context.surfaceContainerLowest,
+                 borderRadius: BorderRadius.circular(10),
+               ),
+               padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
@@ -410,10 +410,10 @@ class _TabletTransactionSkeleton extends StatelessWidget {
                   itemCount: 6,
                   itemBuilder: (_, i) => Container(
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerLowest,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: const EdgeInsets.all(10),
+color: context.surfaceContainerLowest,
+                       borderRadius: BorderRadius.circular(10),
+                     ),
+                     padding: const EdgeInsets.all(10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
@@ -439,10 +439,10 @@ class _TabletTransactionSkeleton extends StatelessWidget {
             margin: const EdgeInsets.all(8),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
+    color: context.surfaceContainerLowest,
+       borderRadius: BorderRadius.circular(12),
+     ),
+     child: Column(
               children: [
                 Skeleton(width: double.infinity, height: 20),
                 const SizedBox(height: 16),
@@ -590,9 +590,9 @@ class IncomingGoodsSkeleton extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
+              color: context.surfaceContainerLowest,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.borderLight),
+              border: Border.all(color: context.borderLight),
             ),
             child: Row(
               children: [

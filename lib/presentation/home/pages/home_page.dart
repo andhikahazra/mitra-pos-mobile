@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:mitrapos/core/constants/app_constants.dart';
+
 import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/theme/app_text_styles.dart';
@@ -105,24 +106,24 @@ class _HomePageState extends ConsumerState<HomePage>
     ref.read(homeControllerProvider.notifier).add(ChangePeriod(period));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final homeState = ref.watch(homeControllerProvider);
-    final isTablet = MediaQuery.of(context).size.width >= 800;
+    @override
+    Widget build(BuildContext context) {
+      final homeState = ref.watch(homeControllerProvider);
+      final isTablet = MediaQuery.of(context).size.width >= 800;
 
-    void handleNav(int index) {
-      if (index == 1) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ProductsPage()));
-      } else if (index == 2) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TransactionsPage()));
-      } else if (index == 3) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HistoryPage()));
-      } else if (index == 4) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const IncomingGoodsPage()));
+      void handleNav(int index) {
+        if (index == 1) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ProductsPage()));
+        } else if (index == 2) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const TransactionsPage()));
+        } else if (index == 3) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HistoryPage()));
+        } else if (index == 4) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const IncomingGoodsPage()));
+        }
       }
-    }
 
-    Widget homeBody() {
+      Widget homeBody() {
       return Column(
         children: [
           Consumer(
@@ -148,7 +149,7 @@ class _HomePageState extends ConsumerState<HomePage>
 
     if (isTablet) {
       return Scaffold(
-        backgroundColor: AppColors.surfaceContainerLowest,
+        backgroundColor: context.surfaceContainerLowest,
         body: SafeArea(
           child: Row(
             children: [
@@ -161,7 +162,7 @@ class _HomePageState extends ConsumerState<HomePage>
     }
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: context.surfaceContainerLowest,
       bottomNavigationBar: Navigator.canPop(context)
           ? null
           : MitraPOSBottomNavBar(
@@ -194,7 +195,7 @@ class _HomePageState extends ConsumerState<HomePage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: AppColors.error),
+            Icon(Icons.error_outline, size: 64, color: context.error),
             const SizedBox(height: AppConstants.paddingMD),
             Text(
               state.message,
@@ -276,15 +277,15 @@ class _HomePageState extends ConsumerState<HomePage>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.surfaceContainerLowest,
-                      AppColors.surfaceContainerLow,
+                      context.surfaceContainerLowest,
+                      context.surfaceContainerLow,
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: AppColors.indigoPrimary.withValues(alpha: 0.22),
+                    color: context.indigoPrimary.withValues(alpha: 0.22),
                   ),
                 ),
                 child: Column(
@@ -296,7 +297,7 @@ class _HomePageState extends ConsumerState<HomePage>
                             icon: Icons.visibility_outlined,
                             label: 'Transaksi',
                             value: state.stats.views.toString(),
-                            iconColor: AppColors.info,
+                            iconColor: context.indigoPrimaryFixed,
                             trendLabel: state.stats.viewsGrowth >= 0
                                 ? '+${state.stats.viewsGrowth}%'
                                 : '${state.stats.viewsGrowth}%',
@@ -308,7 +309,7 @@ class _HomePageState extends ConsumerState<HomePage>
                             icon: Icons.emoji_people_outlined,
                             label: 'Aktivitas',
                             value: state.stats.visits.toString(),
-                            iconColor: AppColors.textPrimary,
+                            iconColor: context.textPrimary,
                             trendLabel: state.stats.visitsGrowth >= 0
                                 ? '+${state.stats.visitsGrowth}%'
                                 : '${state.stats.visitsGrowth}%',
@@ -324,7 +325,7 @@ class _HomePageState extends ConsumerState<HomePage>
                             icon: Icons.shopping_bag_outlined,
                             label: 'Item Terjual',
                             value: state.stats.orders.toString(),
-                            iconColor: AppColors.warning,
+                            iconColor: context.warning,
                             trendLabel: state.stats.ordersGrowth >= 0
                                 ? '+${state.stats.ordersGrowth}%'
                                 : '${state.stats.ordersGrowth}%',
@@ -338,7 +339,7 @@ class _HomePageState extends ConsumerState<HomePage>
                             value: CurrencyFormatter.format(
                               state.stats.revenue,
                             ),
-                            iconColor: AppColors.textPrimary,
+                            iconColor: context.textPrimary,
                             trendLabel: state.stats.revenueGrowth >= 0
                                 ? '+${state.stats.revenueGrowth}%'
                                 : '${state.stats.revenueGrowth}%',

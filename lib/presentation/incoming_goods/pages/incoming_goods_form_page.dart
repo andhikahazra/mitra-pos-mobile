@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:mitrapos/core/widgets/skeleton.dart';
-import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/theme/app_text_styles.dart';
 import 'package:mitrapos/data/incoming_goods/models/supplier_model.dart';
@@ -282,6 +282,7 @@ class _IncomingGoodsFormPageState extends ConsumerState<IncomingGoodsFormPage> {
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
                   decoration: buildFieldDecoration(
+                    context,
                     labelText: 'Catatan (Opsional)',
                     hintText: 'Contoh: Penerimaan rutin dari supplier A',
                   ),
@@ -348,7 +349,7 @@ class _IncomingGoodsFormPageState extends ConsumerState<IncomingGoodsFormPage> {
     return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.white,
+      backgroundColor: context.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
@@ -390,18 +391,18 @@ class _ProductItemFormWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: context.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -412,15 +413,15 @@ class _ProductItemFormWidget extends StatelessWidget {
                 Text(
                   'Item Produk',
                   style: AppTypePairing.bodySm(
-                    color: AppColors.textPrimary,
+                    color: context.textPrimary,
                     weight: FontWeight.w700,
                   ),
                 ),
                 const Spacer(),
                 IconButton(
                   onPressed: onRemove,
-                  icon: const Icon(Icons.delete_outline, size: 17, color: AppColors.error),
-                  style: IconButton.styleFrom(backgroundColor: AppColors.errorLight),
+                  icon: Icon(Icons.delete_outline, size: 17, color: context.error),
+                  style: IconButton.styleFrom(backgroundColor: context.errorLight),
                 ),
               ],
             ),
@@ -443,6 +444,7 @@ class _ProductItemFormWidget extends StatelessWidget {
                 CurrencyInputFormatter(),
               ],
               decoration: buildFieldDecoration(
+                context,
                 labelText: 'Qty',
                 hintText: '0',
               ),
@@ -462,6 +464,7 @@ class _ProductItemFormWidget extends StatelessWidget {
                 CurrencyInputFormatter(),
               ],
               decoration: buildFieldDecoration(
+                context,
                 labelText: 'Harga',
                 hintText: '0',
                 prefixIcon: const Padding(
@@ -499,14 +502,14 @@ class _ItemBadge extends StatelessWidget {
       height: 24,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: AppColors.primary,
+        color: context.indigoPrimary,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         '${index + 1}',
         style: AppTextStyles.labelSmall.copyWith(
           fontWeight: FontWeight.w800,
-          color: AppColors.white,
+          color: Colors.white,
         ),
       ),
     );
@@ -537,13 +540,14 @@ class _TapField extends StatelessWidget {
       onTap: onTap,
       child: InputDecorator(
         decoration: buildFieldDecoration(
+          context,
           labelText: label,
           suffixIcon: Icon(suffixIcon, size: 18),
         ),
         child: Text(
           value,
           style: AppTextStyles.bodyMedium.copyWith(
-            color: isPlaceholder ? AppColors.textTertiary : AppColors.textPrimary,
+            color: isPlaceholder ? context.textTertiary : context.textPrimary,
           ),
         ),
       ),
@@ -585,6 +589,7 @@ class _SearchablePickerSheetState<T> extends State<_SearchablePickerSheet<T>> {
           TextField(
             onChanged: (v) => setState(() => _query = v),
             decoration: buildFieldDecoration(
+              context,
               labelText: 'Cari data',
               hintText: 'Cari...',
               prefixIcon: const Icon(Icons.search),
@@ -631,10 +636,10 @@ class _SectionHeader extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: context.indigoPrimary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: AppColors.primary, size: 20),
+                child: Icon(icon, color: context.indigoPrimary, size: 20),
               ),
               const SizedBox(width: 12),
             ],
@@ -647,7 +652,7 @@ class _SectionHeader extends StatelessWidget {
             padding: EdgeInsets.only(left: icon != null ? 40 : 0),
             child: Text(
               subtitle!,
-              style: AppTypePairing.bodySm(color: AppColors.textTertiary, weight: FontWeight.w500),
+              style: AppTypePairing.bodySm(color: context.textTertiary, weight: FontWeight.w500),
             ),
           ),
         ],
@@ -680,7 +685,7 @@ class _InvoiceUploadSection extends StatelessWidget {
                 label: const Text('Pilih File'),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  side: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
+                  side: BorderSide(color: context.indigoPrimary.withValues(alpha: 0.2)),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
               ),
@@ -693,7 +698,7 @@ class _InvoiceUploadSection extends StatelessWidget {
                 label: const Text('Ambil Foto'),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  side: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
+                  side: BorderSide(color: context.indigoPrimary.withValues(alpha: 0.2)),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
               ),
@@ -705,17 +710,17 @@ class _InvoiceUploadSection extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.successLight.withValues(alpha: 0.1),
+              color: context.successLight.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               children: [
-                const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 14),
+                Icon(Icons.check_circle_rounded, color: context.success, size: 14),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     fileName!,
-                    style: AppTypePairing.bodySm(color: AppColors.success, weight: FontWeight.w600),
+                    style: AppTypePairing.bodySm(color: context.success, weight: FontWeight.w600),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -776,7 +781,7 @@ class _BottomSubmitBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -796,7 +801,7 @@ class _BottomSubmitBar extends StatelessWidget {
               ),
               child: Text(
                 'Batal',
-                style: AppTypePairing.bodyMd(color: AppColors.textSecondary, weight: FontWeight.w700),
+                style: AppTypePairing.bodyMd(color: context.textSecondary, weight: FontWeight.w700),
               ),
             ),
           ),
@@ -805,7 +810,7 @@ class _BottomSubmitBar extends StatelessWidget {
             child: FilledButton(
               onPressed: isSubmitting ? null : onSubmit,
               style: FilledButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: context.indigoPrimary,
                 minimumSize: const Size.fromHeight(54),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 elevation: 0,
@@ -818,7 +823,7 @@ class _BottomSubmitBar extends StatelessWidget {
                     ) 
                   : Text(
                       'Simpan Data',
-                      style: AppTypePairing.bodyMd(color: AppColors.white, weight: FontWeight.w800),
+                      style: AppTypePairing.bodyMd(color: Colors.white, weight: FontWeight.w800),
                     ),
             ),
           ),
@@ -828,7 +833,7 @@ class _BottomSubmitBar extends StatelessWidget {
   }
 }
 
-InputDecoration buildFieldDecoration({
+InputDecoration buildFieldDecoration(BuildContext context, {
   required String labelText,
   String? hintText,
   Widget? suffixIcon,
@@ -838,29 +843,29 @@ InputDecoration buildFieldDecoration({
 }) {
   return InputDecoration(
     labelText: labelText,
-    labelStyle: AppTypePairing.bodySm(color: AppColors.textSecondary, weight: FontWeight.w600),
+    labelStyle: AppTypePairing.bodySm(color: context.textSecondary, weight: FontWeight.w600),
     hintText: hintText,
-    hintStyle: AppTypePairing.bodySm(color: AppColors.textTertiary),
+    hintStyle: AppTypePairing.bodySm(color: context.textTertiary),
     suffixIcon: suffixIcon,
     prefixIcon: prefixIcon,
     filled: true,
-    fillColor: fillColor ?? AppColors.white,
+    fillColor: fillColor ?? Colors.white,
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: AppColors.border.withValues(alpha: 0.5), width: 1),
+      borderSide: BorderSide(color: context.border.withValues(alpha: 0.5), width: 1),
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: BorderSide(color: AppColors.border.withValues(alpha: 0.5), width: 1),
+      borderSide: BorderSide(color: context.border.withValues(alpha: 0.5), width: 1),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+      borderSide: BorderSide(color: context.indigoPrimary, width: 1.5),
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: AppColors.error, width: 1),
+      borderSide: BorderSide(color: context.error, width: 1),
     ),
   );
 }

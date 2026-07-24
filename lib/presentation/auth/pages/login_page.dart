@@ -56,7 +56,7 @@ class _LoginViewState extends ConsumerState<_LoginView> {
     final state = ref.watch(authControllerProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLow,
+      backgroundColor: context.surfaceContainerLow,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(

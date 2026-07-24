@@ -28,8 +28,8 @@ import 'package:mitrapos/presentation/products/pages/products_page.dart';
 import 'package:mitrapos/presentation/history/pages/history_page.dart';
 import 'package:mitrapos/core/services/thermal_printer_service.dart';
 
-const Color _posBlueDark = AppColors.indigoPrimary;
-const Color _posBlueSoft = AppColors.primaryFixed;
+const Color _posBlueDark = Color(0xFF000B60);
+const Color _posBlueSoft = Color(0xFFDFE0FF);
 
 String _formatTanggalJamIndonesia(DateTime date) {
   const bulan = [
@@ -155,7 +155,7 @@ class _TransactionsView extends ConsumerWidget {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: context.surfaceContainerLowest,
       body: Builder(
         builder: (context) {
           if (state.isLoading) {
@@ -169,9 +169,9 @@ class _TransactionsView extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.error_outline,
-                      color: AppColors.error,
+                      color: context.error,
                       size: 44,
                     ),
                     const SizedBox(height: 10),
@@ -295,7 +295,7 @@ class _KasirMainScreenState extends ConsumerState<_KasirMainScreen> {
         _handleBackNavigation();
       },
       child: Scaffold(
-        backgroundColor: AppColors.surfaceContainerLowest,
+        backgroundColor: context.surfaceContainerLowest,
         bottomNavigationBar: MitraPOSBottomNavBar(
           currentIndex: 2,
           onTap: _handleBottomNavTap,
@@ -600,7 +600,7 @@ class _TabletTransactionLayoutState extends ConsumerState<_TabletTransactionLayo
     final List bankList = state.appSettings?['rekening_bank'] ?? [];
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: context.surfaceContainerLowest,
       body: SafeArea(
         child: Row(
           children: [
@@ -622,7 +622,7 @@ class _TabletTransactionLayoutState extends ConsumerState<_TabletTransactionLayo
               flex: 6,
               child: _buildProductPanel(state, controller, kategoriList, displayedProducts),
             ),
-            Container(width: 1, color: AppColors.borderLight),
+            Container(width: 1, color: context.borderLight),
             Expanded(
               flex: 4,
               child: _buildCartPanel(state, controller, cartEntries, productMap, subtotal, jumlah, total, finalAdminFee, uangCustomer, kembalian, isTunaiKurang, metodeBelumDipilih, isInternalTanpaCatatan, bankList, isTunai, isInternal, finalAdminFee, total),
@@ -652,9 +652,9 @@ class _TabletTransactionLayoutState extends ConsumerState<_TabletTransactionLayo
               const Spacer(),
               Container(
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLowest,
+                  color: context.surfaceContainerLowest,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14)),
+                  border: Border.all(color: context.indigoSurfaceTint.withValues(alpha: 0.14)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -778,11 +778,11 @@ class _TabletTransactionLayoutState extends ConsumerState<_TabletTransactionLayo
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.shopping_cart_outlined, size: 48, color: AppColors.textTertiary.withValues(alpha: 0.4)),
+                      Icon(Icons.shopping_cart_outlined, size: 48, color: context.textTertiary.withValues(alpha: 0.4)),
                       const SizedBox(height: 12),
-                      Text('Belum ada item', style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary)),
+                      Text('Belum ada item', style: AppTextStyles.bodyMedium.copyWith(color: context.textSecondary)),
                       const SizedBox(height: 4),
-                      Text('Tap produk untuk menambahkan', style: AppTextStyles.bodySmall.copyWith(color: AppColors.textTertiary)),
+                      Text('Tap produk untuk menambahkan', style: AppTextStyles.bodySmall.copyWith(color: context.textTertiary)),
                     ],
                   ),
                 )
@@ -872,7 +872,7 @@ class _TabletTransactionLayoutState extends ConsumerState<_TabletTransactionLayo
                 children: bankList.map((bank) {
                   final String bankName = bank['bank'] ?? '-';
                   final isSelected = _selectedBank == bankName;
-                  return ChoiceChip(label: Text(bankName), selected: isSelected, onSelected: (s) => setState(() => _selectedBank = s ? bankName : null), selectedColor: _posBlueSoft, labelStyle: AppTextStyles.labelSmall.copyWith(color: isSelected ? _posBlueDark : AppColors.textPrimary, fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500));
+                  return ChoiceChip(label: Text(bankName), selected: isSelected, onSelected: (s) => setState(() => _selectedBank = s ? bankName : null), selectedColor: _posBlueSoft, labelStyle: AppTextStyles.labelSmall.copyWith(color: isSelected ? _posBlueDark : context.textPrimary, fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500));
                 }).toList(),
               ),
             ),
@@ -886,14 +886,14 @@ class _TabletTransactionLayoutState extends ConsumerState<_TabletTransactionLayo
                 onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
                   hintText: 'Uang Customer',
-                  hintStyle: AppTextStyles.labelLarge.copyWith(color: AppColors.textTertiary),
+                  hintStyle: AppTextStyles.labelLarge.copyWith(color: context.textTertiary),
                   prefixText: 'Rp ',
                   prefixStyle: AppTextStyles.labelLarge.copyWith(color: _posBlueDark, fontWeight: FontWeight.w700),
                   filled: true,
-                  fillColor: AppColors.surfaceContainerLowest,
+                  fillColor: context.surfaceContainerLowest,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.10))),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: context.indigoSurfaceTint.withValues(alpha: 0.10))),
                   focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: _posBlueDark, width: 1.2)),
                 ),
               ),
@@ -901,19 +901,19 @@ class _TabletTransactionLayoutState extends ConsumerState<_TabletTransactionLayo
           if (metodeBelumDipilih)
             Padding(
               padding: const EdgeInsets.only(top: 6, left: 20),
-              child: Align(alignment: Alignment.centerLeft, child: Text('Pilih metode pembayaran', style: AppTextStyles.labelSmall.copyWith(color: AppColors.error, fontWeight: FontWeight.w700))),
+              child: Align(alignment: Alignment.centerLeft, child: Text('Pilih metode pembayaran', style: AppTextStyles.labelSmall.copyWith(color: context.error, fontWeight: FontWeight.w700))),
             ),
           if (isInternalTanpaCatatan)
             Padding(
               padding: const EdgeInsets.only(top: 6, left: 20),
-              child: Align(alignment: Alignment.centerLeft, child: Text('Wajib isi catatan untuk Internal', style: AppTextStyles.labelSmall.copyWith(color: AppColors.error, fontWeight: FontWeight.w700))),
+              child: Align(alignment: Alignment.centerLeft, child: Text('Wajib isi catatan untuk Internal', style: AppTextStyles.labelSmall.copyWith(color: context.error, fontWeight: FontWeight.w700))),
             ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
             child: SizedBox(
               width: double.infinity,
               child: FilledButton(
-                style: FilledButton.styleFrom(backgroundColor: AppColors.indigoPrimary, foregroundColor: Colors.white, minimumSize: const Size.fromHeight(48), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)), elevation: 0),
+                style: FilledButton.styleFrom(backgroundColor: context.indigoPrimary, foregroundColor: Colors.white, minimumSize: const Size.fromHeight(48), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)), elevation: 0),
                 onPressed: jumlah == 0 || metodeBelumDipilih || isTunaiKurang || isInternalTanpaCatatan || state.isSubmitting
                     ? null
                     : () {
@@ -940,72 +940,18 @@ class _TabletTransactionLayoutState extends ConsumerState<_TabletTransactionLayo
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        gradient: isSelected ? AppColors.indigoActionGradient : null,
-        color: isSelected ? null : AppColors.surfaceContainerLowest,
+        gradient: isSelected ? context.indigoActionGradient : null,
+        color: isSelected ? null : context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: isSelected ? AppColors.primary : AppColors.indigoSurfaceTint.withValues(alpha: 0.10)),
+        border: Border.all(color: isSelected ? context.indigoPrimary : context.indigoSurfaceTint.withValues(alpha: 0.10)),
       ),
       child: Text(
         label,
         textAlign: TextAlign.center,
         style: AppTextStyles.labelSmall.copyWith(
-          color: isSelected ? Colors.white : AppColors.textSecondary,
+          color: isSelected ? Colors.white : context.textSecondary,
           fontWeight: FontWeight.w700,
         ),
-      ),
-    );
-  }
-
-  Widget _buildTabletCartItem(TransactionProduct product, int qty, TransactionsController controller) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(color: _posBlueSoft, borderRadius: BorderRadius.circular(8)),
-            child: Center(child: Icon(Icons.inventory_2_outlined, size: 20, color: _posBlueDark)),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(product.nama, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppTextStyles.labelLarge.copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
-                const SizedBox(height: 2),
-                Text('$qty x ${CurrencyFormatter.format(product.harga, symbol: 'Rp')}', style: AppTextStyles.labelSmall.copyWith(color: AppColors.textSecondary)),
-              ],
-            ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: () => controller.add(KurangProdukKeranjang(product.id)),
-                child: Container(width: 28, height: 28, decoration: BoxDecoration(color: const Color(0xFFEF4444).withValues(alpha: 0.12), borderRadius: BorderRadius.circular(7)),
-                  child: const Icon(Icons.remove, size: 16, color: Color(0xFFEF4444)),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text('$qty', style: AppTextStyles.labelLarge.copyWith(fontWeight: FontWeight.w700)),
-              ),
-              GestureDetector(
-                onTap: () => controller.add(TambahProdukKeranjang(product)),
-                child: Container(width: 28, height: 28, decoration: BoxDecoration(color: _posBlueDark.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(7)),
-                  child: const Icon(Icons.add, size: 16, color: _posBlueDark),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -1031,16 +977,16 @@ class _ViewToggleButton extends StatelessWidget {
         width: 32,
         height: 30,
         decoration: BoxDecoration(
-          color: selected ? AppColors.white : Colors.transparent,
+          color: selected ? Colors.white : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: selected ? AppColors.border : Colors.transparent,
+            color: selected ? context.border : Colors.transparent,
           ),
         ),
         child: Icon(
           icon,
           size: 16,
-          color: selected ? _posBlueDark : AppColors.textSecondary,
+          color: selected ? _posBlueDark : context.textSecondary,
         ),
       ),
     );
@@ -1137,13 +1083,13 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
               child: Text(
                 'Batal',
                 style: AppTextStyles.labelLarge.copyWith(
-                  color: AppColors.textSecondary,
+                  color: context.textSecondary,
                 ),
               ),
             ),
             FilledButton(
               style: FilledButton.styleFrom(
-                backgroundColor: AppColors.indigoPrimary,
+                backgroundColor: context.indigoPrimary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -1168,17 +1114,17 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
     final state = ref.watch(transactionsControllerProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: context.surfaceContainerLowest,
       appBar: AppBar(
-        backgroundColor: AppColors.surfaceContainerLowest,
+        backgroundColor: context.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         toolbarHeight: 54,
         centerTitle: false,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back,
-            color: AppColors.textPrimary,
+            color: context.textPrimary,
             size: 22,
           ),
           onPressed: () => Navigator.pop(context),
@@ -1279,18 +1225,18 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                                         hintText: 'Nama Pelanggan (Opsional)',
                                         hintStyle: AppTextStyles.labelLarge
                                             .copyWith(
-                                              color: AppColors.textTertiary,
+                                              color: context.textTertiary,
                                               fontWeight: FontWeight.w500,
                                             ),
                                         suffixIcon: Icon(
                                           Icons.person,
-                                          color: AppColors.textTertiary
+                                          color: context.textTertiary
                                               .withValues(alpha: 0.9),
                                           size: 22,
                                         ),
                                         filled: true,
                                         fillColor:
-                                            AppColors.surfaceContainerLowest,
+                                            context.surfaceContainerLowest,
                                         contentPadding:
                                             const EdgeInsets.symmetric(
                                               horizontal: 14,
@@ -1307,7 +1253,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                                             12,
                                           ),
                                           borderSide: BorderSide(
-                                            color: AppColors.indigoSurfaceTint
+                                            color: context.indigoSurfaceTint
                                                 .withValues(alpha: 0.10),
                                           ),
                                         ),
@@ -1329,7 +1275,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                                   child: Material(
                                     elevation: 4,
                                     borderRadius: BorderRadius.circular(12),
-                                    color: AppColors.surfaceContainerLowest,
+                                    color: context.surfaceContainerLowest,
                                     child: ConstrainedBox(
                                       constraints: BoxConstraints(
                                         maxHeight: 250,
@@ -1402,18 +1348,18 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                               decoration: InputDecoration(
                                 hintText: 'Catatan Transaksi (Opsional)',
                                 hintStyle: AppTextStyles.labelLarge.copyWith(
-                                  color: AppColors.textTertiary,
+                                  color: context.textTertiary,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 suffixIcon: Icon(
                                   Icons.note_alt_outlined,
-                                  color: AppColors.textTertiary.withValues(
+                                  color: context.textTertiary.withValues(
                                     alpha: 0.9,
                                   ),
                                   size: 22,
                                 ),
                                 filled: true,
-                                fillColor: AppColors.surfaceContainerLowest,
+                                fillColor: context.surfaceContainerLowest,
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 14,
                                   vertical: 10,
@@ -1425,7 +1371,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide(
-                                    color: AppColors.indigoSurfaceTint
+                                    color: context.indigoSurfaceTint
                                         .withValues(alpha: 0.10),
                                   ),
                                 ),
@@ -1456,7 +1402,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(14),
                                 decoration: BoxDecoration(
-                                  color: AppColors.surfaceContainerLow,
+                                  color: context.surfaceContainerLow,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
@@ -1630,7 +1576,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                                             .copyWith(
                                               color: isSelected
                                                   ? _posBlueDark
-                                                  : AppColors.textPrimary,
+                                                  : context.textPrimary,
                                               fontWeight: isSelected
                                                   ? FontWeight.w700
                                                   : FontWeight.w500,
@@ -1650,7 +1596,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                           child: Text(
                             'Pilih salah satu metode pembayaran',
                             style: AppTextStyles.labelSmall.copyWith(
-                              color: AppColors.error,
+                              color: context.error,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -1661,7 +1607,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                           child: Text(
                             'Wajib isi catatan untuk Pemakaian Internal',
                             style: AppTextStyles.labelSmall.copyWith(
-                              color: AppColors.error,
+                              color: context.error,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -1680,7 +1626,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                             decoration: InputDecoration(
                               hintText: 'Uang Customer',
                               hintStyle: AppTextStyles.labelLarge.copyWith(
-                                color: AppColors.textTertiary,
+                                color: context.textTertiary,
                               ),
                               prefixText: 'Rp ',
                               prefixStyle: AppTextStyles.labelLarge.copyWith(
@@ -1688,7 +1634,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                                 fontWeight: FontWeight.w700,
                               ),
                               filled: true,
-                              fillColor: AppColors.surfaceContainerLowest,
+                              fillColor: context.surfaceContainerLowest,
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 14,
                                 vertical: 10,
@@ -1700,7 +1646,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                  color: AppColors.indigoSurfaceTint.withValues(
+                                  color: context.indigoSurfaceTint.withValues(
                                     alpha: 0.10,
                                   ),
                                 ),
@@ -1734,8 +1680,8 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                     width: double.infinity,
                     child: FilledButton(
                       style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.indigoPrimary,
-                        foregroundColor: AppColors.white,
+                        backgroundColor: context.indigoPrimary,
+                        foregroundColor: Colors.white,
                         minimumSize: const Size.fromHeight(48),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
@@ -1784,7 +1730,7 @@ class _OrderSummaryScreenState extends ConsumerState<_OrderSummaryScreen> {
                           : Text(
                               'KONFIRMASI TRANSAKSI',
                               style: AppTextStyles.labelLarge.copyWith(
-                                color: AppColors.white,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -1815,7 +1761,7 @@ class _PaymentMethodChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = selected ? AppColors.white : AppColors.textSecondary;
+    final fg = selected ? Colors.white : context.textSecondary;
 
     return Material(
       color: Colors.transparent,
@@ -1825,18 +1771,18 @@ class _PaymentMethodChip extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 9),
           decoration: BoxDecoration(
-            gradient: selected ? AppColors.indigoActionGradient : null,
-            color: selected ? null : AppColors.surfaceContainerLowest,
+            gradient: selected ? context.indigoActionGradient : null,
+            color: selected ? null : context.surfaceContainerLowest,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: selected
-                  ? AppColors.primary.withValues(alpha: 0.18)
-                  : AppColors.indigoSurfaceTint.withValues(alpha: 0.10),
+                  ? context.indigoPrimary.withValues(alpha: 0.18)
+                  : context.indigoSurfaceTint.withValues(alpha: 0.10),
             ),
             boxShadow: selected
                 ? [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.22),
+                      color: context.indigoPrimary.withValues(alpha: 0.22),
                       blurRadius: 12,
                       offset: const Offset(0, 5),
                     ),
@@ -1851,7 +1797,7 @@ class _PaymentMethodChip extends StatelessWidget {
               Text(
                 label,
                 style: AppTextStyles.labelSmall.copyWith(
-                  color: selected ? AppColors.white : AppColors.textPrimary,
+                  color: selected ? Colors.white : context.textPrimary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -1886,16 +1832,16 @@ class _KasirHeader extends StatelessWidget {
           width: 30,
           height: 30,
           decoration: BoxDecoration(
-            color: AppColors.primaryFixed,
+            color: context.primaryFixed,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.24),
+              color: context.indigoPrimary.withValues(alpha: 0.24),
             ),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.receipt_long_rounded,
             size: 16,
-            color: AppColors.primary,
+            color: context.indigoPrimary,
           ),
         ),
         const SizedBox(width: 10),
@@ -1934,10 +1880,10 @@ class _KasirHeader extends StatelessWidget {
             if (hasCartItems) const SizedBox(width: 6),
             Container(
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
+                color: context.surfaceContainerLowest,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+                  color: context.indigoSurfaceTint.withValues(alpha: 0.14),
                 ),
               ),
               child: Row(
@@ -1975,15 +1921,15 @@ class _SearchKasir extends StatelessWidget {
       decoration: InputDecoration(
         hintText: 'Cari produk / SKU',
         hintStyle: AppTypePairing.bodySm(
-          color: AppColors.textSecondary.withValues(alpha: 0.7),
+          color: context.textSecondary.withValues(alpha: 0.7),
         ),
         prefixIcon: Icon(
           Icons.search,
-          color: AppColors.textSecondary.withValues(alpha: 0.6),
+          color: context.textSecondary.withValues(alpha: 0.6),
           size: 20,
         ),
         filled: true,
-        fillColor: AppColors.surfaceContainerLowest,
+        fillColor: context.surfaceContainerLowest,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 12,
@@ -1995,13 +1941,13 @@ class _SearchKasir extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: AppColors.indigoSurfaceTint.withValues(alpha: 0.15),
+            color: context.indigoSurfaceTint.withValues(alpha: 0.15),
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: AppColors.primary.withValues(alpha: 0.35),
+            color: context.indigoPrimary.withValues(alpha: 0.35),
             width: 1.2,
           ),
         ),
@@ -2048,17 +1994,17 @@ class _KasirProductTileState extends State<_KasirProductTile> {
           constraints: const BoxConstraints(minHeight: 96),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: widget.highlighted
-                  ? AppColors.info.withValues(alpha: 0.26)
-                  : AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+                  ? Color(0xFF74B9FF).withValues(alpha: 0.26)
+                  : context.indigoSurfaceTint.withValues(alpha: 0.14),
             ),
             boxShadow: [
               BoxShadow(
                 color: widget.highlighted
-                    ? AppColors.info.withValues(alpha: 0.1)
+                    ? Color(0xFF74B9FF).withValues(alpha: 0.1)
                     : Colors.black.withValues(alpha: 0.03),
                 blurRadius: widget.highlighted ? 10 : 5,
                 offset: Offset(0, widget.highlighted ? 4 : 2),
@@ -2132,7 +2078,7 @@ class _KasirProductTileState extends State<_KasirProductTile> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.textSecondary.withValues(alpha: 0.8),
+                        color: context.textSecondary.withValues(alpha: 0.8),
                         fontWeight: FontWeight.w500,
                         fontSize: 10,
                       ),
@@ -2145,7 +2091,7 @@ class _KasirProductTileState extends State<_KasirProductTile> {
                       style: AppTextStyles.labelLarge.copyWith(
                         fontWeight: FontWeight.w700,
                         height: 1.2,
-                        color: AppColors.textPrimary,
+                        color: context.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -2177,8 +2123,8 @@ class _KasirProductTileState extends State<_KasirProductTile> {
                           'Stok: ${widget.product.stok}',
                           style: AppTextStyles.labelSmall.copyWith(
                             color: widget.product.stok < 10
-                                ? AppColors.error
-                                : AppColors.textSecondary,
+                                ? context.error
+                                : context.textSecondary,
                             fontWeight: FontWeight.w600,
                             fontSize: 10,
                           ),
@@ -2246,7 +2192,7 @@ class _KasirProductTileState extends State<_KasirProductTile> {
                                 child: Icon(
                                   Icons.add,
                                   size: 20,
-                                  color: AppColors.white,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -2264,14 +2210,14 @@ class _KasirProductTileState extends State<_KasirProductTile> {
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: AppColors.white,
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(999),
-                            border: Border.all(color: AppColors.indigoPrimary),
+                            border: Border.all(color: context.indigoPrimary),
                           ),
                           child: Text(
                             '${widget.qty}',
                             style: AppTextStyles.labelSmall.copyWith(
-                              color: AppColors.indigoPrimary,
+                              color: context.indigoPrimary,
                               fontWeight: FontWeight.w800,
                               fontSize: 10,
                               height: 1,
@@ -2312,25 +2258,25 @@ class _KasirProductGridCard extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         onTap: () {
           HapticFeedback.selectionClick();
           onTambah();
         },
         child: Container(
           decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(16),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: highlighted
-                  ? AppColors.indigoPrimary.withValues(alpha: 0.24)
-                  : AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+                  ? context.indigoPrimary.withValues(alpha: 0.24)
+                  : context.indigoSurfaceTint.withValues(alpha: 0.14),
             ),
             boxShadow: [
               BoxShadow(
                 color: highlighted
-                    ? AppColors.primary.withValues(alpha: 0.09)
-                    : AppColors.shadowLight,
+                    ? context.indigoPrimary.withValues(alpha: 0.09)
+                    : context.shadowLight,
                 blurRadius: highlighted ? 16 : 11,
                 offset: const Offset(0, 5),
               ),
@@ -2353,7 +2299,7 @@ class _KasirProductGridCard extends StatelessWidget {
                         Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(8),
                             onTap: onTapProduct,
                             child: SizedBox(
                               height: imageHeight,
@@ -2372,8 +2318,7 @@ class _KasirProductGridCard extends StatelessWidget {
                                                 return child;
                                               }
                                               return Container(
-                                                color: AppColors
-                                                    .surfaceContainerLow,
+                                                color: context.surfaceContainerLow,
                                                 child: const Center(
                                                   child:
                                                       Skeleton(
@@ -2391,24 +2336,24 @@ class _KasirProductGridCard extends StatelessWidget {
                                               stackTrace,
                                             ) => Container(
                                               color:
-                                                  AppColors.surfaceContainerLow,
-                                              child: const Center(
+                                                  context.surfaceContainerLow,
+                                              child: Center(
                                                 child: Icon(
                                                   Icons
                                                       .image_not_supported_outlined,
                                                   size: 28,
-                                                  color: AppColors.textTertiary,
+                                                  color: context.textTertiary,
                                                 ),
                                               ),
                                             ),
                                       )
                                     : Container(
-                                        color: AppColors.surfaceContainerLow,
-                                        child: const Center(
+                                        color: context.surfaceContainerLow,
+                                        child: Center(
                                           child: Icon(
                                             Icons.image_not_supported_outlined,
                                             size: 28,
-                                            color: AppColors.textTertiary,
+                                            color: context.textTertiary,
                                           ),
                                         ),
                                       ),
@@ -2425,7 +2370,7 @@ class _KasirProductGridCard extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryFixed.withValues(
+                              color: context.primaryFixed.withValues(
                                 alpha: 0.92,
                               ),
                               borderRadius: BorderRadius.circular(999),
@@ -2435,7 +2380,7 @@ class _KasirProductGridCard extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: AppTextStyles.labelSmall.copyWith(
-                                color: AppColors.indigoPrimary,
+                                color: context.indigoPrimary,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 10,
                                 height: 1,
@@ -2457,15 +2402,15 @@ class _KasirProductGridCard extends StatelessWidget {
                                 vertical: 5,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.indigoPrimary,
+                                color: context.indigoPrimary,
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: AppColors.white,
+                                  color: Colors.white,
                                   width: 2,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.indigoPrimary.withValues(
+                                    color: context.indigoPrimary.withValues(
                                       alpha: 0.24,
                                     ),
                                     blurRadius: 8,
@@ -2477,7 +2422,7 @@ class _KasirProductGridCard extends StatelessWidget {
                               child: Text(
                                 qty > 99 ? '99+' : '$qty',
                                 style: AppTextStyles.labelSmall.copyWith(
-                                  color: AppColors.white,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.w800,
                                   fontSize: 11,
                                   height: 1,
@@ -2503,7 +2448,7 @@ class _KasirProductGridCard extends StatelessWidget {
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: AppTextStyles.labelLarge.copyWith(
-                                  color: AppColors.textPrimary,
+                                  color: context.textPrimary,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15,
                                   height: 1.05,
@@ -2518,8 +2463,8 @@ class _KasirProductGridCard extends StatelessWidget {
                             'Stok: ${product.stok}',
                             style: AppTextStyles.labelSmall.copyWith(
                               color: product.stok < 10
-                                  ? AppColors.error
-                                  : AppColors.textSecondary,
+                                  ? context.error
+                                  : context.textSecondary,
                               fontWeight: FontWeight.w600,
                               fontSize: 10,
                             ),
@@ -2542,29 +2487,6 @@ class _KasirProductGridCard extends StatelessWidget {
                                     height: 1.05,
                                     fontFamily: GoogleFonts.plusJakartaSans()
                                         .fontFamily,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(10),
-                                  onTap: onTambah,
-                                  child: Container(
-                                    width: 36,
-                                    height: 36,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primaryFixed,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Icon(
-                                      Icons.shopping_cart_checkout_rounded,
-                                      size: 19,
-                                      color: hasQty
-                                          ? AppColors.indigoPrimary
-                                          : AppColors.indigoSurfaceTint,
-                                    ),
                                   ),
                                 ),
                               ),
@@ -2606,13 +2528,13 @@ class _QtyButton extends StatelessWidget {
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: AppColors.surfaceVariant,
+          color: context.surfaceVariant,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(
           icon,
           size: iconSize,
-          color: onTap == null ? AppColors.textTertiary : AppColors.textPrimary,
+          color: onTap == null ? context.textTertiary : context.textPrimary,
         ),
       ),
     );
@@ -2664,12 +2586,14 @@ class _QuantityInputDialogState extends State<_QuantityInputDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 24),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 380),
+        child: Container(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(18),
+          color: context.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(14),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -2678,19 +2602,19 @@ class _QuantityInputDialogState extends State<_QuantityInputDialog> {
             Row(
               children: [
                 Container(
-                  width: 32,
-                  height: 32,
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
-                    color: AppColors.indigoPrimary.withValues(alpha: 0.12),
+                    color: context.indigoPrimary.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.shopping_basket_outlined,
-                    size: 17,
-                    color: AppColors.indigoPrimary,
+                    size: 18,
+                    color: context.indigoPrimary,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     'Atur Quantity',
@@ -2704,48 +2628,81 @@ class _QuantityInputDialogState extends State<_QuantityInputDialog> {
                 ),
               ],
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 16),
+            // Product Info
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: context.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.product.nama,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypePairing.bodyMd(
+                            color: context.textPrimary,
+                            weight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          CurrencyFormatter.format(widget.product.harga, symbol: 'Rp '),
+                          style: AppTypePairing.bodyMd(
+                            color: context.indigoPrimary,
+                            weight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: widget.product.stok < 10
+                          ? context.error.withValues(alpha: 0.12)
+                          : context.surfaceContainerLowest,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      'Stok: ${widget.product.stok}',
+                      style: AppTypePairing.bodySm(
+                        color: widget.product.stok < 10
+                            ? context.error
+                            : context.textSecondary,
+                        weight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Quantity Header
             Text(
-              widget.product.nama,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypePairing.bodySm(
-                color: AppColors.textPrimary,
+              'Jumlah',
+              style: AppTypePairing.bodyMd(
+                color: context.textSecondary,
                 weight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  CurrencyFormatter.format(widget.product.harga, symbol: 'Rp '),
-                  style: AppTypePairing.bodySm(
-                    color: AppColors.indigoPrimary,
-                    weight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  'Stok: ${widget.product.stok}',
-                  style: AppTypePairing.bodySm(
-                    color: widget.product.stok < 10
-                        ? AppColors.error
-                        : AppColors.textSecondary,
-                    weight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
+            // Quantity Controls
             Row(
               children: [
                 _QtyButton(
                   icon: Icons.remove,
-                  size: 36,
-                  iconSize: 18,
+                  size: 40,
+                  iconSize: 20,
                   onTap: _draftQty > 0 ? () => _setQty(_draftQty - 1) : null,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
                     controller: _controller,
@@ -2756,73 +2713,74 @@ class _QuantityInputDialogState extends State<_QuantityInputDialog> {
                     onChanged: (value) {
                       final parsed = int.tryParse(value.trim());
                       if (parsed == null) return;
-                      setState(() => _draftQty = parsed);
+                      setState(() => _draftQty = parsed.clamp(0, widget.product.stok));
                     },
-                    style: AppTypePairing.titleMd(weight: FontWeight.w800),
+                    style: AppTypePairing.titleMd(weight: FontWeight.w800, fontSize: 20),
                     decoration: InputDecoration(
                       hintText: '0',
                       filled: true,
-                      fillColor: AppColors.surfaceContainerLow,
+                      fillColor: context.surfaceContainerLow,
                       contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 10,
+                        horizontal: 12,
+                        vertical: 12,
                       ),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.indigoSurfaceTint.withValues(
-                            alpha: 0.14,
-                          ),
+                          color: context.indigoSurfaceTint.withValues(alpha: 0.14),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: AppColors.indigoPrimary.withValues(alpha: 0.4),
+                          color: context.indigoPrimary.withValues(alpha: 0.4),
                         ),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
                 _QtyButton(
                   icon: Icons.add,
-                  size: 36,
-                  iconSize: 18,
+                  size: 40,
+                  iconSize: 20,
                   onTap: () => _setQty(_draftQty + 1),
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
+            // Quick Presets
             Wrap(
-              spacing: 6,
-              runSpacing: 6,
+              spacing: 8,
+              runSpacing: 8,
               children: [1, 5, 10, 20].map((preset) {
                 final selected = _draftQty == preset;
                 return InkWell(
-                  borderRadius: BorderRadius.circular(999),
+                  borderRadius: BorderRadius.circular(8),
                   onTap: () => _setQty(preset),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 9,
-                      vertical: 5,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       color: selected
-                          ? AppColors.indigoPrimary.withValues(alpha: 0.12)
-                          : AppColors.surfaceContainerLow,
-                      borderRadius: BorderRadius.circular(999),
+                          ? context.indigoPrimary
+                          : context.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: selected
+                            ? context.indigoPrimary
+                            : Colors.transparent,
+                      ),
                     ),
                     child: Text(
                       '$preset',
-                      style: AppTypePairing.bodySm(
+                      style: AppTypePairing.bodyMd(
                         color: selected
-                            ? AppColors.indigoPrimary
-                            : AppColors.textSecondary,
+                            ? Colors.white
+                            : context.textSecondary,
                         weight: FontWeight.w700,
                       ),
                     ),
@@ -2830,18 +2788,17 @@ class _QuantityInputDialogState extends State<_QuantityInputDialog> {
                 );
               }).toList(),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 18),
+            // Action Buttons
             Row(
               children: [
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.pop(context),
                     style: OutlinedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(42),
+                      minimumSize: const Size.fromHeight(44),
                       side: BorderSide(
-                        color: AppColors.indigoSurfaceTint.withValues(
-                          alpha: 0.24,
-                        ),
+                        color: context.indigoSurfaceTint.withValues(alpha: 0.24),
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -2849,24 +2806,27 @@ class _QuantityInputDialogState extends State<_QuantityInputDialog> {
                     ),
                     child: Text(
                       'Batal',
-                      style: AppTypePairing.bodySm(weight: FontWeight.w700),
+                      style: AppTypePairing.bodyMd(weight: FontWeight.w700),
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
                 Expanded(
                   child: FilledButton(
                     onPressed: () => Navigator.pop(context, _draftQty),
                     style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(42),
+                      minimumSize: const Size.fromHeight(44),
+                      backgroundColor: _draftQty == 0
+                          ? context.error
+                          : context.indigoPrimary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     child: Text(
-                      _draftQty == 0 ? 'Hapus' : 'Simpan',
-                      style: AppTypePairing.bodySm(
-                        color: AppColors.white,
+                      _draftQty == 0 ? 'Hapus Produk' : 'Simpan',
+                      style: AppTypePairing.bodyMd(
+                        color: Colors.white,
                         weight: FontWeight.w700,
                       ),
                     ),
@@ -2875,6 +2835,7 @@ class _QuantityInputDialogState extends State<_QuantityInputDialog> {
               ],
             ),
           ],
+        ),
         ),
       ),
     );
@@ -2908,11 +2869,11 @@ class _ProceedButton extends StatelessWidget {
             height: 52,
             padding: const EdgeInsets.symmetric(horizontal: 14),
             decoration: BoxDecoration(
-              gradient: AppColors.indigoActionGradient,
+              gradient: context.indigoActionGradient,
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.26),
+                  color: context.indigoPrimary.withValues(alpha: 0.26),
                   blurRadius: 16,
                   offset: const Offset(0, 8),
                 ),
@@ -2924,20 +2885,20 @@ class _ProceedButton extends StatelessWidget {
                   width: 28,
                   height: 28,
                   decoration: BoxDecoration(
-                    color: AppColors.white.withValues(alpha: 0.14),
+                    color: Colors.white.withValues(alpha: 0.14),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(
                     Icons.shopping_bag_outlined,
                     size: 16,
-                    color: AppColors.white,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(width: 10),
                 Text(
                   '$totalItem item | ${CurrencyFormatter.format(totalHarga, symbol: 'Rp ')}',
                   style: AppTextStyles.labelMedium.copyWith(
-                    color: AppColors.white,
+                    color: Colors.white,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -2945,7 +2906,7 @@ class _ProceedButton extends StatelessWidget {
                 Text(
                   'Lanjut',
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.white.withValues(alpha: 0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.2,
                   ),
@@ -2953,7 +2914,7 @@ class _ProceedButton extends StatelessWidget {
                 const SizedBox(width: 6),
                 const Icon(
                   Icons.chevron_right,
-                  color: AppColors.white,
+                  color: Colors.white,
                   size: 18,
                 ),
               ],
@@ -2985,14 +2946,14 @@ class _OrderItemTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.08),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.08),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowLight,
+            color: context.shadowLight,
             blurRadius: 6,
             offset: const Offset(0, 1),
           ),
@@ -3017,7 +2978,7 @@ class _OrderItemTile extends StatelessWidget {
                 Text(
                   CurrencyFormatter.format(product.harga, symbol: 'Rp '),
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.textSecondary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -3025,7 +2986,7 @@ class _OrderItemTile extends StatelessWidget {
                 Text(
                   'Total: ${CurrencyFormatter.format(lineTotal, symbol: 'Rp ')}',
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.primary,
+                    color: context.indigoPrimary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -3036,7 +2997,7 @@ class _OrderItemTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColors.surfaceVariant,
+              color: context.surfaceVariant,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -3124,14 +3085,14 @@ class _OrderPaymentSummaryPanel extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.10),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.10),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowLight,
+            color: context.shadowLight,
             blurRadius: 7,
             offset: const Offset(0, 1),
           ),
@@ -3143,7 +3104,7 @@ class _OrderPaymentSummaryPanel extends StatelessWidget {
           Text(
             'Ringkasan Pembayaran',
             style: AppTextStyles.labelLarge.copyWith(
-              color: AppColors.textPrimary,
+              color: context.textPrimary,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -3168,7 +3129,7 @@ class _OrderPaymentSummaryPanel extends StatelessWidget {
                 'Metode',
                 style: AppTextStyles.labelLarge.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
+                  color: context.textPrimary,
                 ),
               ),
               hasMetode
@@ -3176,7 +3137,7 @@ class _OrderPaymentSummaryPanel extends StatelessWidget {
                   : Text(
                       '-',
                       style: AppTextStyles.labelLarge.copyWith(
-                        color: AppColors.textSecondary,
+                        color: context.textSecondary,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -3192,7 +3153,7 @@ class _OrderPaymentSummaryPanel extends StatelessWidget {
             _OrderSummaryLine(
               label: 'Kembalian',
               value: CurrencyFormatter.format(kembalian!, symbol: 'Rp '),
-              valueColor: AppColors.success,
+              valueColor: context.success,
             ),
           ],
           const Padding(
@@ -3205,7 +3166,7 @@ class _OrderPaymentSummaryPanel extends StatelessWidget {
               Text(
                 'Total Bayar',
                 style: AppTextStyles.labelLarge.copyWith(
-                  color: AppColors.textPrimary,
+                  color: context.textPrimary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -3235,9 +3196,9 @@ class _OrderMethodPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
-        color: AppColors.primaryFixed,
+        color: context.primaryFixed,
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.14)),
+        border: Border.all(color: context.indigoPrimary.withValues(alpha: 0.14)),
       ),
       child: Text(
         label,
@@ -3270,14 +3231,14 @@ class _OrderSummaryLine extends StatelessWidget {
         Text(
           label,
           style: AppTextStyles.bodySmall.copyWith(
-            color: AppColors.textSecondary,
+            color: context.textSecondary,
           ),
         ),
         Text(
           value,
           style: AppTextStyles.labelLarge.copyWith(
             fontWeight: FontWeight.w700,
-            color: valueColor ?? AppColors.textPrimary,
+            color: valueColor ?? context.textPrimary,
           ),
         ),
       ],
@@ -3295,14 +3256,14 @@ class _OrderSectionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.08),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.08),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowLight,
+            color: context.shadowLight,
             blurRadius: 6,
             offset: const Offset(0, 1),
           ),
@@ -3326,7 +3287,7 @@ class _OrderSectionTitle extends StatelessWidget {
         Text(
           title,
           style: AppTextStyles.labelMedium.copyWith(
-            color: AppColors.textSecondary,
+            color: context.textSecondary,
             letterSpacing: 0.5,
             fontWeight: FontWeight.w700,
           ),
@@ -3412,7 +3373,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                           .toUpperCase(),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.textPrimary,
+                        color: context.textPrimary,
                         fontSize: 9,
                         fontWeight: FontWeight.w400,
                       ),
@@ -3424,7 +3385,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                           .toUpperCase(),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.textPrimary,
+                        color: context.textPrimary,
                         fontSize: 8,
                         fontWeight: FontWeight.w400,
                       ),
@@ -3435,7 +3396,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                           .toUpperCase(),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.textPrimary,
+                        color: context.textPrimary,
                         fontSize: 8,
                         fontWeight: FontWeight.w400,
                       ),
@@ -3445,7 +3406,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                           .toUpperCase(),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.textPrimary,
+                        color: context.textPrimary,
                         fontSize: 8,
                         fontWeight: FontWeight.w400,
                       ),
@@ -3455,7 +3416,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                           .toUpperCase(),
                       textAlign: TextAlign.center,
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.textPrimary,
+                        color: context.textPrimary,
                         fontSize: 8,
                         fontWeight: FontWeight.w400,
                       ),
@@ -3466,7 +3427,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                       '${widget.appSettings?['no_hp']}',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: AppColors.textPrimary,
+                        color: context.textPrimary,
                         fontSize: 8,
                         fontWeight: FontWeight.w400,
                       ),
@@ -3483,7 +3444,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                 Text(
                   widget.orderId,
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.textPrimary,
+                    color: context.textPrimary,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -3492,7 +3453,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
             Text(
               widget.tanggalJam,
               style: AppTextStyles.labelSmall.copyWith(
-                color: AppColors.textPrimary,
+                color: context.textPrimary,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -3519,7 +3480,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                       Text(
                         item.name.toUpperCase(),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textPrimary,
+                          color: context.textPrimary,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -3529,7 +3490,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                           Text(
                             '${item.qty} x ${CurrencyFormatter.format(item.lineTotal ~/ item.qty, symbol: '')}',
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textPrimary,
+                              color: context.textPrimary,
                               fontSize: 10,
                               fontWeight: FontWeight.w400,
                             ),
@@ -3540,7 +3501,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                               symbol: '',
                             ),
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textPrimary,
+                              color: context.textPrimary,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -3592,14 +3553,14 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                 Text(
                   'GRAND TOTAL',
                   style: AppTextStyles.labelLarge.copyWith(
-                    color: AppColors.textPrimary,
+                    color: context.textPrimary,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
                 Text(
                   CurrencyFormatter.format(widget.total, symbol: 'Rp '),
                   style: AppTextStyles.labelLarge.copyWith(
-                    color: AppColors.textPrimary,
+                    color: context.textPrimary,
                     fontWeight: FontWeight.w400,
                     fontFamily: 'monospace',
                   ),
@@ -3615,7 +3576,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                     .replaceAll(' ', ''),
                 textAlign: TextAlign.center,
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.textPrimary,
+                  color: context.textPrimary,
                   fontSize: 9,
                   fontWeight: FontWeight.w400,
                 ),
@@ -3652,7 +3613,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
         elevation: 0,
         centerTitle: false,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back, color: context.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -3679,7 +3640,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                           width: 84,
                           height: 84,
                           decoration: BoxDecoration(
-                            color: AppColors.primaryFixed.withValues(
+                            color: context.primaryFixed.withValues(
                               alpha: 0.35,
                             ),
                             borderRadius: BorderRadius.circular(999),
@@ -3694,7 +3655,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                               ),
                               child: const Icon(
                                 Icons.check,
-                                color: AppColors.white,
+                                color: Colors.white,
                                 size: 20,
                               ),
                             ),
@@ -3707,7 +3668,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                         textAlign: TextAlign.center,
                         style: AppTextStyles.headingLarge.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: AppColors.textPrimary,
+                          color: context.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -3715,7 +3676,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: AppColors.surfaceVariant,
+                            color: context.surfaceVariant,
                             borderRadius: BorderRadius.circular(999),
                           ),
                           child: Row(
@@ -3797,19 +3758,19 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
 
                         if (context.mounted) {
                           if (success) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Struk berhasil dicetak!'),
-                                backgroundColor: AppColors.success,
-                              ),
-                            );
+ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Struk berhasil dicetak!'),
+                              backgroundColor: context.success,
+                            ),
+                          );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
+                              SnackBar(
                                 content: Text(
                                   'Gagal mencetak struk. Pastikan printer terhubung di menu Pengaturan Printer.',
                                 ),
-                                backgroundColor: AppColors.error,
+                                backgroundColor: context.error,
                                 duration: Duration(seconds: 4),
                               ),
                             );
@@ -3820,7 +3781,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                       label: const Text('Cetak Struk'),
                       style: FilledButton.styleFrom(
                         backgroundColor: _posBlueDark,
-                        foregroundColor: AppColors.white,
+                        foregroundColor: Colors.white,
                         minimumSize: const Size.fromHeight(50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
@@ -3847,9 +3808,9 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                           label: const Text('Ke Home'),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size.fromHeight(44),
-                            backgroundColor: AppColors.white,
+                            backgroundColor: Colors.white,
                             side: BorderSide(
-                              color: AppColors.indigoSurfaceTint.withValues(
+                              color: context.indigoSurfaceTint.withValues(
                                 alpha: 0.22,
                               ),
                             ),
@@ -3880,7 +3841,7 @@ class _OrderSuccessScreenState extends State<_OrderSuccessScreen> {
                               255,
                             ),
                             side: BorderSide(
-                              color: AppColors.indigoSurfaceTint.withValues(
+                              color: context.indigoSurfaceTint.withValues(
                                 alpha: 0.22,
                               ),
                             ),
@@ -3930,7 +3891,7 @@ class _ReceiptStyleChip extends StatelessWidget {
           label,
           style: AppTextStyles.labelSmall.copyWith(
             fontWeight: FontWeight.w700,
-            color: selected ? AppColors.white : AppColors.textSecondary,
+            color: selected ? Colors.white : context.textSecondary,
           ),
         ),
       ),
@@ -3974,7 +3935,7 @@ class _ModernReceiptCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF8F8FA),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
+        border: Border.all(color: context.border.withValues(alpha: 0.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -4000,7 +3961,7 @@ class _ModernReceiptCard extends StatelessWidget {
                             .toString()
                             .toUpperCase(),
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.textSecondary,
                           fontSize: 9,
                           fontWeight: FontWeight.w400,
                         ),
@@ -4011,7 +3972,7 @@ class _ModernReceiptCard extends StatelessWidget {
                             .toString()
                             .toUpperCase(),
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.textSecondary,
                           fontSize: 8,
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.w400,
@@ -4022,7 +3983,7 @@ class _ModernReceiptCard extends StatelessWidget {
                         '${appSettings?['alamat_toko']?['jalan'] ?? ''}'
                             .toUpperCase(),
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.textSecondary,
                           fontSize: 8,
                           fontWeight: FontWeight.w400,
                         ),
@@ -4031,7 +3992,7 @@ class _ModernReceiptCard extends StatelessWidget {
                         '${appSettings?['alamat_toko']?['kota'] ?? ''}, ${appSettings?['alamat_toko']?['provinsi'] ?? ''}'
                             .toUpperCase(),
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.textSecondary,
                           fontSize: 8,
                           fontWeight: FontWeight.w400,
                         ),
@@ -4041,7 +4002,7 @@ class _ModernReceiptCard extends StatelessWidget {
                       Text(
                         'TELP: ${appSettings?['no_hp']}',
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.textSecondary,
                           fontSize: 8,
                           fontWeight: FontWeight.w400,
                         ),
@@ -4053,9 +4014,9 @@ class _ModernReceiptCard extends StatelessWidget {
               _OrderMethodPill(label: metodePembayaran?.toUpperCase() ?? '-'),
             ],
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
-            child: Divider(height: 1, color: AppColors.border),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Divider(height: 1, color: context.border),
           ),
           Row(
             children: [
@@ -4072,9 +4033,9 @@ class _ModernReceiptCard extends StatelessWidget {
               ),
             ],
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
-            child: Divider(height: 1, color: AppColors.border),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Divider(height: 1, color: context.border),
           ),
           if (purchasedItems.isEmpty)
             _OrderDetailItemRow(
@@ -4134,13 +4095,13 @@ class _ModernReceiptCard extends StatelessWidget {
                   _SummaryRow(
                     label: 'Kembali',
                     value: CurrencyFormatter.format(kembalian!, symbol: ''),
-                    valueColor: AppColors.success,
+                    valueColor: context.success,
                   ),
                 ],
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Divider(height: 1, color: AppColors.border),
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Divider(height: 1, color: context.border),
+          ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -4172,7 +4133,7 @@ class _ModernReceiptCard extends StatelessWidget {
                   .replaceAll(' ', ''),
               textAlign: TextAlign.center,
               style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.textSecondary,
+                color: context.textSecondary,
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
               ),
@@ -4220,7 +4181,7 @@ class _ReceiptMetaTile extends StatelessWidget {
         Text(
           label,
           style: AppTextStyles.labelSmall.copyWith(
-            color: AppColors.textSecondary,
+            color: context.textSecondary,
             letterSpacing: 0.8,
             fontWeight: FontWeight.w400,
           ),
@@ -4256,9 +4217,9 @@ class _ReceiptPaper extends StatelessWidget {
         Container(
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.border.withValues(alpha: 0.65)),
+            border: Border.all(color: context.border.withValues(alpha: 0.65)),
             boxShadow: const [
               BoxShadow(
                 color: Color(0x14000000),
@@ -4309,7 +4270,7 @@ class _ReceiptDashedDivider extends StatelessWidget {
             (_) => Container(
               width: 4,
               height: 1.2,
-              color: AppColors.textSecondary.withValues(alpha: 0.35),
+              color: context.textSecondary.withValues(alpha: 0.35),
             ),
           ),
         );
@@ -4345,7 +4306,7 @@ class _OrderDetailItemRow extends StatelessWidget {
                 style: AppTextStyles.labelLarge.copyWith(
                   fontWeight: FontWeight.w400,
                   height: 1.15,
-                  color: AppColors.textPrimary,
+                  color: context.textPrimary,
                 ),
               ),
               const SizedBox(height: 2),
@@ -4354,7 +4315,7 @@ class _OrderDetailItemRow extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.textSecondary,
+                  color: context.textSecondary,
                   fontFamily: 'monospace',
                 ),
               ),
@@ -4373,3 +4334,4 @@ class _OrderDetailItemRow extends StatelessWidget {
     );
   }
 }
+

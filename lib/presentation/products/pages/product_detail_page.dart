@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/domain/products/entities/product.dart';
@@ -13,14 +14,14 @@ class ProductDetailPage extends StatelessWidget {
     final isLowStock = product.stock <= 10;
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: context.surfaceContainerLowest,
       appBar: AppBar(
-        backgroundColor: AppColors.surfaceContainerLowest,
+        backgroundColor: context.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         titleSpacing: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: context.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
@@ -30,7 +31,7 @@ class ProductDetailPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Detail Produk', style: AppTypePairing.headlineLg(color: AppColors.primary)),
+                Text('Detail Produk', style: AppTypePairing.headlineLg(color: context.indigoPrimary)),
                 Text('Informasi lengkap katalog', style: AppTypePairing.bodySm()),
               ],
             ),
@@ -70,9 +71,9 @@ class _HeroImage extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         border: Border(
-          bottom: BorderSide(color: AppColors.borderLight, width: 1),
+          bottom: BorderSide(color: context.borderLight, width: 1),
         ),
       ),
       child: Column(
@@ -82,14 +83,14 @@ class _HeroImage extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 1,
               child: Container(
-                color: AppColors.surfaceContainerLow,
-                child: product.imageUrl != null
-                    ? Image.network(
-                        product.imageUrl!,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => _placeholderIcon(),
-                      )
-                    : _placeholderIcon(),
+                color: context.surfaceContainerLow,
+child: product.imageUrl != null
+              ? Image.network(
+                  product.imageUrl!,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) => _placeholderIcon(context),
+                )
+              : _placeholderIcon(context),
               ),
             ),
           ),
@@ -99,12 +100,12 @@ class _HeroImage extends StatelessWidget {
             children: [
               _Badge(
                 label: product.categoryName,
-                color: AppColors.primary,
+                color: context.indigoPrimary,
                 isLight: true,
               ),
               _Badge(
                 label: product.status ? 'AKTIF' : 'NON-AKTIF',
-                color: product.status ? AppColors.success : AppColors.error,
+                color: product.status ? context.success : context.error,
                 isLight: true,
               ),
             ],
@@ -114,8 +115,8 @@ class _HeroImage extends StatelessWidget {
     );
   }
 
-  Widget _placeholderIcon() {
-    return const Icon(Icons.image_not_supported_outlined, size: 48, color: AppColors.textTertiary);
+  Widget _placeholderIcon(BuildContext context) {
+    return Icon(Icons.image_not_supported_outlined, size: 48, color: context.textTertiary);
   }
 }
 
@@ -140,12 +141,12 @@ class _HeaderInfo extends StatelessWidget {
                   children: [
                     Text(
                       product.name,
-                      style: AppTypePairing.headlineLg(color: AppColors.textPrimary).copyWith(fontSize: 22),
+                      style: AppTypePairing.headlineLg(color: context.textPrimary).copyWith(fontSize: 22),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'SKU: ${product.sku.toUpperCase()}',
-                      style: AppTypePairing.bodySm(color: AppColors.textSecondary, weight: FontWeight.w600),
+                      style: AppTypePairing.bodySm(color: context.textSecondary, weight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -154,18 +155,18 @@ class _HeaderInfo extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
-                    color: AppColors.errorLight,
+                    color: context.errorLight,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
+                    border: Border.all(color: context.error.withValues(alpha: 0.2)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.warning_amber_rounded, size: 12, color: AppColors.error),
+                      Icon(Icons.warning_amber_rounded, size: 12, color: context.error),
                       const SizedBox(width: 4),
                       Text(
                         'Stok Rendah',
-                        style: AppTypePairing.labelSmCaps(color: AppColors.error),
+                        style: AppTypePairing.labelSmCaps(color: context.error),
                       ),
                     ],
                   ),
@@ -176,11 +177,11 @@ class _HeaderInfo extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.label_outline, size: 14, color: AppColors.textTertiary),
+                Icon(Icons.label_outline, size: 14, color: context.textTertiary),
                 const SizedBox(width: 6),
                 Text(
                   'Merek: ${product.brand}',
-                  style: AppTypePairing.bodySm(color: AppColors.textSecondary),
+                  style: AppTypePairing.bodySm(color: context.textSecondary),
                 ),
               ],
             ),
@@ -206,7 +207,7 @@ class _PriceStockRow extends StatelessWidget {
             child: _InfoBox(
               label: 'Harga Jual',
               value: 'Rp ${_formatRupiah(product.price)}',
-              color: AppColors.primary,
+              color: context.indigoPrimary,
               icon: Icons.attach_money_rounded,
             ),
           ),
@@ -215,7 +216,7 @@ class _PriceStockRow extends StatelessWidget {
             child: _InfoBox(
               label: 'Stok Tersedia',
               value: '${product.stock} Unit',
-              color: isLowStock ? AppColors.error : AppColors.success,
+              color: isLowStock ? context.error : context.success,
               icon: Icons.inventory_2_rounded,
             ),
           ),
@@ -254,9 +255,9 @@ class _SpecsCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
+              color: context.surfaceContainerLowest,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.borderLight),
+              border: Border.all(color: context.borderLight),
             ),
             child: Column(
               children: [
@@ -335,9 +336,9 @@ class _InfoBox extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderLight),
+        border: Border.all(color: context.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -346,7 +347,7 @@ class _InfoBox extends StatelessWidget {
             children: [
               Icon(icon, size: 16, color: color),
               const SizedBox(width: 6),
-              Text(label, style: AppTypePairing.bodySm(color: AppColors.textSecondary)),
+              Text(label, style: AppTypePairing.bodySm(color: context.textSecondary)),
             ],
           ),
           const SizedBox(height: 8),
@@ -376,15 +377,15 @@ class _SpecRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: AppColors.textTertiary),
+          Icon(icon, size: 18, color: context.textTertiary),
           const SizedBox(width: 12),
-          Text(label, style: AppTypePairing.bodySm(color: AppColors.textSecondary)),
+          Text(label, style: AppTypePairing.bodySm(color: context.textSecondary)),
           const Spacer(),
           Text(
             value,
             style: isBold
                 ? AppTypePairing.titleMd()
-                : AppTypePairing.bodySm(color: AppColors.textPrimary, weight: FontWeight.w600),
+                : AppTypePairing.bodySm(color: context.textPrimary, weight: FontWeight.w600),
           ),
         ],
       ),
@@ -395,6 +396,6 @@ class _SpecRow extends StatelessWidget {
 class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Divider(height: 1, color: AppColors.borderLight);
+    return Divider(height: 1, color: context.borderLight);
   }
 }

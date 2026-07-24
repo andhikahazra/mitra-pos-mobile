@@ -39,18 +39,18 @@ class _StoreInfoCardState extends State<StoreInfoCard> {
         width: double.infinity,
         padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [
-              AppColors.indigoPrimary,
-              AppColors.indigoPrimaryContainer,
-            ],
+          gradient: LinearGradient(
+colors: [
+               context.indigoPrimary,
+               context.primaryFixed,
+             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withValues(alpha: _isHovered ? 0.18 : 0.12),
+              color: context.indigoPrimary.withValues(alpha: _isHovered ? 0.18 : 0.12),
               blurRadius: _isHovered ? 24 : 16,
               offset: Offset(0, _isHovered ? 10 : 7),
             ),
@@ -65,13 +65,13 @@ class _StoreInfoCardState extends State<StoreInfoCard> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryFixed,
+                    color: context.primaryFixed,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.storefront_outlined,
                     size: 19,
-                    color: AppColors.primary,
+                    color: context.indigoPrimary,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -81,14 +81,14 @@ class _StoreInfoCardState extends State<StoreInfoCard> {
                     children: [
                       Text(
                         widget.storeName,
-                        style: AppTypePairing.headlineLg(color: AppColors.white),
+                        style: AppTypePairing.headlineLg(color: Colors.white),
                       ),
                       const SizedBox(height: 3),
                       Text(
                         '${widget.username} · ${widget.category}',
-                        style: AppTypePairing.bodySm(
-                          color: AppColors.white.withValues(alpha: 0.78),
-                        ),
+style: AppTypePairing.bodySm(
+                         color: Colors.white.withValues(alpha: 0.78),
+                       ),
                       ),
                     ],
                   ),
@@ -117,7 +117,7 @@ class _StoreInfoCardState extends State<StoreInfoCard> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
         decoration: BoxDecoration(
-          color: AppColors.white.withValues(alpha: 0.12),
+          color: Colors.white.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -126,14 +126,14 @@ class _StoreInfoCardState extends State<StoreInfoCard> {
             Text(
               label,
               style: AppTypePairing.labelSmCaps(
-                color: AppColors.white.withValues(alpha: 0.72),
+                color: Colors.white.withValues(alpha: 0.72),
               ),
             ),
             const SizedBox(height: 4),
             Text(
               value,
               style: AppTypePairing.valueMd(
-                color: AppColors.white,
+                color: Colors.white,
               ),
             ),
           ],

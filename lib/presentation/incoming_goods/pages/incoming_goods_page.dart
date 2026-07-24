@@ -54,22 +54,22 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
 
   Color _statusColor(String s) {
     if (s == 'Diterima' || s == 'Disetujui' || s == 'Selesai') {
-      return AppColors.success;
+      return context.success;
     }
     if (s == 'Ditolak') {
-      return AppColors.error;
+      return context.error;
     }
-    return AppColors.warning;
+    return context.warning;
   }
 
   Color _statusBg(String s) {
     if (s == 'Diterima' || s == 'Disetujui' || s == 'Selesai') {
-      return AppColors.successLight;
+      return context.success.withValues(alpha: 0.1);
     }
     if (s == 'Ditolak') {
-      return AppColors.errorLight;
+      return context.error.withValues(alpha: 0.1);
     }
-    return AppColors.warningLight;
+    return context.warning.withValues(alpha: 0.1);
   }
 
   @override
@@ -94,7 +94,7 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
     Widget incomingBody() {
       return RefreshIndicator(
         onRefresh: _onRefresh,
-        color: AppColors.primary,
+        color: context.indigoPrimary,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
@@ -104,7 +104,7 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceContainerLow,
+                    color: context.surfaceContainerLow,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: TextField(
@@ -112,12 +112,12 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
                     decoration: InputDecoration(
                       hintText: 'Cari kode atau supplier',
                       hintStyle: AppTypePairing.bodySm(),
-                      prefixIcon: const Icon(Icons.search_rounded, size: 18, color: AppColors.textTertiary),
+                      prefixIcon: Icon(Icons.search_rounded, size: 18, color: context.textTertiary),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(vertical: 10),
                       isDense: true,
                     ),
-                    style: AppTypePairing.bodySm(color: AppColors.textPrimary),
+                    style: AppTypePairing.bodySm(color: context.textPrimary),
                   ),
                 ),
               ),
@@ -142,10 +142,10 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
                           duration: const Duration(milliseconds: 150),
                           padding: const EdgeInsets.symmetric(horizontal: 14),
                           decoration: BoxDecoration(
-                            color: active ? AppColors.primary : Colors.transparent,
+                            color: active ? context.indigoPrimary : Colors.transparent,
                             borderRadius: BorderRadius.circular(999),
                             border: Border.all(
-                              color: active ? AppColors.primary : AppColors.border,
+                              color: active ? context.indigoPrimary : context.border,
                               width: active ? 0 : 1,
                             ),
                           ),
@@ -153,7 +153,7 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
                           child: Text(
                             opt,
                             style: AppTypePairing.labelSmCaps(
-                              color: active ? AppColors.white : AppColors.textSecondary,
+                              color: active ? Colors.white : context.textSecondary,
                             ),
                           ),
                         ),
@@ -173,7 +173,7 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
                     const Spacer(),
                     Text(
                       '${filteredItems.length} dokumen',
-                      style: AppTypePairing.bodySm(color: AppColors.textTertiary),
+                      style: AppTypePairing.bodySm(color: context.textTertiary),
                     ),
                   ],
                 ),
@@ -211,7 +211,7 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
 
     if (isTablet) {
       return Scaffold(
-        backgroundColor: AppColors.surfaceContainerLowest,
+        backgroundColor: context.surfaceContainerLowest,
         body: SafeArea(
           child: Row(
             children: [
@@ -224,15 +224,15 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: context.surfaceContainerLowest,
       appBar: AppBar(
-        backgroundColor: AppColors.surfaceContainerLowest,
+        backgroundColor: context.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Text(
           'Penerimaan Barang',
-          style: AppTypePairing.titleMd(color: AppColors.textPrimary, weight: FontWeight.w800),
+          style: AppTypePairing.titleMd(color: context.textPrimary, weight: FontWeight.w800),
         ),
         centerTitle: false,
         actions: [
@@ -246,11 +246,11 @@ class _IncomingGoodsPageState extends ConsumerState<IncomingGoodsPage> {
               icon: const Icon(Icons.add_rounded, size: 16),
               label: const Text('Baru'),
               style: FilledButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: context.indigoPrimary,
                 minimumSize: const Size(0, 36),
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                textStyle: AppTypePairing.labelSmCaps(color: AppColors.white),
+                textStyle: AppTypePairing.labelSmCaps(color: Colors.white),
               ),
             ),
           ),
@@ -289,13 +289,13 @@ class _EmptyState extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: Column(
         children: [
-          Icon(icon, size: 40, color: AppColors.textTertiary),
+          Icon(icon, size: 40, color: context.textTertiary),
           const SizedBox(height: 12),
-          Text(title, style: AppTypePairing.titleMd(color: AppColors.textSecondary)),
+          Text(title, style: AppTypePairing.titleMd(color: context.textSecondary)),
           const SizedBox(height: 6),
           Text(
             subtitle,
-            style: AppTypePairing.bodySm(color: AppColors.textTertiary),
+            style: AppTypePairing.bodySm(color: context.textTertiary),
             textAlign: TextAlign.center,
           ),
         ],
@@ -347,7 +347,7 @@ class _IncomingItemCard extends StatelessWidget {
     }
 
     return Material(
-      color: AppColors.surfaceContainerLowest,
+      color: context.surfaceContainerLowest,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: () => Navigator.push(
@@ -359,7 +359,7 @@ class _IncomingItemCard extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.borderLight),
+            border: Border.all(color: context.borderLight),
           ),
           child: Row(
             children: [
@@ -368,10 +368,10 @@ class _IncomingItemCard extends StatelessWidget {
                 height: 40,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: AppColors.primaryFixed,
+                  color: context.primaryFixed,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Text(initial, style: AppTypePairing.titleMd(color: AppColors.primary, weight: FontWeight.w700)),
+                child: Text(initial, style: AppTypePairing.titleMd(color: context.indigoPrimary, weight: FontWeight.w700)),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -383,7 +383,7 @@ class _IncomingItemCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             item['kode'] ?? '-',
-                            style: AppTypePairing.valueMd(color: AppColors.textPrimary),
+                            style: AppTypePairing.valueMd(color: context.textPrimary),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -399,18 +399,18 @@ class _IncomingItemCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 3),
-                    Text(supplierName, style: AppTypePairing.bodySm(color: AppColors.textSecondary)),
+                    Text(supplierName, style: AppTypePairing.bodySm(color: context.textSecondary)),
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Text(formattedDate, style: AppTypePairing.labelSmCaps(color: AppColors.textTertiary)),
+                        Text(formattedDate, style: AppTypePairing.labelSmCaps(color: context.textTertiary)),
                         const SizedBox(width: 10),
-                        Text('$totalItems item', style: AppTypePairing.labelSmCaps(color: AppColors.textTertiary)),
+                        Text('$totalItems item', style: AppTypePairing.labelSmCaps(color: context.textTertiary)),
                         if (totalAmount > 0) ...[
                           const SizedBox(width: 10),
                           Text(
                             'Rp ${rupiah(totalAmount)}',
-                            style: AppTypePairing.labelSmCaps(color: AppColors.primary, weight: FontWeight.w600),
+                            style: AppTypePairing.labelSmCaps(color: context.indigoPrimary, weight: FontWeight.w600),
                           ),
                         ],
                       ],
@@ -419,7 +419,7 @@ class _IncomingItemCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.textTertiary.withValues(alpha: 0.6)),
+              Icon(Icons.chevron_right_rounded, size: 18, color: context.textTertiary.withValues(alpha: 0.6)),
             ],
           ),
         ),

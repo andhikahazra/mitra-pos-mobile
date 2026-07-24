@@ -60,7 +60,7 @@ class _PeriodFilterChipState extends State<PeriodFilterChip> {
           boxShadow: [
             BoxShadow(
               color: widget.isSelected
-                  ? AppColors.primary.withValues(alpha: _isPressed ? 0.18 : 0.12)
+                      ? AppColors.primary.withValues(alpha: _isPressed ? 0.18 : 0.12)
                   : AppColors.indigoSurfaceTint.withValues(alpha: _isPressed ? 0.07 : 0.04),
               blurRadius: _isPressed ? 10 : 6,
               offset: Offset(0, _isPressed ? 3 : 2),

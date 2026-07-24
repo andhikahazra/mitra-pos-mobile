@@ -29,8 +29,8 @@ class _StatCardState extends State<StatCard> {
   @override
   Widget build(BuildContext context) {
     final isPositive = widget.growthPercentage >= 0;
-    final trendColor = isPositive ? AppColors.success : AppColors.error;
-    final iconColor = widget.iconColor ?? AppColors.textPrimary;
+    final trendColor = isPositive ? context.success : context.error;
+    final iconColor = widget.iconColor ?? context.textPrimary;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -48,9 +48,9 @@ class _StatCardState extends State<StatCard> {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(11),
-          border: Border.all(
-            color: _isHovered ? AppColors.border.withValues(alpha: 0.5) : AppColors.border,
-          ),
+border: Border.all(
+             color: _isHovered ? context.border.withValues(alpha: 0.5) : context.border,
+           ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: _isHovered ? 0.06 : 0.03),
@@ -98,10 +98,10 @@ class _StatCardState extends State<StatCard> {
             const SizedBox(height: 13),
             Text(
               widget.label,
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.textSecondary,
-                height: 1.3,
-              ),
+style: AppTextStyles.bodySmall.copyWith(
+                 color: context.textSecondary,
+                 height: 1.3,
+               ),
             ),
             const SizedBox(height: 7),
             FittedBox(

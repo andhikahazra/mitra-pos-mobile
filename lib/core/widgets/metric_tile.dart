@@ -23,10 +23,10 @@ class MetricTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(9, 8, 9, 8),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: AppColors.indigoPrimary.withValues(alpha: 0.18),
+          color: context.indigoPrimary.withValues(alpha: 0.18),
         ),
       ),
       child: Column(
@@ -48,9 +48,9 @@ class MetricTile extends StatelessWidget {
                 Text(
                   trendLabel!,
                   style: AppTypePairing.labelSmCaps(
-                    color: trendLabel!.startsWith('-')
-                        ? AppColors.error
-                        : AppColors.success,
+color: trendLabel!.startsWith('-')
+                          ? context.error
+                          : context.success,
                   ),
                 ),
             ],

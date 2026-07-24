@@ -41,33 +41,33 @@ class IncomingGoodsDetailPage extends StatelessWidget {
       total += price * qty;
     }
 
-    Color statusColor = AppColors.warning;
-    Color statusBgColor = AppColors.warningLight;
+    Color statusColor = context.warning;
+    Color statusBgColor = context.warningLight;
     IconData statusIcon = Icons.schedule_rounded;
     if (status == 'Diterima' || status == 'Disetujui' || status == 'Selesai') {
-      statusColor = AppColors.success;
-      statusBgColor = AppColors.successLight;
+      statusColor = context.success;
+      statusBgColor = context.successLight;
       statusIcon = Icons.check_circle_rounded;
     } else if (status == 'Ditolak') {
-      statusColor = AppColors.error;
-      statusBgColor = AppColors.errorLight;
+      statusColor = context.error;
+      statusBgColor = context.errorLight;
       statusIcon = Icons.cancel_rounded;
     }
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: context.surfaceContainerLowest,
       appBar: AppBar(
-        backgroundColor: AppColors.surfaceContainerLowest,
+        backgroundColor: context.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         titleSpacing: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20, color: context.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Detail Penerimaan',
-          style: AppTypePairing.titleMd(color: AppColors.textPrimary, weight: FontWeight.w700),
+          style: AppTypePairing.titleMd(color: context.textPrimary, weight: FontWeight.w700),
         ),
         centerTitle: false,
       ),
@@ -77,9 +77,9 @@ class IncomingGoodsDetailPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
+              color: context.surfaceContainerLowest,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.borderLight),
+              border: Border.all(color: context.borderLight),
             ),
             child: Row(
               children: [
@@ -103,7 +103,7 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         formattedDate,
-                        style: AppTypePairing.bodySm(color: AppColors.textSecondary),
+                        style: AppTypePairing.bodySm(color: context.textSecondary),
                       ),
                     ],
                   ),
@@ -129,9 +129,9 @@ class IncomingGoodsDetailPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
+              color: context.surfaceContainerLowest,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.borderLight),
+              border: Border.all(color: context.borderLight),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,9 +157,9 @@ class IncomingGoodsDetailPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
+              color: context.surfaceContainerLowest,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.borderLight),
+              border: Border.all(color: context.borderLight),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +173,7 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                     ),
                     Text(
                       '${items.length} item',
-                      style: AppTypePairing.bodySm(color: AppColors.textSecondary),
+                      style: AppTypePairing.bodySm(color: context.textSecondary),
                     ),
                   ],
                 ),
@@ -189,15 +189,15 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerLow,
+                      color: context.surfaceContainerLow,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        Expanded(flex: 3, child: Text('Produk', style: AppTypePairing.labelSmCaps(color: AppColors.textSecondary, weight: FontWeight.w600))),
-                        Expanded(flex: 1, child: Text('Qty', textAlign: TextAlign.center, style: AppTypePairing.labelSmCaps(color: AppColors.textSecondary, weight: FontWeight.w600))),
-                        Expanded(flex: 2, child: Text('Harga', textAlign: TextAlign.right, style: AppTypePairing.labelSmCaps(color: AppColors.textSecondary, weight: FontWeight.w600))),
-                        Expanded(flex: 2, child: Text('Subtotal', textAlign: TextAlign.right, style: AppTypePairing.labelSmCaps(color: AppColors.textSecondary, weight: FontWeight.w600))),
+                        Expanded(flex: 3, child: Text('Produk', style: AppTypePairing.labelSmCaps(color: context.textSecondary, weight: FontWeight.w600))),
+                        Expanded(flex: 1, child: Text('Qty', textAlign: TextAlign.center, style: AppTypePairing.labelSmCaps(color: context.textSecondary, weight: FontWeight.w600))),
+                        Expanded(flex: 2, child: Text('Harga', textAlign: TextAlign.right, style: AppTypePairing.labelSmCaps(color: context.textSecondary, weight: FontWeight.w600))),
+                        Expanded(flex: 2, child: Text('Subtotal', textAlign: TextAlign.right, style: AppTypePairing.labelSmCaps(color: context.textSecondary, weight: FontWeight.w600))),
                       ],
                     ),
                   ),
@@ -222,13 +222,13 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                               children: [
                                 Text(
                                   productName,
-                                  style: AppTypePairing.bodySm(color: AppColors.textPrimary, weight: FontWeight.w500),
+                                  style: AppTypePairing.bodySm(color: context.textPrimary, weight: FontWeight.w500),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
                                   'SKU $sku',
-                                  style: AppTypePairing.labelSmCaps(color: AppColors.textTertiary),
+                                  style: AppTypePairing.labelSmCaps(color: context.textTertiary),
                                 ),
                               ],
                             ),
@@ -238,7 +238,7 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                             child: Text(
                               qty.toString(),
                               textAlign: TextAlign.center,
-                              style: AppTypePairing.bodySm(color: AppColors.textSecondary),
+                              style: AppTypePairing.bodySm(color: context.textSecondary),
                             ),
                           ),
                           Expanded(
@@ -246,7 +246,7 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                             child: Text(
                               NumberFormat.currency(locale: 'id', symbol: '', decimalDigits: 0).format(price),
                               textAlign: TextAlign.right,
-                              style: AppTypePairing.bodySm(color: AppColors.textSecondary),
+                              style: AppTypePairing.bodySm(color: context.textSecondary),
                             ),
                           ),
                           Expanded(
@@ -254,7 +254,7 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                             child: Text(
                               NumberFormat.currency(locale: 'id', symbol: '', decimalDigits: 0).format(subtotal),
                               textAlign: TextAlign.right,
-                              style: AppTypePairing.bodySm(color: AppColors.textPrimary, weight: FontWeight.w600),
+                              style: AppTypePairing.bodySm(color: context.textPrimary, weight: FontWeight.w600),
                             ),
                           ),
                         ],
@@ -270,16 +270,16 @@ class IncomingGoodsDetailPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
+                color: context.surfaceContainerLowest,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.borderLight),
+                border: Border.all(color: context.borderLight),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Catatan', style: AppTypePairing.titleMd(weight: FontWeight.w700)),
                   const SizedBox(height: 12),
-                  Text(catatan, style: AppTypePairing.bodySm(color: AppColors.textSecondary)),
+                  Text(catatan, style: AppTypePairing.bodySm(color: context.textSecondary)),
                 ],
               ),
             ),
@@ -288,7 +288,7 @@ class IncomingGoodsDetailPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
+              gradient: context.primaryGradient,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -296,11 +296,11 @@ class IncomingGoodsDetailPage extends StatelessWidget {
               children: [
                 Text(
                   'TOTAL PEMBAYARAN',
-                  style: AppTypePairing.labelSmCaps(color: AppColors.white, weight: FontWeight.w700),
+                  style: AppTypePairing.labelSmCaps(color: Colors.white, weight: FontWeight.w700),
                 ),
                 Text(
                   NumberFormat.currency(locale: 'id', symbol: 'Rp ', decimalDigits: 0).format(total),
-                  style: AppTypePairing.headlineLg(color: AppColors.white, weight: FontWeight.w800),
+                  style: AppTypePairing.headlineLg(color: Colors.white, weight: FontWeight.w800),
                 ),
               ],
             ),
@@ -327,8 +327,8 @@ class IncomingGoodsDetailPage extends StatelessWidget {
                   return Container(
                     height: 150,
                     width: double.infinity,
-                    color: AppColors.surfaceContainerHigh,
-                    child: const Icon(Icons.broken_image_outlined, color: AppColors.textTertiary),
+                    color: context.surfaceContainerHigh,
+                    child: Icon(Icons.broken_image_outlined, color: context.textTertiary),
                   );
                 },
               ),
@@ -356,15 +356,15 @@ class _InfoRow extends StatelessWidget {
           width: 90,
           child: Text(
             label,
-            style: AppTypePairing.bodySm(color: AppColors.textSecondary),
+            style: AppTypePairing.bodySm(color: context.textSecondary),
           ),
         ),
-        Text(':', style: AppTypePairing.bodySm(color: AppColors.textTertiary)),
+        Text(':', style: AppTypePairing.bodySm(color: context.textTertiary)),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             value,
-            style: AppTypePairing.bodySm(color: AppColors.textPrimary, weight: FontWeight.w500),
+            style: AppTypePairing.bodySm(color: context.textPrimary, weight: FontWeight.w500),
           ),
         ),
       ],

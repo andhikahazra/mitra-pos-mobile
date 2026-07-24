@@ -256,7 +256,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
                         onRefresh: () async {
                           await notifier.loadHistory();
                         },
-                        color: AppColors.primary,
+                        color: context.indigoPrimary,
                         child: filteredEntries.isEmpty
                             ? ListView(
                                 physics: const AlwaysScrollableScrollPhysics(),
@@ -287,7 +287,7 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
 
     if (isTablet) {
       return Scaffold(
-        backgroundColor: AppColors.surfaceContainerLowest,
+        backgroundColor: context.surfaceContainerLowest,
         body: SafeArea(
           child: Row(
             children: [
@@ -300,9 +300,9 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: context.surfaceContainerLowest,
       appBar: AppBar(
-        backgroundColor: AppColors.surfaceContainerLowest,
+        backgroundColor: context.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         title: Text(
@@ -605,17 +605,17 @@ class _EmptyListState extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.14),
         ),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.history_rounded,
-              size: 32, color: AppColors.textSecondary),
+          Icon(Icons.history_rounded,
+              size: 32, color: context.textSecondary),
           const SizedBox(height: 6),
           Text(
             title,
@@ -646,19 +646,19 @@ class _HistoryDetailPage extends ConsumerWidget {
     final settingsState = ref.watch(settingsControllerProvider);
     final appSettings = settingsState.appSettings;
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.bg,
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back, color: context.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Detail Transaksi',
-          style: AppTextStyles.headingSmall.copyWith(color: AppColors.textPrimary),
+          style: AppTextStyles.headingSmall.copyWith(color: context.textPrimary),
         ),
       ),
       body: ListView(
@@ -687,9 +687,9 @@ class _HistoryDetailPage extends ConsumerWidget {
 
                 if (appSettings == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
+                    SnackBar(
                       content: Text('Gagal memuat rincian toko. Mencoba memuat kembali...'),
-                      backgroundColor: AppColors.error,
+                      backgroundColor: context.error,
                     ),
                   );
                   ref.read(settingsControllerProvider.notifier).loadSettings();
@@ -727,11 +727,11 @@ class _HistoryDetailPage extends ConsumerWidget {
                 if (context.mounted) {
                   if (success) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Struk berhasil dicetak ulang!'), backgroundColor: AppColors.success),
+                       SnackBar(content: Text('Struk berhasil dicetak ulang!'), backgroundColor: context.success),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Gagal mencetak struk. Pastikan printer terhubung.'), backgroundColor: AppColors.error),
+                      SnackBar(content: Text('Gagal mencetak struk. Pastikan printer terhubung.'), backgroundColor: context.error),
                     );
                   }
                 }
@@ -739,8 +739,8 @@ class _HistoryDetailPage extends ConsumerWidget {
               icon: const Icon(Icons.print_rounded, size: 20),
               label: const Text('Cetak Ulang Struk', style: TextStyle(fontSize: 15)),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.white,
+                backgroundColor: context.indigoPrimary,
+                foregroundColor: Colors.white,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -758,13 +758,13 @@ class _HistoryDetailPage extends ConsumerWidget {
                 icon: const Icon(Icons.check_circle_outline_rounded, size: 20),
                 label: const Text('Pelunasan Piutang', style: TextStyle(fontSize: 15)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.white,
-                  foregroundColor: AppColors.primary,
+                  backgroundColor: Colors.white,
+                  foregroundColor: context.indigoPrimary,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  side: const BorderSide(color: AppColors.border, width: 1.5),
+                  side: BorderSide(color: context.border, width: 1.5),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  textStyle: AppTextStyles.button.copyWith(color: AppColors.primary),
+                  textStyle: AppTextStyles.button.copyWith(color: context.indigoPrimary),
                 ),
               ),
             ),
@@ -791,7 +791,7 @@ class _DashboardCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowLight,
+            color: context.shadowLight,
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -817,15 +817,15 @@ class _StatusCard extends StatelessWidget {
     String statusText;
     
     if (isCompleted) {
-      statusColor = AppColors.success;
+      statusColor = context.success;
       statusIcon = Icons.check_circle_rounded;
       statusText = 'Selesai';
     } else if (isPiutang) {
-      statusColor = AppColors.warning;
+      statusColor = context.warning;
       statusIcon = Icons.schedule_rounded;
       statusText = 'Piutang';
     } else {
-      statusColor = AppColors.textSecondary;
+      statusColor = context.textSecondary;
       statusIcon = Icons.info_outline_rounded;
       statusText = entry.status;
     }
@@ -853,7 +853,7 @@ class _StatusCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   _formatFullDateTime(entry.tanggal),
-                  style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.bodySmall.copyWith(color: context.textSecondary),
                 ),
               ],
             ),
@@ -923,7 +923,7 @@ class _InfoRow extends StatelessWidget {
           width: 100,
           child: Text(
             label,
-            style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.bodySmall.copyWith(color: context.textSecondary),
           ),
         ),
         Text(':', style: AppTextStyles.bodySmall),
@@ -959,7 +959,7 @@ class _ItemsCard extends StatelessWidget {
               ),
               Text(
                 '${entry.totalSku} item',
-                style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                style: AppTextStyles.bodySmall.copyWith(color: context.textSecondary),
               ),
             ],
           ),
@@ -970,7 +970,7 @@ class _ItemsCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Text(
                   'Tidak ada item',
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.bodyMedium.copyWith(color: context.textSecondary),
                 ),
               ),
             )
@@ -985,7 +985,7 @@ class _ItemsCard extends StatelessWidget {
                       child: Text(
                         'Produk',
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.textSecondary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -996,7 +996,7 @@ class _ItemsCard extends StatelessWidget {
                         'Qty',
                         textAlign: TextAlign.center,
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.textSecondary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -1007,7 +1007,7 @@ class _ItemsCard extends StatelessWidget {
                         'Harga',
                         textAlign: TextAlign.right,
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.textSecondary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -1018,7 +1018,7 @@ class _ItemsCard extends StatelessWidget {
                         'Subtotal',
                         textAlign: TextAlign.right,
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: context.textSecondary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -1066,7 +1066,7 @@ class _ItemRow extends StatelessWidget {
           child: Text(
             item.qty.toString(),
             textAlign: TextAlign.center,
-            style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.bodySmall.copyWith(color: context.textSecondary),
           ),
         ),
         Expanded(
@@ -1074,7 +1074,7 @@ class _ItemRow extends StatelessWidget {
           child: Text(
             CurrencyFormatter.format(hargaPerItem, symbol: ''),
             textAlign: TextAlign.right,
-            style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.bodySmall.copyWith(color: context.textSecondary),
           ),
         ),
         Expanded(
@@ -1136,9 +1136,9 @@ class _SummaryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final labelStyle = isTotal
         ? AppTextStyles.headingSmall.copyWith(fontWeight: FontWeight.w700)
-        : AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary);
+        : AppTextStyles.bodyMedium.copyWith(color: context.textSecondary);
     final valueStyle = isTotal
-        ? AppTextStyles.headingMedium.copyWith(fontWeight: FontWeight.w800, color: AppColors.primary)
+        ? AppTextStyles.headingMedium.copyWith(fontWeight: FontWeight.w800, color: context.indigoPrimary)
         : AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600);
 
     return Padding(
@@ -1185,7 +1185,7 @@ void _showSettleDialog(BuildContext context, WidgetRef ref, HistoryTransaction e
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Piutang berhasil dilunasi via $method'),
-                        backgroundColor: AppColors.success,
+                        backgroundColor: context.success,
                       ),
                     );
                     Navigator.pop(context); // Close dialog
@@ -1196,7 +1196,7 @@ void _showSettleDialog(BuildContext context, WidgetRef ref, HistoryTransaction e
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Gagal melunasi piutang: $e'),
-                        backgroundColor: AppColors.error,
+                        backgroundColor: context.error,
                       ),
                     );
                   }
@@ -1256,9 +1256,9 @@ class _SettleDialogContentState extends ConsumerState<_SettleDialogContent> {
     final kembalian = _uangBayar - totalTagihan;
 
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: context.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.fromLTRB(20, 12, 20, MediaQuery.of(context).viewInsets.bottom + 32),
       child: Column(
@@ -1270,7 +1270,7 @@ class _SettleDialogContentState extends ConsumerState<_SettleDialogContent> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.borderLight,
+                color: context.borderLight,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -1280,7 +1280,7 @@ class _SettleDialogContentState extends ConsumerState<_SettleDialogContent> {
           const SizedBox(height: 6),
           Text(
             'Invoice: ${widget.entry.kode}',
-            style: AppTypePairing.bodySm(color: AppColors.textSecondary, weight: FontWeight.w700),
+            style: AppTypePairing.bodySm(color: context.textSecondary, weight: FontWeight.w700),
           ),
           const SizedBox(height: 18),
           
@@ -1308,7 +1308,7 @@ class _SettleDialogContentState extends ConsumerState<_SettleDialogContent> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.primaryFixed.withValues(alpha: 0.3),
+                color: context.primaryFixed.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -1317,10 +1317,10 @@ class _SettleDialogContentState extends ConsumerState<_SettleDialogContent> {
                     _selectedMethod == 'Tunai'
                       ? Icons.payments_rounded
                       : (_selectedMethod == 'QRIS' ? Icons.qr_code_scanner_rounded : Icons.account_balance_rounded),
-                    color: AppColors.primary,
+                    color: context.indigoPrimary,
                   ),
                   const SizedBox(width: 10),
-                  Text(_selectedMethod!, style: AppTypePairing.bodySm(weight: FontWeight.w900, color: AppColors.primary)),
+                  Text(_selectedMethod!, style: AppTypePairing.bodySm(weight: FontWeight.w900, color: context.indigoPrimary)),
                   const Spacer(),
                   TextButton(
                     onPressed: () => setState(() {
@@ -1340,7 +1340,7 @@ class _SettleDialogContentState extends ConsumerState<_SettleDialogContent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Total Tagihan', style: AppTypePairing.bodySm(color: AppColors.textSecondary)),
+                Text('Total Tagihan', style: AppTypePairing.bodySm(color: context.textSecondary)),
                 Text(
                   CurrencyFormatter.format(widget.totalHutang, symbol: 'Rp'),
                   style: AppTypePairing.bodyMd(weight: FontWeight.w800),
@@ -1359,7 +1359,7 @@ class _SettleDialogContentState extends ConsumerState<_SettleDialogContent> {
                     width: 20,
                     child: Checkbox(
                       value: _applyAdminFee,
-                      activeColor: AppColors.primary,
+                      activeColor: context.indigoPrimary,
                       onChanged: (v) => setState(() => _applyAdminFee = v ?? false),
                     ),
                   ),
@@ -1377,7 +1377,7 @@ class _SettleDialogContentState extends ConsumerState<_SettleDialogContent> {
                   Text('Total Akhir', style: AppTypePairing.bodySm(weight: FontWeight.w800)),
                   Text(
                     CurrencyFormatter.format(totalTagihan.toInt(), symbol: 'Rp'),
-                    style: AppTypePairing.bodyMd(color: AppColors.primary, weight: FontWeight.w900),
+                    style: AppTypePairing.bodyMd(color: context.indigoPrimary, weight: FontWeight.w900),
                   ),
                 ],
               ),
@@ -1399,9 +1399,9 @@ class _SettleDialogContentState extends ConsumerState<_SettleDialogContent> {
                     label: Text(bankName),
                     selected: isSelected,
                     onSelected: (s) => setState(() => _selectedBank = s ? bankName : null),
-                    selectedColor: AppColors.primaryFixed,
+                    selectedColor: context.primaryFixed,
                     labelStyle: AppTypePairing.bodySm(
-                      color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                      color: isSelected ? context.indigoPrimary : context.textPrimary,
                       weight: isSelected ? FontWeight.w800 : FontWeight.w500,
                     ),
                   );
@@ -1427,7 +1427,7 @@ if (_selectedMethod == 'Tunai') ...[
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: kembalian >= 0 ? AppColors.successLight.withValues(alpha: 0.1) : AppColors.errorLight.withValues(alpha: 0.1),
+                  color: kembalian >= 0 ? context.successLight.withValues(alpha: 0.1) : context.errorLight.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
@@ -1440,7 +1440,7 @@ if (_selectedMethod == 'Tunai') ...[
                     Text(
                       CurrencyFormatter.format(kembalian.abs().toInt(), symbol: 'Rp'),
                       style: AppTypePairing.bodyMd(
-                        color: kembalian >= 0 ? AppColors.success : AppColors.error,
+                        color: kembalian >= 0 ? context.success : context.error,
                         weight: FontWeight.w900,
                       ),
                     ),
@@ -1458,12 +1458,12 @@ if (_selectedMethod == 'Tunai') ...[
                   ? null
                   : () => widget.onSettle(_selectedMethod!, _selectedMethod == 'QRIS' && _applyAdminFee ? widget.initialAdminFee : 0),
                 style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: context.indigoPrimary,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
                 child: Text(
                   'Konfirmasi Pelunasan',
-                  style: AppTypePairing.bodySm(color: AppColors.white, weight: FontWeight.w800),
+                  style: AppTypePairing.bodySm(color: Colors.white, weight: FontWeight.w800),
                 ),
               ),
             ),
@@ -1493,24 +1493,24 @@ class _PaymentMethodOption extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLow,
+          color: context.surfaceContainerLow,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.borderLight),
+          border: Border.all(color: context.borderLight),
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: AppColors.primary, size: 20),
+              child: Icon(icon, color: context.indigoPrimary, size: 20),
             ),
             const SizedBox(width: 14),
             Text(label, style: AppTypePairing.bodySm(weight: FontWeight.w800)),
             const Spacer(),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.textTertiary),
+            Icon(Icons.chevron_right_rounded, color: context.textTertiary),
           ],
         ),
       ),

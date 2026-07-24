@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+
 import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/theme/app_text_styles.dart';
@@ -493,9 +494,9 @@ class _ThermalPrinterSettingsPageState
     final visibleDevices = _visibleDeviceList();
 
     return Scaffold(
-      backgroundColor: AppColors.surface,
+      backgroundColor: context.surface,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: context.surface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         title: Text('Pengaturan Printer', style: AppTypePairing.headlineLg()),
@@ -532,16 +533,16 @@ class _ThermalPrinterSettingsPageState
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.error.withValues(alpha: 0.08),
+                  color: context.error.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: AppColors.error.withValues(alpha: 0.22),
+                    color: context.error.withValues(alpha: 0.22),
                   ),
                 ),
                 child: Text(
                   _errorMessage!,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.error,
+                    color: context.error,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -587,7 +588,7 @@ class _ThermalPrinterSettingsPageState
                   ? 'Printer sudah terhubung. Putuskan dulu jika ingin memilih perangkat lain.'
                   : 'Tekan Bluetooth Scan untuk memuat ulang daftar perangkat paired.',
               style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.textSecondary,
+                color: context.textSecondary,
               ),
             ),
           ],
@@ -613,10 +614,10 @@ class _StatusCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.14),
         ),
       ),
       child: Column(
@@ -625,22 +626,22 @@ class _StatusCard extends StatelessWidget {
             label: 'Bluetooth',
             value: isBluetoothEnabled ? 'Aktif' : 'Nonaktif',
             valueColor: isBluetoothEnabled
-                ? AppColors.success
-                : AppColors.error,
+                ? context.success
+                : context.error,
           ),
           const SizedBox(height: 8),
           _StatusLine(
             label: 'Status Printer',
             value: isConnected ? 'Terhubung' : 'Belum Terhubung',
-            valueColor: isConnected ? AppColors.success : AppColors.warning,
+            valueColor: isConnected ? context.success : context.warning,
           ),
           const SizedBox(height: 8),
           _StatusLine(
             label: 'Nama Printer',
             value: connectedDeviceName ?? '-',
             valueColor: connectedDeviceName != null
-                ? AppColors.indigoPrimary
-                : AppColors.textSecondary,
+                ? context.indigoPrimary
+                : context.textSecondary,
           ),
         ],
       ),
@@ -723,7 +724,7 @@ class _ActionRow extends StatelessWidget {
                 minimumSize: const Size(double.infinity, 44),
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 side: BorderSide(
-                  color: AppColors.indigoSurfaceTint.withValues(alpha: 0.35),
+                  color: context.indigoSurfaceTint.withValues(alpha: 0.35),
                   width: 1.2,
                 ),
               ),
@@ -747,18 +748,18 @@ class _EmptyDeviceState extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 18, 14, 18),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.14),
         ),
       ),
       child: Column(
         children: [
-          const Icon(
+          Icon(
             Icons.print_disabled_outlined,
             size: 32,
-            color: AppColors.textSecondary,
+            color: context.textSecondary,
           ),
           const SizedBox(height: 8),
           Text(
@@ -770,7 +771,7 @@ class _EmptyDeviceState extends StatelessWidget {
             'Pair printer dari pengaturan Bluetooth perangkat lalu tekan Scan.',
             textAlign: TextAlign.center,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textSecondary,
+              color: context.textSecondary,
             ),
           ),
           const SizedBox(height: 10),
@@ -803,12 +804,12 @@ class _DeviceTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: isActive
-              ? AppColors.success.withValues(alpha: 0.35)
-              : AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+              ? context.success.withValues(alpha: 0.35)
+              : context.indigoSurfaceTint.withValues(alpha: 0.14),
         ),
       ),
       child: Row(
@@ -817,12 +818,12 @@ class _DeviceTile extends StatelessWidget {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: AppColors.indigoSurfaceTint.withValues(alpha: 0.12),
+              color: context.indigoSurfaceTint.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.print_rounded,
-              color: AppColors.indigoPrimary,
+              color: context.indigoPrimary,
             ),
           ),
           const SizedBox(width: 10),
@@ -838,14 +839,14 @@ class _DeviceTile extends StatelessWidget {
                 Text(
                   device.address ?? '-',
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   isPaired ? 'Paired' : 'Belum Paired',
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: isPaired ? AppColors.success : AppColors.warning,
+                    color: isPaired ? context.success : context.warning,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -856,8 +857,8 @@ class _DeviceTile extends StatelessWidget {
           FilledButton(
             onPressed: isActive ? null : onConnect,
             style: FilledButton.styleFrom(
-              backgroundColor: isActive ? AppColors.success : AppColors.primary,
-              foregroundColor: AppColors.white,
+              backgroundColor: isActive ? context.success : context.indigoPrimary,
+              foregroundColor: Colors.white,
               minimumSize: const Size(82, 36),
               padding: const EdgeInsets.symmetric(horizontal: 12),
             ),

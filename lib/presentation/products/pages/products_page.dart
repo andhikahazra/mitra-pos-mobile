@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:mitrapos/core/theme/app_colors.dart';
 import 'package:mitrapos/core/theme/app_type_pairing.dart';
 import 'package:mitrapos/core/theme/app_text_styles.dart';
@@ -59,7 +60,7 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.error_outline, size: 46, color: AppColors.error),
+                Icon(Icons.error_outline, size: 46, color: context.error),
                 const SizedBox(height: 12),
                 Text(state.errorMessage!, style: AppTextStyles.bodyMedium, textAlign: TextAlign.center),
                 const SizedBox(height: 12),
@@ -86,15 +87,15 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                       hintStyle: AppTypePairing.bodySm(),
                       prefixIcon: const Icon(Icons.search_rounded, size: 19),
                       filled: true,
-                      fillColor: AppColors.surfaceContainerLowest,
+                      fillColor: context.surfaceContainerLowest,
                       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14)),
+                        borderSide: BorderSide(color: context.indigoSurfaceTint.withValues(alpha: 0.14)),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppColors.indigoPrimary.withValues(alpha: 0.45)),
+                        borderSide: BorderSide(color: context.indigoPrimary.withValues(alpha: 0.45)),
                       ),
                     ),
                   ),
@@ -134,7 +135,7 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
 
     if (isTablet) {
       return Scaffold(
-        backgroundColor: AppColors.surfaceContainerLowest,
+        backgroundColor: context.surfaceContainerLowest,
         body: SafeArea(
           child: Row(
             children: [
@@ -147,9 +148,9 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: context.surfaceContainerLowest,
       appBar: AppBar(
-        backgroundColor: AppColors.surfaceContainerLowest,
+        backgroundColor: context.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -206,24 +207,24 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      size: 46,
-                      color: AppColors.error,
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      state.errorMessage!,
-                      style: AppTextStyles.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 12),
-                    FilledButton(
-                      onPressed: () => ref.read(productControllerProvider.notifier).fetchProducts(),
-                      child: const Text('Coba Lagi'),
-                    ),
-                  ],
+children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 46,
+                        color: context.error,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        state.errorMessage!,
+                        style: AppTextStyles.bodyMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
+                      FilledButton(
+                        onPressed: () => ref.read(productControllerProvider.notifier).fetchProducts(),
+                        child: const Text('Coba Lagi'),
+                      ),
+                    ],
                 ),
               ),
             );
@@ -243,7 +244,7 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                           hintStyle: AppTypePairing.bodySm(),
                           prefixIcon: const Icon(Icons.search_rounded, size: 19),
                           filled: true,
-                          fillColor: AppColors.surfaceContainerLowest,
+                          fillColor: context.surfaceContainerLowest,
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 10,
@@ -251,13 +252,13 @@ class _ProductsPageState extends ConsumerState<ProductsPage> {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+                              color: context.indigoSurfaceTint.withValues(alpha: 0.14),
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                              color: AppColors.indigoPrimary.withValues(alpha: 0.45),
+                              color: context.indigoPrimary.withValues(alpha: 0.45),
                             ),
                           ),
                         ),
@@ -337,7 +338,7 @@ class _FilterButton extends ConsumerWidget {
                           width: 44,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: AppColors.border,
+                            color: context.border,
                             borderRadius: BorderRadius.circular(999),
                           ),
                         ),
@@ -379,15 +380,15 @@ class _FilterButton extends ConsumerWidget {
           width: 44,
           height: 44,
           decoration: BoxDecoration(
-            color: state.categoryFilter != null ? AppColors.primaryFixed : AppColors.surfaceContainerLowest,
+            color: state.categoryFilter != null ? context.primaryFixed : context.surfaceContainerLowest,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+              color: context.indigoSurfaceTint.withValues(alpha: 0.14),
             ),
           ),
           child: Icon(
             Icons.filter_list_rounded,
-            color: state.categoryFilter != null ? AppColors.primary : AppColors.textSecondary,
+            color: state.categoryFilter != null ? context.indigoPrimary : context.textSecondary,
           ),
         ),
       ),
@@ -408,14 +409,14 @@ class _ListingTile extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(11),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.1),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.1),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.03),
+            color: context.indigoPrimary.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -436,9 +437,9 @@ class _ListingTile extends StatelessWidget {
                     ? Image.network(
                         item.imageUrl!,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => _placeholderImage(),
+                        errorBuilder: (_, __, ___) => _placeholderImage(context),
                       )
-                    : _placeholderImage(),
+                    : _placeholderImage(context),
               ),
             ),
           ),
@@ -451,7 +452,7 @@ class _ListingTile extends StatelessWidget {
                   Text(
                     item.name,
                     style: AppTypePairing.valueMd(
-                      color: AppColors.textPrimary,
+                      color: context.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -462,7 +463,7 @@ class _ListingTile extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppTypePairing.bodySm(
-                      color: AppColors.textSecondary,
+                      color: context.textSecondary,
                       weight: FontWeight.w600,
                     ),
                   ),
@@ -492,7 +493,7 @@ class _ListingTile extends StatelessWidget {
                         child: Text(
                           'Rp ${_formatRupiahCompact(item.price.toInt())}',
                           style: AppTypePairing.valueMd(
-                            color: AppColors.primary,
+                            color: context.indigoPrimary,
                           ),
                         ),
                       ),
@@ -505,14 +506,14 @@ class _ListingTile extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: (isLowStock ? AppColors.error : AppColors.indigoPrimary)
+                          color: (isLowStock ? context.error : context.indigoPrimary)
                               .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(999),
                         ),
                         child: Text(
                           'Stok ${item.stock}',
                           style: AppTypePairing.labelSmCaps(
-                            color: isLowStock ? AppColors.error : AppColors.indigoPrimary,
+                            color: isLowStock ? context.error : context.indigoPrimary,
                           ),
                         ),
                       ),
@@ -527,13 +528,10 @@ class _ListingTile extends StatelessWidget {
     );
   }
 
-  Widget _placeholderImage() {
+  Widget _placeholderImage(BuildContext context) {
     return Container(
-      color: AppColors.surfaceContainerLow,
-      child: const Icon(
-        Icons.image_not_supported_outlined,
-        size: 18,
-      ),
+      color: context.surfaceContainerLow,
+      child: Icon(Icons.image_not_supported_outlined, size: 18, color: context.textTertiary),
     );
   }
 
@@ -584,23 +582,23 @@ class _DimensionChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(999),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.14),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.14),
         ),
       ),
       child: RichText(
         text: TextSpan(
           style: AppTypePairing.labelSmCaps(
-            color: AppColors.textSecondary,
+            color: context.textSecondary,
           ),
           children: [
             TextSpan(text: '$label: '),
             TextSpan(
               text: '$value $unit',
               style: AppTypePairing.labelSmCaps(
-                color: AppColors.textPrimary,
+                color: context.textPrimary,
               ),
             ),
           ],
@@ -621,10 +619,10 @@ class _EmptyProductsState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.inventory_2_outlined,
               size: 42,
-              color: AppColors.textTertiary,
+              color: context.textTertiary,
             ),
             const SizedBox(height: 10),
             Text(

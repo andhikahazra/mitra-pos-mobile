@@ -43,10 +43,10 @@ class UserProfileHeader extends StatelessWidget {
               width: 40,
               height: 40,
               alignment: Alignment.center,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [AppColors.indigoPrimary, AppColors.indigoPrimaryContainer],
+                 gradient: LinearGradient(
+                   colors: [context.indigoPrimary, context.primaryFixed],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -54,7 +54,7 @@ class UserProfileHeader extends StatelessWidget {
               child: Text(
                 _initials(name),
                 style: AppTextStyles.labelMedium.copyWith(
-                  color: AppColors.white,
+                  color: Colors.white,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -75,7 +75,7 @@ class UserProfileHeader extends StatelessWidget {
                   Text(
                     email,
                     style: AppTypePairing.bodySm(
-                      color: AppColors.textSecondary.withValues(alpha: 0.9),
+                      color: context.textSecondary.withValues(alpha: 0.9),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -88,13 +88,13 @@ class UserProfileHeader extends StatelessWidget {
               height: 34,
               margin: const EdgeInsets.only(right: 8),
               decoration: BoxDecoration(
-                color: (isPrinterConnected ? AppColors.success : AppColors.error)
+                color: (isPrinterConnected ? context.success : context.error)
                     .withValues(alpha: 0.14),
                 borderRadius: BorderRadius.circular(999),
               ),
               child: Icon(
                 Icons.print_rounded,
-                color: isPrinterConnected ? AppColors.success : AppColors.error,
+                color: isPrinterConnected ? context.success : context.error,
                 size: 18,
               ),
             ),
@@ -107,12 +107,12 @@ class UserProfileHeader extends StatelessWidget {
                   width: 34,
                   height: 34,
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceContainer,
+                    color: context.surfaceContainer,
                     borderRadius: BorderRadius.circular(999),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.tune_rounded,
-                    color: AppColors.textSecondary,
+                    color: context.textSecondary,
                     size: 17,
                   ),
                 ),
