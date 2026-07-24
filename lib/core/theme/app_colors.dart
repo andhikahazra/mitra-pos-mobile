@@ -174,6 +174,7 @@ extension ThemeColors on BuildContext {
   Color get divider => isDark ? AppColors.darkDivider : AppColors.divider;
 
   Color get indigoPrimary => isDark ? AppColors.darkIndigoPrimary : AppColors.indigoPrimary;
+  Color get indigoPrimaryContainer => isDark ? AppColors.darkIndigoPrimaryContainer : AppColors.indigoPrimaryContainer;
   Color get indigoSurfaceTint => isDark ? AppColors.darkIndigoSurfaceTint : AppColors.indigoSurfaceTint;
   Color get indigoPrimaryFixed => isDark ? AppColors.darkIndigoPrimaryFixed : AppColors.indigoPrimaryFixed;
 

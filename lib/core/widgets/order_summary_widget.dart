@@ -134,7 +134,7 @@ class _OrderSummaryItemTile extends StatelessWidget {
         color: context.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: AppColors.indigoSurfaceTint.withValues(alpha: 0.08),
+          color: context.indigoSurfaceTint.withValues(alpha: 0.08),
         ),
       ),
       child: Row(
@@ -152,13 +152,13 @@ class _OrderSummaryItemTile extends StatelessWidget {
                       errorBuilder: (context, error, stackTrace) => Icon(
                         Icons.inventory_2_outlined,
                         size: 20,
-                        color: AppColors.indigoSurfaceTint,
+                        color: context.indigoSurfaceTint,
                       ),
                     )
                   : Icon(
                       Icons.inventory_2_outlined,
                       size: 20,
-                      color: AppColors.indigoSurfaceTint,
+                      color: context.indigoSurfaceTint,
                     ),
             ),
           ),

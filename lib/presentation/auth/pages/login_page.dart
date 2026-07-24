@@ -36,7 +36,7 @@ class _LoginViewState extends ConsumerState<_LoginView> {
   }
 
   void _goToHome(BuildContext context) {
-    if (_hasNavigated) return; // Guard: only navigate once
+    if (_hasNavigated) return;
     _hasNavigated = true;
     Navigator.pushReplacement(
       context,
@@ -47,7 +47,6 @@ class _LoginViewState extends ConsumerState<_LoginView> {
   @override
   Widget build(BuildContext context) {
     ref.listen<AuthState>(authControllerProvider, (previous, next) {
-      // Only navigate if transitioning FROM unauthenticated TO authenticated
       if (!(previous?.isAuthenticated ?? false) && next.isAuthenticated) {
         _goToHome(context);
       }
@@ -70,7 +69,7 @@ class _LoginViewState extends ConsumerState<_LoginView> {
                   Text(
                     'MitraPOS',
                     style: AppTextStyles.labelLarge.copyWith(
-                      color: AppColors.primary,
+                      color: context.indigoPrimary,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.8,
                     ),
@@ -79,7 +78,7 @@ class _LoginViewState extends ConsumerState<_LoginView> {
                   Text(
                     'Masuk ke akun',
                     style: AppTextStyles.headingMedium.copyWith(
-                      color: AppColors.textPrimary,
+                      color: context.textPrimary,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -87,7 +86,7 @@ class _LoginViewState extends ConsumerState<_LoginView> {
                   Text(
                     'Email',
                     style: AppTextStyles.labelMedium.copyWith(
-                      color: AppColors.textSecondary,
+                      color: context.textSecondary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -103,7 +102,7 @@ class _LoginViewState extends ConsumerState<_LoginView> {
                   Text(
                     'Password',
                     style: AppTextStyles.labelMedium.copyWith(
-                      color: AppColors.textSecondary,
+                      color: context.textSecondary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -134,7 +133,7 @@ class _LoginViewState extends ConsumerState<_LoginView> {
                             ? Icons.visibility_off_outlined
                             : Icons.visibility_outlined,
                         size: 19,
-                        color: AppColors.textSecondary,
+                        color: context.textSecondary,
                       ),
                     ),
                   ),
@@ -155,7 +154,7 @@ class _LoginViewState extends ConsumerState<_LoginView> {
                                   );
                             },
                       style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.primary,
+                        backgroundColor: context.indigoPrimary,
                         minimumSize: const Size.fromHeight(50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -170,7 +169,7 @@ class _LoginViewState extends ConsumerState<_LoginView> {
                           : Text(
                               'Masuk',
                               style: AppTextStyles.labelLarge.copyWith(
-                                color: AppColors.white,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -185,16 +184,16 @@ class _LoginViewState extends ConsumerState<_LoginView> {
                         vertical: 10,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.errorLight,
+                        color: context.errorLight,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: AppColors.error.withValues(alpha: 0.3),
+                          color: context.error.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
                         state.errorMessage!,
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.error,
+                          color: context.error,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -242,10 +241,10 @@ class _AuthField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         filled: true,
-        fillColor: AppColors.surfaceContainerLow,
+        fillColor: context.surfaceContainerLow,
         prefixIcon: prefixIcon == null
             ? null
-            : Icon(prefixIcon, color: AppColors.textSecondary, size: 20),
+            : Icon(prefixIcon, color: context.textSecondary, size: 20),
         suffixIcon: suffixIcon,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
@@ -253,14 +252,14 @@ class _AuthField extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(color: context.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.2),
+          borderSide: BorderSide(color: context.indigoPrimary, width: 1.2),
         ),
         hintStyle: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.textTertiary,
+          color: context.textTertiary,
         ),
       ),
     );

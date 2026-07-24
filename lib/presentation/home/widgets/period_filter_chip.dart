@@ -40,18 +40,18 @@ class _PeriodFilterChipState extends State<PeriodFilterChip> {
         ),
         decoration: BoxDecoration(
           gradient: widget.isSelected
-              ? const LinearGradient(
+              ? LinearGradient(
                   colors: [
-                    AppColors.indigoPrimary,
-                    AppColors.indigoPrimaryContainer,
+                    context.indigoPrimary,
+                    context.indigoPrimaryContainer,
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 )
               : LinearGradient(
                   colors: [
-                    AppColors.surfaceContainerLowest,
-                    AppColors.surfaceContainerLow,
+                    context.surfaceContainerLowest,
+                    context.surfaceContainerLow,
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -60,8 +60,8 @@ class _PeriodFilterChipState extends State<PeriodFilterChip> {
           boxShadow: [
             BoxShadow(
               color: widget.isSelected
-                      ? AppColors.primary.withValues(alpha: _isPressed ? 0.18 : 0.12)
-                  : AppColors.indigoSurfaceTint.withValues(alpha: _isPressed ? 0.07 : 0.04),
+                      ? context.indigoPrimary.withValues(alpha: _isPressed ? 0.18 : 0.12)
+                  : context.indigoSurfaceTint.withValues(alpha: _isPressed ? 0.07 : 0.04),
               blurRadius: _isPressed ? 10 : 6,
               offset: Offset(0, _isPressed ? 3 : 2),
             ),
@@ -72,7 +72,7 @@ class _PeriodFilterChipState extends State<PeriodFilterChip> {
           child: Text(
             widget.label,
             style: AppTypePairing.bodySm(
-              color: widget.isSelected ? AppColors.white : AppColors.textSecondary,
+              color: widget.isSelected ? Colors.white : context.textSecondary,
               weight: FontWeight.w600,
             ),
           ),

@@ -21,13 +21,13 @@ class IndigoFilterChip extends StatelessWidget {
     final chip = Container(
       padding: padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: selected ? AppColors.primary : AppColors.primaryFixed,
+        color: selected ? context.indigoPrimary : context.primaryFixed,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         label,
         style: AppTypePairing.labelSmCaps(
-          color: selected ? AppColors.white : AppColors.primary,
+          color: selected ? Colors.white : context.indigoPrimary,
         ),
       ),
     );

@@ -44,13 +44,13 @@ class MitraPOSBottomNavBar extends StatelessWidget {
               ),
               border: Border(
                 top: BorderSide(
-                  color: AppColors.indigoSurfaceTint.withValues(alpha: 0.2),
+                  color: context.indigoSurfaceTint.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.06),
+                  color: context.indigoPrimary.withValues(alpha: 0.06),
                   blurRadius: 32,
                   offset: const Offset(0, -4),
                 ),
@@ -109,7 +109,7 @@ class _BottomNavItem extends StatelessWidget {
             Icon(
               data.icon,
               size: 18,
-              color: selected ? AppColors.primary : AppColors.textSecondary,
+              color: selected ? context.indigoPrimary : context.textSecondary,
             ),
             const SizedBox(height: 3),
             Text(
@@ -119,7 +119,7 @@ class _BottomNavItem extends StatelessWidget {
               style: AppTextStyles.labelSmall.copyWith(
                 fontSize: 10,
                 letterSpacing: 0.25,
-                color: selected ? AppColors.primary : AppColors.textSecondary,
+                color: selected ? context.indigoPrimary : context.textSecondary,
                 fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
               ),
             ),
